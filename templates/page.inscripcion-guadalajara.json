@@ -1,0 +1,11 @@
+{
+  "sections": {
+    "main": {
+      "type": "race-registration-guadalajara",
+      "settings": {}
+    }
+  },
+  "order": [
+    "main"
+  ]
+}

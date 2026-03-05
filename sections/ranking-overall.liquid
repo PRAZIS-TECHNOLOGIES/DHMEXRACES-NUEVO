@@ -1,0 +1,219 @@
+{% comment %}
+  Ranking Overall - DHMEX PRO
+  Dynamically fetches data from /pages/ranking-2026
+  Calculates aggregated standings per category across sedes
+{% endcomment %}
+
+<section class="section ranking-section">
+  <div class="container">
+    <div class="section__header">
+      <div class="section__header-left">
+        <span class="label">{{ section.settings.subtitle | default: 'Clasificacion General' }}</span>
+        <h2 class="heading-lg">{{ section.settings.title | default: 'Overall 2026' }}</h2>
+      </div>
+      {% if section.settings.ranking_link != blank %}
+        <a href="{{ section.settings.ranking_link }}" class="btn btn--outline">Ver por Sede</a>
+      {% endif %}
+    </div>
+
+    <div id="overallContent">
+      <div class="ranking-loading">
+        <span class="label">Cargando resultados...</span>
+      </div>
+    </div>
+
+    <div id="overallEmpty" style="display: none;">
+      <div class="ranking-empty">
+        <span class="heading-md" style="color: var(--text-secondary);">Proximamente</span>
+        <p class="body-text" style="margin-top: var(--space-sm);">La clasificacion general se actualizara despues de cada carrera</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const sourceUrl = '{{ section.settings.source_page | default: "/pages/ranking-2026" }}';
+  loadOverallRanking(sourceUrl);
+});
+
+async function loadOverallRanking(sourceUrl) {
+  const contentEl = document.getElementById('overallContent');
+  const emptyEl = document.getElementById('overallEmpty');
+
+  try {
+    const response = await fetch(sourceUrl);
+    if (!response.ok) throw new Error('No data');
+    const html = await response.text();
+
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(html, 'text/html');
+
+    // Find all ranking tables
+    const tables = doc.querySelectorAll('.ranking-table tbody');
+    if (!tables.length) {
+      contentEl.style.display = 'none';
+      emptyEl.style.display = 'block';
+      return;
+    }
+
+    // Collect all results by rider and category
+    const riders = {};
+    const sedeNames = [];
+
+    doc.querySelectorAll('.ranking-sede').forEach(function(sede, idx) {
+      const titleEl = sede.querySelector('.ranking-sede__title');
+      const sedeName = titleEl ? titleEl.textContent.trim() : 'Sede ' + (idx + 1);
+      sedeNames.push(sedeName);
+
+      sede.querySelectorAll('tbody tr').forEach(function(row) {
+        const cells = row.querySelectorAll('td');
+        if (cells.length < 6) return;
+
+        const name = cells[1].textContent.trim();
+        const category = row.dataset.category || cells[2].textContent.trim();
+        const points = parseInt(cells[5].textContent.trim()) || 0;
+
+        const key = name + '___' + category;
+        if (!riders[key]) {
+          riders[key] = {
+            name: name,
+            category: category,
+            sedes: {},
+            total: 0
+          };
+        }
+        riders[key].sedes[idx] = points;
+        riders[key].total += points;
+      });
+    });
+
+    if (Object.keys(riders).length === 0) {
+      contentEl.style.display = 'none';
+      emptyEl.style.display = 'block';
+      return;
+    }
+
+    // Group by category
+    const categories = {};
+    Object.values(riders).forEach(function(rider) {
+      if (!categories[rider.category]) categories[rider.category] = [];
+      categories[rider.category].push(rider);
+    });
+
+    // Sort each category by total points
+    Object.keys(categories).forEach(function(cat) {
+      categories[cat].sort(function(a, b) { return b.total - a.total; });
+    });
+
+    // Build filters
+    let filtersHTML = '<div class="ranking-filters" id="overallFilters">';
+    filtersHTML += '<button class="ranking-filter is-active" data-filter="all" onclick="filterOverall(this)">Todos</button>';
+    Object.keys(categories).sort().forEach(function(cat) {
+      filtersHTML += '<button class="ranking-filter" data-filter="' + cat + '" onclick="filterOverall(this)">' + cat + '</button>';
+    });
+    filtersHTML += '</div>';
+
+    // Build table
+    let tableHTML = '<div class="ranking-table-wrap"><table class="ranking-table ranking-table--overall"><thead><tr>';
+    tableHTML += '<th class="ranking-table__pos">#</th>';
+    tableHTML += '<th class="ranking-table__name">Piloto</th>';
+    tableHTML += '<th class="ranking-table__cat">Cat</th>';
+    sedeNames.forEach(function(s) {
+      tableHTML += '<th class="ranking-table__sede">' + s.substring(0, 3).toUpperCase() + '</th>';
+    });
+    tableHTML += '<th class="ranking-table__pts">Total</th>';
+    tableHTML += '<th class="ranking-table__diff">Dif</th>';
+    tableHTML += '</tr></thead><tbody>';
+
+    // Render all riders sorted by category then total
+    let allRiders = Object.values(riders).sort(function(a, b) { return b.total - a.total; });
+
+    allRiders.forEach(function(rider, idx) {
+      const leader = categories[rider.category][0];
+      const diff = rider.total - leader.total;
+      let posInCat = categories[rider.category].indexOf(rider) + 1;
+
+      let medalClass = '';
+      if (posInCat === 1) medalClass = 'ranking-medal--gold';
+      else if (posInCat === 2) medalClass = 'ranking-medal--silver';
+      else if (posInCat === 3) medalClass = 'ranking-medal--bronze';
+
+      tableHTML += '<tr data-category="' + rider.category + '">';
+      tableHTML += '<td class="ranking-table__pos">' + (medalClass ? '<span class="ranking-medal ' + medalClass + '">' + posInCat + '</span>' : posInCat) + '</td>';
+      tableHTML += '<td class="ranking-table__name">' + rider.name + '</td>';
+      tableHTML += '<td class="ranking-table__cat"><span class="tag">' + rider.category + '</span></td>';
+
+      sedeNames.forEach(function(s, sIdx) {
+        const pts = rider.sedes[sIdx] || '—';
+        tableHTML += '<td class="ranking-table__sede">' + pts + '</td>';
+      });
+
+      tableHTML += '<td class="ranking-table__pts"><strong>' + rider.total + '</strong></td>';
+      tableHTML += '<td class="ranking-table__diff">' + (diff === 0 ? '—' : diff) + '</td>';
+      tableHTML += '</tr>';
+    });
+
+    tableHTML += '</tbody></table></div>';
+
+    contentEl.innerHTML = filtersHTML + tableHTML;
+
+  } catch (e) {
+    console.error('Error loading overall:', e);
+    contentEl.style.display = 'none';
+    emptyEl.style.display = 'block';
+  }
+}
+
+function filterOverall(btn) {
+  const filter = btn.dataset.filter;
+  document.querySelectorAll('#overallFilters .ranking-filter').forEach(b => b.classList.remove('is-active'));
+  btn.classList.add('is-active');
+
+  document.querySelectorAll('.ranking-table--overall tbody tr').forEach(function(row) {
+    if (filter === 'all' || row.dataset.category === filter) {
+      row.style.display = '';
+    } else {
+      row.style.display = 'none';
+    }
+  });
+}
+</script>
+
+{% schema %}
+{
+  "name": "Ranking Overall",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "subtitle",
+      "label": "Subtitulo",
+      "default": "Clasificacion General"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Titulo",
+      "default": "Overall 2026"
+    },
+    {
+      "type": "text",
+      "id": "source_page",
+      "label": "URL fuente de datos",
+      "default": "/pages/ranking-2026",
+      "info": "Pagina de donde se obtienen los resultados"
+    },
+    {
+      "type": "url",
+      "id": "ranking_link",
+      "label": "Link al Ranking por Sede"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Ranking Overall"
+    }
+  ]
+}
+{% endschema %}

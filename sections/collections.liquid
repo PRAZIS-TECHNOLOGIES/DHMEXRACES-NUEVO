@@ -1,0 +1,61 @@
+{% comment %}
+  This section is used in the list-collections template to render a list of
+  collections.
+
+  https://shopify.dev/docs/storefronts/themes/architecture/templates/collection
+{% endcomment %}
+
+<section class="section" style="padding-top: 140px;">
+  <div class="container">
+    <div class="page-hero" style="padding-top: 0; border-bottom: none;">
+      <span class="page-hero__eyebrow reveal">{{ 'collections.title' | t }}</span>
+      <h1 class="page-hero__title reveal reveal--delay-1">{{ 'collections.title' | t }}</h1>
+    </div>
+
+    <div class="products-grid--editorial {{ section.settings.grid_item_width }} stagger-children" style="gap: {{ section.settings.grid_gap }}px;">
+      {% for collection in collections %}
+        <a href="{{ collection.url }}" class="collection-card reveal">
+          {% if collection.featured_image %}
+            <img src="{{ collection.featured_image | image_url: width: 900 }}" alt="{{ collection.title }}" class="collection-card__image" loading="lazy">
+          {% endif %}
+          <div class="collection-card__overlay"></div>
+          <div class="collection-card__content">
+            <h2 class="collection-card__title">{{ collection.title }}</h2>
+            {% if collection.description != blank %}
+              <p class="body-text" style="opacity: 0.7; margin-top: var(--space-xs);">{{ collection.description | strip_html | truncatewords: 15 }}</p>
+            {% endif %}
+          </div>
+        </a>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "t:general.collections_grid",
+  "settings": [
+    {
+      "type": "select",
+      "id": "grid_item_width",
+      "label": "t:labels.grid_item_width",
+      "options": [
+        { "value": "collections--compact", "label": "t:options.size.small" },
+        { "value": "collections--full", "label": "t:options.size.large" }
+      ],
+      "default": "collections--full"
+    },
+    {
+      "type": "range",
+      "id": "grid_gap",
+      "label": "t:labels.grid_gap",
+      "min": 0,
+      "max": 50,
+      "step": 5,
+      "unit": "px",
+      "default": 10
+    }
+  ],
+  "presets": [{ "name": "t:general.collections_grid" }]
+}
+{% endschema %}

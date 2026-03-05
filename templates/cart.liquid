@@ -1,0 +1,524 @@
+{% comment %}
+  Cart Page - DHMEX PRO
+  Custom cart with inscription detection, promo jersey sync,
+  discount codes, and registration form redirect
+{% endcomment %}
+
+<div class="cart-page">
+  <div class="container">
+    <div class="section__header">
+      <div class="section__header-left">
+        <span class="label">Tu carrito</span>
+        <h1 class="heading-lg">Carrito</h1>
+      </div>
+    </div>
+
+    {% if cart.item_count > 0 %}
+      <div class="cart-layout" id="cartContent">
+        <div class="cart-items" id="cartItems">
+          {% for item in cart.items %}
+            {% assign title_lower = item.product_title | downcase %}
+            {% assign is_inscription = false %}
+            {% assign is_promo_jersey = false %}
+
+            {% if title_lower contains 'inscripcion' or title_lower contains 'inscripción' %}
+              {% assign is_inscription = true %}
+            {% endif %}
+
+            {% if item.properties['_promo_jersey'] == 'true' %}
+              {% assign is_promo_jersey = true %}
+            {% endif %}
+
+            <div class="cart-item {% if is_promo_jersey %}cart-item--promo{% endif %}" data-line="{{ forloop.index }}" data-variant-id="{{ item.variant_id }}">
+              <a href="{{ item.url }}">
+                {% if item.image %}
+                  <img class="cart-item__image" src="{{ item.image | image_url: width: 160 }}" alt="{{ item.title }}" loading="lazy">
+                {% else %}
+                  <div class="cart-item__image" style="background: var(--bg-secondary);"></div>
+                {% endif %}
+              </a>
+
+              <div class="cart-item__details">
+                <a href="{{ item.url }}" class="cart-item__title">{{ item.product.title }}</a>
+                {% unless item.variant.title == 'Default Title' %}
+                  <div class="label" style="margin-top: 4px;">{{ item.variant.title }}</div>
+                {% endunless %}
+
+                {% if is_promo_jersey %}
+                  <span class="cart-item__promo-badge">JERSEY GRATIS</span>
+                  <span class="label" style="margin-top: 4px; opacity: 0.6;">Sincronizado con inscripciones</span>
+                {% endif %}
+
+                {% for property in item.properties %}
+                  {% assign prop_first_char = property.first | slice: 0, 1 %}
+                  {% if property.last != blank and prop_first_char != '_' %}
+                    <div class="label" style="margin-top: 4px;">{{ property.first }}: {{ property.last }}</div>
+                  {% endif %}
+                {% endfor %}
+
+                {% unless is_promo_jersey %}
+                  <div style="margin-top: 8px;">
+                    <div class="quantity-selector" style="display: inline-flex;">
+                      <button type="button" onclick="updateQuantity({{ forloop.index }}, -1)" aria-label="Menos">&minus;</button>
+                      <input type="number" value="{{ item.quantity }}" min="0" readonly aria-label="Cantidad">
+                      <button type="button" onclick="updateQuantity({{ forloop.index }}, 1)" aria-label="Mas">+</button>
+                    </div>
+                    <button type="button" class="cart-item__remove" onclick="removeItem({{ forloop.index }})" aria-label="Eliminar">
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                    </button>
+                  </div>
+                {% endunless %}
+              </div>
+
+              <div class="cart-item__price">
+                {% if is_promo_jersey %}
+                  <span class="cart-item__price-original">{{ item.original_line_price | money }}</span>
+                  <span class="cart-item__price-free">GRATIS</span>
+                {% else %}
+                  {{ item.line_price | money }}
+                {% endif %}
+              </div>
+            </div>
+          {% endfor %}
+        </div>
+
+        <div class="cart-summary">
+          <div class="cart-summary__section">
+            <span class="heading-sm">Resumen</span>
+          </div>
+
+          {% assign has_inscriptions = false %}
+          {% assign inscription_count = 0 %}
+          {% assign promo_jersey_total = 0 %}
+
+          {% for item in cart.items %}
+            {% assign t = item.product_title | downcase %}
+            {% if t contains 'inscripcion' or t contains 'inscripción' %}
+              {% assign has_inscriptions = true %}
+              {% assign inscription_count = inscription_count | plus: item.quantity %}
+            {% endif %}
+            {% if item.properties['_promo_jersey'] == 'true' %}
+              {% assign promo_jersey_total = promo_jersey_total | plus: item.original_line_price %}
+            {% endif %}
+          {% endfor %}
+
+          {% if has_inscriptions %}
+            <div class="cart-summary__row">
+              <span class="label">Inscripciones</span>
+              <span class="label">{{ inscription_count }}</span>
+            </div>
+          {% endif %}
+
+          {% if promo_jersey_total > 0 %}
+            <div class="cart-summary__row">
+              <span class="label">Jersey Oficial Gratis</span>
+              <span class="label" style="color: var(--accent);">-{{ promo_jersey_total | money }}</span>
+            </div>
+          {% endif %}
+
+          <div class="cart-summary__row cart-summary__row--total">
+            <span>Total</span>
+            <span>{{ cart.total_price | money }}</span>
+          </div>
+
+          <div class="cart-summary__row" style="font-size: 11px; color: var(--text-secondary);">
+            <span>Impuestos y envio calculados en checkout</span>
+          </div>
+
+          <div class="cart-summary__discount" id="discountSection">
+            <div id="discountInput" class="cart-discount">
+              <input type="text" id="discountCode" placeholder="Codigo de descuento" class="cart-discount__input" autocomplete="off">
+              <button type="button" onclick="applyDiscount()" class="btn btn--outline cart-discount__btn">Aplicar</button>
+            </div>
+            <div id="discountConfirmed" class="cart-discount__confirmed" style="display: none;">
+              <span class="label">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+                Codigo: <strong id="discountCodeDisplay"></strong>
+              </span>
+              <button type="button" onclick="changeDiscount()" class="label" style="text-decoration: underline; cursor: pointer;">Cambiar</button>
+            </div>
+          </div>
+
+          {% if has_inscriptions %}
+            <button type="button" class="btn btn--primary btn--large" style="width: 100%; margin-top: var(--space-sm);" onclick="proceedToRegistration()">
+              Continuar al Registro
+            </button>
+            <p class="label" style="text-align: center; margin-top: 8px; opacity: 0.6;">Llenaras los datos de cada participante</p>
+          {% else %}
+            <a href="/checkout" class="btn btn--primary btn--large" style="width: 100%; margin-top: var(--space-sm); text-align: center;">
+              Proceder al pago
+            </a>
+          {% endif %}
+
+          <a href="/#sedes" class="btn btn--outline" style="width: 100%; text-align: center;">
+            Seguir comprando
+          </a>
+        </div>
+      </div>
+
+      <div id="cartProcessing" class="cart-processing" style="display: none;">
+        <span class="label">Actualizando carrito...</span>
+      </div>
+
+    {% else %}
+      <div style="text-align: center; padding: var(--space-xl) 0;">
+        <p class="heading-md" style="margin-bottom: var(--space-md);">Tu carrito esta vacio</p>
+        <a href="/#sedes" class="btn btn--primary">Ver inscripciones</a>
+      </div>
+    {% endif %}
+  </div>
+</div>
+
+<style>
+  .cart-page {
+    padding: var(--space-lg) 0;
+    min-height: 60vh;
+  }
+  .cart-layout {
+    display: grid;
+    grid-template-columns: 1fr 380px;
+    gap: var(--space-lg);
+    align-items: start;
+  }
+  @media (max-width: 968px) {
+    .cart-layout {
+      grid-template-columns: 1fr;
+    }
+  }
+  .cart-items {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-sm);
+  }
+  .cart-item {
+    display: grid;
+    grid-template-columns: 80px 1fr auto;
+    gap: var(--space-sm);
+    padding: var(--space-sm);
+    border: 1px solid rgba(0,0,0,0.08);
+    border-radius: 8px;
+    background: var(--bg-secondary);
+  }
+  .cart-item--promo {
+    border-color: rgba(var(--accent-rgb, 255,59,48), 0.3);
+    background: rgba(var(--accent-rgb, 255,59,48), 0.05);
+  }
+  .cart-item__image {
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+    border-radius: 6px;
+  }
+  .cart-item__details {
+    display: flex;
+    flex-direction: column;
+  }
+  .cart-item__title {
+    font-family: var(--font-heading);
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-primary);
+    text-decoration: none;
+  }
+  .cart-item__title:hover {
+    color: var(--accent);
+  }
+  .cart-item__promo-badge {
+    display: inline-block;
+    margin-top: 6px;
+    padding: 2px 8px;
+    font-family: var(--font-heading);
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    color: var(--accent);
+    border: 1px solid var(--accent);
+    border-radius: 4px;
+    width: fit-content;
+  }
+  .cart-item__remove {
+    background: none;
+    border: none;
+    color: var(--text-secondary);
+    cursor: pointer;
+    padding: 4px;
+    margin-left: 8px;
+    vertical-align: middle;
+  }
+  .cart-item__remove:hover {
+    color: var(--accent);
+  }
+  .cart-item__price {
+    font-family: var(--font-heading);
+    font-size: 14px;
+    font-weight: 600;
+    text-align: right;
+    white-space: nowrap;
+  }
+  .cart-item__price-original {
+    text-decoration: line-through;
+    color: var(--text-secondary);
+    font-size: 12px;
+    display: block;
+  }
+  .cart-item__price-free {
+    color: var(--accent);
+    font-weight: 700;
+  }
+  .cart-summary {
+    padding: var(--space-md);
+    border: 1px solid rgba(0,0,0,0.08);
+    border-radius: 8px;
+    background: var(--bg-secondary);
+    position: sticky;
+    top: calc(72px + var(--space-md));
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-sm);
+  }
+  .cart-summary__row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .cart-summary__row--total {
+    padding-top: var(--space-sm);
+    border-top: 1px solid rgba(0,0,0,0.08);
+    font-family: var(--font-heading);
+    font-weight: 700;
+    font-size: 18px;
+  }
+  .cart-discount {
+    display: flex;
+    gap: 8px;
+  }
+  .cart-discount__input {
+    flex: 1;
+    padding: 8px 12px;
+    background: var(--bg-primary);
+    border: 1px solid rgba(0,0,0,0.1);
+    border-radius: 6px;
+    color: var(--text-primary);
+    font-family: var(--font-body);
+    font-size: 13px;
+  }
+  .cart-discount__input::placeholder {
+    color: var(--text-secondary);
+  }
+  .cart-discount__btn {
+    padding: 8px 16px !important;
+    font-size: 11px !important;
+    white-space: nowrap;
+  }
+  .cart-discount__confirmed {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 12px;
+    background: rgba(var(--accent-rgb, 255,59,48), 0.08);
+    border-radius: 6px;
+  }
+  .cart-processing {
+    text-align: center;
+    padding: var(--space-lg);
+  }
+</style>
+
+<script>
+let isProcessing = false;
+
+function setProcessingState(processing) {
+  isProcessing = processing;
+  const content = document.getElementById('cartContent');
+  const overlay = document.getElementById('cartProcessing');
+  if (content) content.style.opacity = processing ? '0.5' : '1';
+  if (overlay) overlay.style.display = processing ? 'block' : 'none';
+}
+
+async function updateQuantity(line, change) {
+  if (isProcessing) return;
+  setProcessingState(true);
+  try {
+    const res = await fetch('/cart.js');
+    const cart = await res.json();
+    const item = cart.items[line - 1];
+    if (!item) return;
+    const newQty = item.quantity + change;
+    if (newQty < 1) { await removeItem(line); return; }
+    if (newQty > 10) { setProcessingState(false); return; }
+    await fetch('/cart/change.js', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ line: line, quantity: newQty })
+    });
+    await syncPromoJerseysWithInscriptions();
+    location.reload();
+  } catch (e) {
+    console.error('Update error:', e);
+    setProcessingState(false);
+  }
+}
+
+async function removeItem(line) {
+  if (isProcessing) return;
+  setProcessingState(true);
+  try {
+    await fetch('/cart/change.js', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ line: line, quantity: 0 })
+    });
+    await syncPromoJerseysWithInscriptions();
+    location.reload();
+  } catch (e) {
+    console.error('Remove error:', e);
+    setProcessingState(false);
+  }
+}
+
+async function syncPromoJerseysWithInscriptions() {
+  try {
+    const res = await fetch('/cart.js');
+    const cart = await res.json();
+
+    const inscriptions = cart.items.filter(i => {
+      const t = (i.product_title || '').toLowerCase();
+      return t.includes('inscripcion') || t.includes('inscripción');
+    });
+    const totalInscriptions = inscriptions.reduce((sum, i) => sum + i.quantity, 0);
+
+    const promoJersey = cart.items.find(i => (i.properties || {})['_promo_jersey'] === 'true');
+
+    if (totalInscriptions === 0 && promoJersey) {
+      const jerseyLine = cart.items.indexOf(promoJersey) + 1;
+      await fetch('/cart/change.js', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ line: jerseyLine, quantity: 0 })
+      });
+      return;
+    }
+
+    if (!promoJersey || totalInscriptions === 0) return;
+
+    let jerseyQty = totalInscriptions;
+    try {
+      const invRes = await fetch('https://dhmexraces-webhooks.vercel.app/api/inventory');
+      const invData = await invRes.json();
+      if (invData.success || invData.sedes) {
+        const sedes = invData.sedes || {};
+        const firstSede = Object.keys(sedes)[0];
+        if (firstSede) {
+          const disponibles = sedes[firstSede]?.playeras?.disponibles ?? 50;
+          jerseyQty = Math.min(totalInscriptions, disponibles);
+          if (disponibles <= 0) jerseyQty = 0;
+        }
+      }
+    } catch (e) {}
+
+    const jerseyLine = cart.items.indexOf(promoJersey) + 1;
+    if (jerseyQty <= 0) {
+      await fetch('/cart/change.js', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ line: jerseyLine, quantity: 0 })
+      });
+    } else if (promoJersey.quantity !== jerseyQty) {
+      await fetch('/cart/change.js', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ line: jerseyLine, quantity: jerseyQty })
+      });
+    }
+  } catch (e) {
+    console.error('Sync error:', e);
+  }
+}
+
+async function proceedToRegistration() {
+  try {
+    const res = await fetch('/cart.js');
+    const cart = await res.json();
+
+    const cartItems = cart.items.filter(function(i) {
+      var t = (i.product_title || '').toLowerCase();
+      return t.includes('inscripcion') || t.includes('inscripción');
+    }).map(function(i) {
+      return {
+        variant_id: String(i.variant_id),
+        variant_title: i.variant_title || i.title,
+        product_title: i.product_title,
+        quantity: i.quantity
+      };
+    });
+
+    if (cartItems.length === 0) {
+      alert('No hay inscripciones en el carrito');
+      return;
+    }
+
+    sessionStorage.setItem('registrationCartData', JSON.stringify(cartItems));
+
+    var promoJersey = cart.items.find(function(i) {
+      return (i.properties || {})['_promo_jersey'] === 'true';
+    });
+
+    if (promoJersey) {
+      sessionStorage.setItem('jerseyDisponible', JSON.stringify({
+        disponible: true,
+        count: promoJersey.quantity,
+        sede: ''
+      }));
+    } else {
+      sessionStorage.removeItem('jerseyDisponible');
+    }
+
+    var code = localStorage.getItem('discountCode');
+    if (code) sessionStorage.setItem('discountCode', code);
+
+    window.location.href = '/pages/formulario-de-inscripcion';
+  } catch (e) {
+    console.error('Registration redirect error:', e);
+    alert('Error al procesar. Intenta de nuevo.');
+  }
+}
+
+// Discount code
+function applyDiscount() {
+  const input = document.getElementById('discountCode');
+  const code = (input.value || '').trim().toUpperCase();
+  if (!code) return;
+  localStorage.setItem('discountCode', code);
+  document.getElementById('discountInput').style.display = 'none';
+  document.getElementById('discountConfirmed').style.display = 'flex';
+  document.getElementById('discountCodeDisplay').textContent = code;
+}
+
+function changeDiscount() {
+  localStorage.removeItem('discountCode');
+  document.getElementById('discountInput').style.display = 'flex';
+  document.getElementById('discountConfirmed').style.display = 'none';
+  document.getElementById('discountCode').value = '';
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+  var saved = localStorage.getItem('discountCode');
+  if (saved) {
+    document.getElementById('discountInput').style.display = 'none';
+    document.getElementById('discountConfirmed').style.display = 'flex';
+    document.getElementById('discountCodeDisplay').textContent = saved;
+  }
+
+  var discountInput = document.getElementById('discountCode');
+  if (discountInput) {
+    discountInput.addEventListener('input', function() {
+      this.value = this.value.toUpperCase();
+    });
+    discountInput.addEventListener('keydown', function(e) {
+      if (e.key === 'Enter') { e.preventDefault(); applyDiscount(); }
+    });
+  }
+
+  syncPromoJerseysWithInscriptions();
+});
+</script>

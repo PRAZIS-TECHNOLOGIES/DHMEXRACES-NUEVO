@@ -1,0 +1,60 @@
+{
+  "sections": {
+    "main": {
+      "type": "ranking",
+      "settings": {
+        "subtitle": "Resultados",
+        "title": "Ranking 2026"
+      },
+      "blocks": {
+        "sede_1": {
+          "type": "sede",
+          "settings": {
+            "round": "R1",
+            "title": "Guanajuato",
+            "date": "22 Marzo 2026",
+            "status": "upcoming"
+          }
+        },
+        "sede_2": {
+          "type": "sede",
+          "settings": {
+            "round": "R2",
+            "title": "Puebla",
+            "date": "Proximamente",
+            "status": "upcoming"
+          }
+        },
+        "sede_3": {
+          "type": "sede",
+          "settings": {
+            "round": "R3",
+            "title": "Guadalajara",
+            "date": "Proximamente",
+            "status": "upcoming"
+          }
+        },
+        "sede_4": {
+          "type": "sede",
+          "settings": {
+            "round": "R4",
+            "title": "Ixtapan de la Sal",
+            "date": "Proximamente",
+            "status": "upcoming"
+          }
+        },
+        "sede_5": {
+          "type": "sede",
+          "settings": {
+            "round": "R5",
+            "title": "Taxco - Final Urbano",
+            "date": "Proximamente",
+            "status": "upcoming"
+          }
+        }
+      },
+      "block_order": ["sede_1", "sede_2", "sede_3", "sede_4", "sede_5"]
+    }
+  },
+  "order": ["main"]
+}

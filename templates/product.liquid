@@ -1,0 +1,183 @@
+<div class="product-page">
+  <div class="container">
+    <div class="product-page__grid">
+      <!-- Gallery -->
+      <div class="product-page__gallery">
+        {% for image in product.images %}
+          <div class="product-page__image reveal">
+            <img
+              src="{{ image | image_url: width: 800 }}"
+              alt="{{ image.alt | default: product.title }}"
+              loading="{% if forloop.first %}eager{% else %}lazy{% endif %}"
+            >
+          </div>
+        {% endfor %}
+
+        {% if product.images.size == 0 %}
+          <div class="product-page__image">
+            <div style="width: 100%; height: 100%; background: var(--bg-secondary); display: flex; align-items: center; justify-content: center;">
+              <span class="label" style="opacity: 0.3;">Sin imagen</span>
+            </div>
+          </div>
+        {% endif %}
+      </div>
+
+      <!-- Info -->
+      <div class="product-page__info">
+        {% if product.vendor != blank %}
+          <span class="label">{{ product.vendor }}</span>
+        {% endif %}
+
+        <h1 class="product-page__title">{{ product.title }}</h1>
+
+        <div class="product-page__price">
+          {% if product.compare_at_price > product.price %}
+            <s style="color: var(--text-secondary); font-weight: 400; font-size: 0.75em;">{{ product.compare_at_price | money }}</s>
+          {% endif %}
+          {{ product.price | money }}
+        </div>
+
+        {% if product.description != blank %}
+          <div class="product-page__description">
+            {{ product.description }}
+          </div>
+        {% endif %}
+
+        {% form 'product', product %}
+          <!-- Variants -->
+          {% if product.variants.size > 1 %}
+            {% for option in product.options_with_values %}
+              <div class="variant-selector">
+                <span class="variant-selector__label">{{ option.name }}</span>
+                <div class="variant-selector__options">
+                  {% for value in option.values %}
+                    <label class="variant-selector__option {% if option.selected_value == value %}is-selected{% endif %}">
+                      <input
+                        type="radio"
+                        name="{{ option.name }}"
+                        value="{{ value }}"
+                        {% if option.selected_value == value %}checked{% endif %}
+                        style="display: none;"
+                      >
+                      {{ value }}
+                    </label>
+                  {% endfor %}
+                </div>
+              </div>
+            {% endfor %}
+          {% endif %}
+
+          <input type="hidden" name="id" value="{{ product.selected_or_first_available_variant.id }}">
+
+          <!-- Nombre del piloto para inscripciones -->
+          {% if product.type == 'Inscripcion' or product.tags contains 'inscripcion' %}
+            <div class="line-property">
+              <label class="line-property__label" for="attendee-name">Nombre del piloto</label>
+              <input
+                class="line-property__input"
+                type="text"
+                id="attendee-name"
+                name="properties[Nombre del asistente]"
+                placeholder="Nombre completo del corredor"
+                required
+              >
+            </div>
+          {% endif %}
+
+          <!-- Quantity -->
+          <div class="add-to-cart">
+            <div class="quantity-selector">
+              <button type="button" data-minus aria-label="Menos">−</button>
+              <input type="number" name="quantity" value="1" min="1" aria-label="Cantidad">
+              <button type="button" data-plus aria-label="Mas">+</button>
+            </div>
+
+            <button
+              type="submit"
+              class="btn btn--primary btn--large"
+              id="addToCartBtn"
+              {% unless product.available %}disabled{% endunless %}
+            >
+              {% if product.available %}
+                Agregar al carrito — <span id="addToCartPrice">{{ product.price | money }}</span>
+              {% else %}
+                Agotado
+              {% endif %}
+            </button>
+          </div>
+        {% endform %}
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  (function() {
+    var variantData = [
+      {% for variant in product.variants %}
+        {
+          id: {{ variant.id }},
+          available: {{ variant.available | json }},
+          price: {{ variant.price | json }},
+          priceFormatted: {{ variant.price | money | json }},
+          options: {{ variant.options | json }}
+        }{% unless forloop.last %},{% endunless %}
+      {% endfor %}
+    ];
+
+    var optionInputs = document.querySelectorAll('.variant-selector__option input[type="radio"]');
+    var hiddenInput = document.querySelector('input[name="id"]');
+    var addBtn = document.getElementById('addToCartBtn');
+    var priceEl = document.getElementById('addToCartPrice');
+
+    optionInputs.forEach(function(input) {
+      input.addEventListener('change', function() {
+        // Toggle is-selected class
+        this.closest('.variant-selector__options').querySelectorAll('.variant-selector__option').forEach(function(opt) {
+          opt.classList.remove('is-selected');
+        });
+        this.closest('.variant-selector__option').classList.add('is-selected');
+
+        // Find matching variant
+        var selectedOptions = [];
+        document.querySelectorAll('.variant-selector').forEach(function(selector) {
+          var checked = selector.querySelector('input[type="radio"]:checked');
+          if (checked) selectedOptions.push(checked.value);
+        });
+
+        var matched = variantData.find(function(v) {
+          return v.options.every(function(opt, i) {
+            return opt === selectedOptions[i];
+          });
+        });
+
+        if (matched) {
+          hiddenInput.value = matched.id;
+          if (priceEl) priceEl.textContent = matched.priceFormatted;
+          if (addBtn) {
+            addBtn.disabled = !matched.available;
+            if (!matched.available) addBtn.textContent = 'Agotado';
+          }
+        }
+      });
+    });
+
+    // Quantity buttons
+    var minusBtn = document.querySelector('[data-minus]');
+    var plusBtn = document.querySelector('[data-plus]');
+    var qtyInput = document.querySelector('input[name="quantity"]');
+
+    if (minusBtn && qtyInput) {
+      minusBtn.addEventListener('click', function() {
+        var val = parseInt(qtyInput.value) || 1;
+        if (val > 1) qtyInput.value = val - 1;
+      });
+    }
+    if (plusBtn && qtyInput) {
+      plusBtn.addEventListener('click', function() {
+        var val = parseInt(qtyInput.value) || 1;
+        qtyInput.value = val + 1;
+      });
+    }
+  })();
+</script>

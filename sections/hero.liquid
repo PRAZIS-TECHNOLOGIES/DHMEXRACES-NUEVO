@@ -1,0 +1,152 @@
+<section class="hero">
+  <div class="hero__bg">
+    {% if section.settings.youtube_url != blank %}
+      {% assign yt_url = section.settings.youtube_url %}
+      {% if yt_url contains 'watch?v=' %}
+        {% assign yt_id = yt_url | split: 'watch?v=' | last | split: '&' | first %}
+      {% elsif yt_url contains 'youtu.be/' %}
+        {% assign yt_id = yt_url | split: 'youtu.be/' | last | split: '?' | first %}
+      {% else %}
+        {% assign yt_id = yt_url %}
+      {% endif %}
+      <iframe
+        src="https://www.youtube.com/embed/{{ yt_id }}?autoplay=1&mute=1&loop=1&playlist={{ yt_id }}&controls=0&showinfo=0&modestbranding=1&rel=0&playsinline=1&enablejsapi=1&iv_load_policy=3&disablekb=1&start=5"
+        frameborder="0"
+        allow="autoplay; encrypted-media"
+        allowfullscreen
+        style="position: absolute; top: 50%; left: 50%; width: 120vw; height: 120vh; transform: translate(-50%, -50%); pointer-events: none; object-fit: cover;"
+      ></iframe>
+    {% elsif section.settings.video_url != blank %}
+      <video autoplay muted loop playsinline>
+        <source src="{{ section.settings.video_url }}" type="video/mp4">
+      </video>
+    {% elsif section.settings.image != blank %}
+      <img
+        src="{{ section.settings.image | image_url: width: 1920 }}"
+        alt="{{ section.settings.heading }}"
+        loading="eager"
+      >
+    {% else %}
+      <div style="width: 100%; height: 100%; background: linear-gradient(135deg, #FFFFFF 0%, #F5F5F5 50%, #FFFFFF 100%);"></div>
+    {% endif %}
+    <div class="hero__overlay"></div>
+  </div>
+
+  <div class="container hero__content">
+    <div class="hero__tag reveal">
+      <span class="tag tag--accent">{{ section.settings.tag | default: 'TEMPORADA 2026 — 5 SEDES' }}</span>
+    </div>
+
+    <h1 class="hero__title heading-xl reveal reveal--delay-1">
+      {% if section.settings.heading_pre != blank %}
+        <span class="hero__title-pre">{{ section.settings.heading_pre }}</span>
+      {% endif %}
+      {{ section.settings.heading | default: 'DHMEX' }}
+      <span class="accent">{{ section.settings.heading_accent | default: 'RACES' }}</span>
+    </h1>
+
+    <div class="hero__info reveal reveal--delay-2">
+      <div class="hero__info-item">
+        <span class="hero__info-label">Proxima sede</span>
+        <span class="hero__info-value">{{ settings.event_location }}</span>
+      </div>
+      <div class="hero__info-item">
+        <span class="hero__info-label">Fecha</span>
+        <span class="hero__info-value">{{ section.settings.date_display | default: '21-22 MARZO 2026' }}</span>
+      </div>
+      <div class="hero__info-item">
+        <span class="hero__info-label">Premios</span>
+        <span class="hero__info-value">{{ section.settings.prize_display | default: '$530,000 MXN' }}</span>
+      </div>
+    </div>
+
+    <!-- Countdown -->
+    <div class="countdown reveal reveal--delay-3" data-countdown="{{ settings.event_date }}T08:00:00">
+      <div class="countdown__item">
+        <div class="countdown__number" data-days>00</div>
+        <div class="countdown__label">Dias</div>
+      </div>
+      <div class="countdown__item">
+        <div class="countdown__number" data-hours>00</div>
+        <div class="countdown__label">Horas</div>
+      </div>
+      <div class="countdown__item">
+        <div class="countdown__number" data-mins>00</div>
+        <div class="countdown__label">Min</div>
+      </div>
+      <div class="countdown__item">
+        <div class="countdown__number" data-secs>00</div>
+        <div class="countdown__label">Seg</div>
+      </div>
+    </div>
+
+    <div class="hero__actions reveal reveal--delay-4" style="margin-top: var(--space-md);">
+      <a href="/#sedes" class="btn btn--primary btn--large">Inscribirme ahora</a>
+      <a href="#about" class="btn btn--outline btn--large">Conocer mas</a>
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Hero",
+  "settings": [
+    {
+      "type": "text",
+      "id": "youtube_url",
+      "label": "URL de YouTube"
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Imagen de fondo (si no hay video)"
+    },
+    {
+      "type": "text",
+      "id": "video_url",
+      "label": "URL de video MP4 (alternativa)"
+    },
+    {
+      "type": "text",
+      "id": "tag",
+      "label": "Tag superior",
+      "default": "TEMPORADA 2026 — 5 SEDES"
+    },
+    {
+      "type": "text",
+      "id": "heading_pre",
+      "label": "Titulo (linea superior)",
+      "default": "COPA SCOTT"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Titulo (parte 1)",
+      "default": "DHMEX"
+    },
+    {
+      "type": "text",
+      "id": "heading_accent",
+      "label": "Titulo (parte accent)",
+      "default": "RACES"
+    },
+    {
+      "type": "text",
+      "id": "date_display",
+      "label": "Fecha visible",
+      "default": "21-22 MARZO 2026"
+    },
+    {
+      "type": "text",
+      "id": "prize_display",
+      "label": "Premios visibles",
+      "default": "$530,000 MXN"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Hero"
+    }
+  ]
+}
+{% endschema %}

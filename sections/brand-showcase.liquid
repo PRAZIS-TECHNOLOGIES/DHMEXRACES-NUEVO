@@ -1,0 +1,156 @@
+{% comment %}
+  Brand Showcase - Editorial split layout
+  SKELETON design system
+{% endcomment %}
+
+<section class="section section--alt" style="background-color: {{ section.settings.background_color }};">
+  <div class="container">
+    <div class="brand-split reveal">
+      <div class="brand-split__visual">
+        {% if section.settings.logo != blank %}
+          <img
+            src="{{ section.settings.logo | image_url: width: 600 }}"
+            alt="{{ section.settings.logo_alt | default: 'DHMEXRACES' }}"
+            loading="lazy"
+            {% if section.settings.logo_width > 0 %}
+              style="max-width: {{ section.settings.logo_width }}px;"
+            {% endif %}
+          >
+        {% endif %}
+      </div>
+      <div class="brand-split__content">
+        {% if section.settings.title != blank %}
+          <h2 class="brand-split__title" style="color: {{ section.settings.title_color }};">
+            {{ section.settings.title }}
+            {% if section.settings.title_line_2 != blank %}
+              <br><span class="accent">{{ section.settings.title_line_2 }}</span>
+            {% endif %}
+          </h2>
+        {% endif %}
+        {% if section.settings.subtitle != blank %}
+          <p class="brand-split__subtitle" style="color: {{ section.settings.subtitle_color }};">{{ section.settings.subtitle }}</p>
+        {% endif %}
+        {% if section.settings.description != blank %}
+          <div class="brand-split__description" style="color: {{ section.settings.text_color }};">{{ section.settings.description }}</div>
+        {% endif %}
+        {% if section.settings.button_text != blank %}
+          <a href="{{ section.settings.button_link }}" class="btn btn--primary btn--large" style="margin-top: var(--space-md);">
+            {{ section.settings.button_text }}
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8H13M13 8L8 3M13 8L8 13" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </a>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Brand Showcase",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Logo"
+    },
+    {
+      "type": "image_picker",
+      "id": "logo",
+      "label": "Logo Image",
+      "info": "Sube el logo de DHMEXRACES en alta resolucion"
+    },
+    {
+      "type": "text",
+      "id": "logo_alt",
+      "label": "Logo Alt Text",
+      "default": "DHMEXRACES"
+    },
+    {
+      "type": "range",
+      "id": "logo_width",
+      "min": 0,
+      "max": 600,
+      "step": 25,
+      "unit": "px",
+      "label": "Logo Width",
+      "default": 300
+    },
+    {
+      "type": "header",
+      "content": "Texto"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Titulo Linea 1",
+      "default": "Copa Scott DHMEXRACES"
+    },
+    {
+      "type": "text",
+      "id": "title_line_2",
+      "label": "Titulo Linea 2",
+      "default": "Nacional de Downhill"
+    },
+    {
+      "type": "text",
+      "id": "subtitle",
+      "label": "Subtitulo",
+      "default": "Temporada 2026"
+    },
+    {
+      "type": "richtext",
+      "id": "description",
+      "label": "Descripcion",
+      "default": "<p>DHMEXRACES es el campeonato de Downhill mas importante de Mexico. Cinco sedes, los mejores riders y la adrenalina al maximo.</p>"
+    },
+    {
+      "type": "header",
+      "content": "Boton"
+    },
+    {
+      "type": "text",
+      "id": "button_text",
+      "label": "Texto del Boton",
+      "default": "Ver Fechas"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Link del Boton"
+    },
+    {
+      "type": "header",
+      "content": "Colores"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Color de Fondo",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "title_color",
+      "label": "Color del Titulo",
+      "default": "#FFFFFF"
+    },
+    {
+      "type": "color",
+      "id": "subtitle_color",
+      "label": "Color del Subtitulo",
+      "default": "#E4007C"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Color del Texto",
+      "default": "#CCCCCC"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Brand Showcase",
+      "category": "DHMEXRACES"
+    }
+  ]
+}
+{% endschema %}

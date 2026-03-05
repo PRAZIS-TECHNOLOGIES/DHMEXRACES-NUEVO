@@ -1,0 +1,34 @@
+{% comment %}
+  Generic configurable section with optional background image
+{% endcomment %}
+
+<section class="section" style="position: relative; overflow: hidden;">
+  {% if section.settings.background_image %}
+    <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; overflow: hidden;">
+      {{ section.settings.background_image | image_url: width: 2000 | image_tag: style: 'position: absolute; width: 100%; height: 100%; top: 0; left: 0; object-fit: cover;' }}
+    </div>
+  {% endif %}
+
+  <div class="container" style="position: relative; z-index: 1;">
+    {% content_for 'blocks' %}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "t:general.custom_section",
+  "blocks": [{ "type": "@theme" }],
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "background_image",
+      "label": "t:labels.background"
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:general.custom_section"
+    }
+  ]
+}
+{% endschema %}

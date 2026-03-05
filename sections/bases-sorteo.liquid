@@ -1,0 +1,209 @@
+{% comment %}
+  Bases del Sorteo FOX 40 - DHMEX PRO
+  Raffle page with hero, info cards, bases legales, CTA
+{% endcomment %}
+
+<section class="sorteo">
+  {%- comment -%} Hero {%- endcomment -%}
+  <div class="sorteo__hero">
+    <div class="container">
+      <div class="sorteo__hero-content">
+        <span class="tag tag--accent">{{ section.settings.badge | default: 'Sorteo Exclusivo' }}</span>
+        <h1 class="heading-xl sorteo__title">{{ section.settings.title | default: 'FOX 40' }}</h1>
+        <p class="body-text--lg" style="max-width: 560px; color: var(--text-secondary);">
+          {{ section.settings.description | default: 'Participa por una suspension FOX 40 valorada en $50,000 MXN' }}
+        </p>
+      </div>
+      {% if section.settings.prize_image != blank %}
+        <div class="sorteo__hero-image">
+          <img
+            src="{{ section.settings.prize_image | image_url: width: 600 }}"
+            alt="{{ section.settings.title }}"
+            loading="lazy"
+          >
+        </div>
+      {% endif %}
+    </div>
+  </div>
+
+  {%- comment -%} Info Cards {%- endcomment -%}
+  <div class="container">
+    <div class="sorteo__info-grid">
+      <div class="sorteo__info-card reveal">
+        <div class="sorteo__info-icon">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <circle cx="12" cy="12" r="10"/>
+            <path d="M12 6V12L16 14"/>
+          </svg>
+        </div>
+        <span class="label">Como participar</span>
+        <p class="body-text">{{ section.settings.how_to | default: 'Inscribete en cualquier sede de la temporada 2026' }}</p>
+      </div>
+      <div class="sorteo__info-card reveal">
+        <div class="sorteo__info-icon">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <path d="M6 2V5M18 2V5M3 8H21M5 4H19C20.1046 4 21 4.89543 21 6V20C21 21.1046 20.1046 22 19 22H5C3.89543 22 3 21.1046 3 20V6C3 4.89543 3.89543 4 5 4Z"/>
+          </svg>
+        </div>
+        <span class="label">Fecha del sorteo</span>
+        <p class="body-text">{{ section.settings.draw_date | default: '22 de Marzo, 2026' }}</p>
+      </div>
+      <div class="sorteo__info-card reveal">
+        <div class="sorteo__info-icon">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <path d="M12 1V23M17 5H9.5C7 5 5 7 5 9.5C5 12 7 14 9.5 14H14.5C17 14 19 16 19 18.5C19 21 17 23 14.5 23H7"/>
+          </svg>
+        </div>
+        <span class="label">Valor del premio</span>
+        <p class="body-text">{{ section.settings.prize_value | default: '$50,000 MXN' }}</p>
+      </div>
+    </div>
+
+    {%- comment -%} Bases Legales {%- endcomment -%}
+    <div class="section__divider"></div>
+    <div class="section__header">
+      <div class="section__header-left">
+        <span class="label">Terminos y condiciones</span>
+        <h2 class="heading-md">Bases Legales</h2>
+      </div>
+    </div>
+
+    <div class="sorteo__bases">
+      {% for block in section.blocks %}
+        {% if block.type == 'base' %}
+          <div class="sorteo__base-card reveal" {{ block.shopify_attributes }}>
+            <span class="sorteo__base-number">{{ forloop.index | prepend: '00' | slice: -2, 2 }}</span>
+            <h3 class="sorteo__base-title">{{ block.settings.title }}</h3>
+            <p class="sorteo__base-text">{{ block.settings.content }}</p>
+          </div>
+        {% endif %}
+      {% endfor %}
+    </div>
+
+    {%- comment -%} CTA {%- endcomment -%}
+    {% if section.settings.cta_text != blank %}
+      <div class="sorteo__cta reveal">
+        <div class="sorteo__cta-content">
+          <h3 class="heading-md">{{ section.settings.cta_heading | default: 'Inscribete y participa' }}</h3>
+          <p class="body-text" style="margin: var(--space-sm) 0 var(--space-md);">
+            {{ section.settings.cta_description | default: 'Cada inscripcion es una oportunidad de ganar' }}
+          </p>
+          <a href="{{ section.settings.cta_link | default: '/#tickets' }}" class="btn btn--primary btn--large">
+            {{ section.settings.cta_text }}
+          </a>
+        </div>
+      </div>
+    {% endif %}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Sorteo / Rifa",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "badge",
+      "label": "Badge",
+      "default": "Sorteo Exclusivo"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Titulo",
+      "default": "FOX 40"
+    },
+    {
+      "type": "textarea",
+      "id": "description",
+      "label": "Descripcion",
+      "default": "Participa por una suspension FOX 40 valorada en $50,000 MXN"
+    },
+    {
+      "type": "image_picker",
+      "id": "prize_image",
+      "label": "Imagen del premio"
+    },
+    {
+      "type": "text",
+      "id": "how_to",
+      "label": "Como participar",
+      "default": "Inscribete en cualquier sede de la temporada 2026"
+    },
+    {
+      "type": "text",
+      "id": "draw_date",
+      "label": "Fecha del sorteo",
+      "default": "22 de Marzo, 2026"
+    },
+    {
+      "type": "text",
+      "id": "prize_value",
+      "label": "Valor del premio",
+      "default": "$50,000 MXN"
+    },
+    {
+      "type": "text",
+      "id": "cta_heading",
+      "label": "Titulo CTA",
+      "default": "Inscribete y participa"
+    },
+    {
+      "type": "textarea",
+      "id": "cta_description",
+      "label": "Descripcion CTA",
+      "default": "Cada inscripcion es una oportunidad de ganar"
+    },
+    {
+      "type": "text",
+      "id": "cta_text",
+      "label": "Texto boton CTA",
+      "default": "Inscribirse Ahora"
+    },
+    {
+      "type": "url",
+      "id": "cta_link",
+      "label": "Link CTA"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "base",
+      "name": "Base Legal",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Titulo",
+          "default": "Elegibilidad"
+        },
+        {
+          "type": "textarea",
+          "id": "content",
+          "label": "Contenido"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Sorteo / Rifa",
+      "blocks": [
+        { "type": "base", "settings": { "title": "Elegibilidad", "content": "Pueden participar todas las personas que se inscriban en cualquier sede de la Copa Scott DHMEXRACES Temporada 2026." } },
+        { "type": "base", "settings": { "title": "Mecanica", "content": "Cada inscripcion pagada genera automaticamente un numero de participacion para el sorteo." } },
+        { "type": "base", "settings": { "title": "Premio", "content": "El premio consiste en una suspension FOX 40 Factory valorada en $50,000 MXN aproximadamente." } },
+        { "type": "base", "settings": { "title": "Fecha del Sorteo", "content": "El sorteo se realizara el 22 de Marzo de 2026 durante el evento de la primera sede." } },
+        { "type": "base", "settings": { "title": "Seleccion del Ganador", "content": "El ganador sera seleccionado de manera aleatoria mediante un sistema digital verificable." } },
+        { "type": "base", "settings": { "title": "Notificacion", "content": "El ganador sera notificado via Instagram y correo electronico registrado en su inscripcion." } },
+        { "type": "base", "settings": { "title": "Entrega del Premio", "content": "El premio se entregara en la sede donde se realice el sorteo o se enviara sin costo adicional." } },
+        { "type": "base", "settings": { "title": "Restricciones", "content": "El premio no es transferible ni canjeable por dinero en efectivo." } },
+        { "type": "base", "settings": { "title": "Responsabilidad", "content": "DHMEXRACES no se hace responsable por el uso inadecuado del premio." } },
+        { "type": "base", "settings": { "title": "Datos Personales", "content": "Los datos de los participantes seran tratados conforme a nuestra politica de privacidad." } },
+        { "type": "base", "settings": { "title": "Modificaciones", "content": "DHMEXRACES se reserva el derecho de modificar las bases del sorteo." } },
+        { "type": "base", "settings": { "title": "Aceptacion", "content": "La participacion en el sorteo implica la aceptacion total de estas bases." } }
+      ]
+    }
+  ]
+}
+{% endschema %}

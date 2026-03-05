@@ -1,0 +1,147 @@
+<header class="header">
+  <div class="header__inner">
+    <!-- Left: Logo -->
+    <a href="/" class="header__logo">
+      <span class="header__logo-ff">DH</span>
+      <span class="header__logo-divider"></span>
+      <span class="header__logo-text">DHMEX<br>RACES</span>
+    </a>
+
+    <!-- Center: Nav -->
+    <nav class="header__nav">
+      <a href="/" class="header__nav-link">
+        <span class="header__nav-index">01</span>
+        Home
+      </a>
+      <a href="/products/inscripcion-sede-2-guadalajara" class="header__nav-link">
+        <span class="header__nav-index">02</span>
+        Inscripciones
+      </a>
+      <a href="/pages/ranking-2026" class="header__nav-link">
+        <span class="header__nav-index">03</span>
+        Ranking 2026
+      </a>
+      <a href="/pages/kit-rider" class="header__nav-link">
+        <span class="header__nav-index">04</span>
+        Kit del Rider
+      </a>
+      <a href="/pages/merch-oficial" class="header__nav-link">
+        <span class="header__nav-index">05</span>
+        Merch Oficial
+      </a>
+      <a href="/pages/ranking-2025" class="header__nav-link">
+        <span class="header__nav-index">06</span>
+        Campeonato 2025
+      </a>
+      <a href="/pages/bases-del-sorteo" class="header__nav-link">
+        <span class="header__nav-index">07</span>
+        Sorteo FOX 40
+      </a>
+    </nav>
+
+    <!-- Right: Actions -->
+    <div class="header__actions">
+      {% if settings.social_instagram != blank %}
+        <a href="{{ settings.social_instagram }}" target="_blank" rel="noopener" class="header__social" aria-label="Instagram">IG</a>
+      {% endif %}
+      {% if shop.customer_accounts_enabled %}
+        <a href="{{ routes.account_url }}" class="header__icon" aria-label="Account">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        </a>
+      {% endif %}
+      <a href="/cart" class="header__cart">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 002 1.61h9.72a2 2 0 002-1.61L23 6H6"/></svg>
+        {% if cart.item_count > 0 %}
+          <span class="header__cart-count" data-cart-count>{{ cart.item_count }}</span>
+        {% endif %}
+      </a>
+      <a href="/products/inscripcion-sede-2-guadalajara" class="header__cta btn btn--primary">Inscribirse</a>
+
+      <button class="header__menu-toggle" aria-label="Menu">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Accent line bottom -->
+  <div class="header__accent-line"></div>
+</header>
+
+<!-- Mobile Menu -->
+<div class="mobile-menu">
+  <div class="mobile-menu__inner">
+    <a href="/" class="mobile-menu__link">
+      <span class="mobile-menu__index">01</span>
+      <span>Home</span>
+    </a>
+    <a href="/products/inscripcion-sede-2-guadalajara" class="mobile-menu__link">
+      <span class="mobile-menu__index">02</span>
+      <span>Inscripciones</span>
+    </a>
+    <a href="/pages/ranking-2026" class="mobile-menu__link">
+      <span class="mobile-menu__index">03</span>
+      <span>Ranking 2026</span>
+    </a>
+    <a href="/pages/kit-rider" class="mobile-menu__link">
+      <span class="mobile-menu__index">04</span>
+      <span>Kit del Rider</span>
+    </a>
+    <a href="/pages/merch-oficial" class="mobile-menu__link">
+      <span class="mobile-menu__index">05</span>
+      <span>Merch Oficial</span>
+    </a>
+    <a href="/pages/ranking-2025" class="mobile-menu__link">
+      <span class="mobile-menu__index">06</span>
+      <span>Campeonato 2025</span>
+    </a>
+    <a href="/pages/bases-del-sorteo" class="mobile-menu__link">
+      <span class="mobile-menu__index">07</span>
+      <span>Sorteo FOX 40</span>
+    </a>
+    <a href="/cart" class="mobile-menu__link">
+      <span class="mobile-menu__index">—</span>
+      <span>Cart ({{ cart.item_count }})</span>
+    </a>
+  </div>
+
+  <div class="mobile-menu__footer">
+    {% if settings.social_instagram != blank %}
+      <a href="{{ settings.social_instagram }}" target="_blank" rel="noopener">Instagram</a>
+    {% endif %}
+    {% if settings.social_youtube != blank %}
+      <a href="{{ settings.social_youtube }}" target="_blank" rel="noopener">YouTube</a>
+    {% endif %}
+  </div>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const toggle = document.querySelector('.header__menu-toggle');
+    const mobileMenu = document.querySelector('.mobile-menu');
+
+    if (toggle && mobileMenu) {
+      toggle.addEventListener('click', function() {
+        toggle.classList.toggle('active');
+        mobileMenu.classList.toggle('is-open');
+        document.body.style.overflow = mobileMenu.classList.contains('is-open') ? 'hidden' : '';
+      });
+
+      mobileMenu.querySelectorAll('.mobile-menu__link').forEach(function(link) {
+        link.addEventListener('click', function() {
+          toggle.classList.remove('active');
+          mobileMenu.classList.remove('is-open');
+          document.body.style.overflow = '';
+        });
+      });
+    }
+  });
+</script>
+
+{% schema %}
+{
+  "name": "Header",
+  "settings": []
+}
+{% endschema %}

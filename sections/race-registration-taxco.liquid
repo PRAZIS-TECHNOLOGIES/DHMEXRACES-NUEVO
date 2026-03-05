@@ -1,0 +1,196 @@
+{% comment %}
+  Race Registration for Taxco (FINAL) - SEDE 5
+  SKELETON design system - uses base.css classes only
+{% endcomment %}
+
+<section class="section" style="padding-top: calc(var(--header-height) + var(--space-lg));">
+  <div class="container">
+    <div class="page-hero reveal">
+      <span class="page-hero__eyebrow">SEDE 5</span>
+      <h2 class="page-hero__title">{{ section.settings.title | default: 'Inscripciones Taxco 2026 - FINAL URBANO' }}</h2>
+      <p class="page-hero__subtitle">{{ section.settings.subtitle | default: 'Octubre 2026 • Taxco, Mexico' }}</p>
+    </div>
+
+    {% if section.settings.status == 'coming_soon' %}
+      <div class="callout reveal reveal--delay-1">
+        <div class="callout__icon">
+          <svg width="80" height="80" viewBox="0 0 80 80" fill="none">
+            <circle cx="40" cy="40" r="35" stroke="currentColor" stroke-width="3"/>
+            <path d="M40 20V40L52 52" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <div class="callout__content">
+          <h3 class="callout__title">PROXIMAMENTE</h3>
+          <p class="callout__text">{{ section.settings.coming_soon_message | default: 'Las inscripciones estaran disponibles pronto' }}</p>
+        </div>
+      </div>
+    {% else %}
+      <div class="reveal reveal--delay-1" style="margin-bottom: var(--space-xl);">
+        <div class="inscripcion__price-card">
+          <span class="inscripcion__price-label">Precio por inscripcion</span>
+          <div style="display: flex; align-items: baseline;">
+            <span class="inscripcion__price">{{ section.settings.price | default: '$1,300' }}</span>
+            <span class="inscripcion__price-currency">MXN</span>
+          </div>
+        </div>
+
+        <div class="ticket-card__features" style="max-width: 700px; margin: var(--space-md) auto 0; display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--space-sm);">
+          <div class="ticket-card__feature">
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M16.6667 5L7.50004 14.1667L3.33337 10" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <span>Numero de corredor oficial</span>
+          </div>
+          <div class="ticket-card__feature">
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M16.6667 5L7.50004 14.1667L3.33337 10" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <span>Mecanica Neutral Shimano</span>
+          </div>
+          <div class="ticket-card__feature">
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M16.6667 5L7.50004 14.1667L3.33337 10" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <span>Puntos campeonato nacional</span>
+          </div>
+          <div class="ticket-card__feature">
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M16.6667 5L7.50004 14.1667L3.33337 10" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <span>$100,000 MXN en premios</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="inscripcion__section reveal reveal--delay-2">
+        <h3 class="inscripcion__section-title">Selecciona tu categoria</h3>
+
+        <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--space-sm);">
+          <button type="button" class="inscripcion__cat-btn" onclick="goToProductTaxco('Elite Hombres')">
+            <span class="inscripcion__cat-name">Elite Hombres</span>
+            <span class="inscripcion__cat-info">{{ section.settings.price | default: '$1,300' }} MXN</span>
+          </button>
+
+          <button type="button" class="inscripcion__cat-btn" onclick="goToProductTaxco('Elite Mujeres')">
+            <span class="inscripcion__cat-name">Elite Mujeres</span>
+            <span class="inscripcion__cat-info">{{ section.settings.price | default: '$1,300' }} MXN</span>
+          </button>
+
+          <button type="button" class="inscripcion__cat-btn" onclick="goToProductTaxco('Sub-Elite Hombres')">
+            <span class="inscripcion__cat-name">Sub-Elite Hombres</span>
+            <span class="inscripcion__cat-info">{{ section.settings.price | default: '$1,300' }} MXN</span>
+          </button>
+
+          <button type="button" class="inscripcion__cat-btn" onclick="goToProductTaxco('Sub-Elite Mujeres')">
+            <span class="inscripcion__cat-name">Sub-Elite Mujeres</span>
+            <span class="inscripcion__cat-info">{{ section.settings.price | default: '$1,300' }} MXN</span>
+          </button>
+
+          <button type="button" class="inscripcion__cat-btn" onclick="goToProductTaxco('Master A (30-39 años)')">
+            <span class="inscripcion__cat-name">Master A (30-39 años)</span>
+            <span class="inscripcion__cat-info">{{ section.settings.price | default: '$1,300' }} MXN</span>
+          </button>
+
+          <button type="button" class="inscripcion__cat-btn" onclick="goToProductTaxco('Master B (40-49 años)')">
+            <span class="inscripcion__cat-name">Master B (40-49 años)</span>
+            <span class="inscripcion__cat-info">{{ section.settings.price | default: '$1,300' }} MXN</span>
+          </button>
+
+          <button type="button" class="inscripcion__cat-btn" onclick="goToProductTaxco('Master C (50+ años)')">
+            <span class="inscripcion__cat-name">Master C (50+ años)</span>
+            <span class="inscripcion__cat-info">{{ section.settings.price | default: '$1,300' }} MXN</span>
+          </button>
+
+          <button type="button" class="inscripcion__cat-btn" onclick="goToProductTaxco('Juvenil Varonil (17-19 años)')">
+            <span class="inscripcion__cat-name">Juvenil Varonil (17-19 años)</span>
+            <span class="inscripcion__cat-info">{{ section.settings.price | default: '$1,300' }} MXN</span>
+          </button>
+
+          <button type="button" class="inscripcion__cat-btn" onclick="goToProductTaxco('Juvenil Femenil (17-19 años)')">
+            <span class="inscripcion__cat-name">Juvenil Femenil (17-19 años)</span>
+            <span class="inscripcion__cat-info">{{ section.settings.price | default: '$1,300' }} MXN</span>
+          </button>
+
+          <button type="button" class="inscripcion__cat-btn" onclick="goToProductTaxco('Infantil Varonil (15-16 años)')">
+            <span class="inscripcion__cat-name">Infantil Varonil (15-16 años)</span>
+            <span class="inscripcion__cat-info">{{ section.settings.price | default: '$1,300' }} MXN</span>
+          </button>
+
+          <button type="button" class="inscripcion__cat-btn" onclick="goToProductTaxco('Infantil Femenil (15-16 años)')">
+            <span class="inscripcion__cat-name">Infantil Femenil (15-16 años)</span>
+            <span class="inscripcion__cat-info">{{ section.settings.price | default: '$1,300' }} MXN</span>
+          </button>
+
+          <button type="button" class="inscripcion__cat-btn" onclick="goToProductTaxco('Principiantes Varonil')">
+            <span class="inscripcion__cat-name">Principiantes Varonil</span>
+            <span class="inscripcion__cat-info">{{ section.settings.price | default: '$1,300' }} MXN</span>
+          </button>
+
+          <button type="button" class="inscripcion__cat-btn" onclick="goToProductTaxco('Principiantes Femenil')">
+            <span class="inscripcion__cat-name">Principiantes Femenil</span>
+            <span class="inscripcion__cat-info">{{ section.settings.price | default: '$1,300' }} MXN</span>
+          </button>
+        </div>
+      </div>
+    {% endif %}
+  </div>
+</section>
+
+<script>
+  function goToProductTaxco(categoryName) {
+    const productUrl = '{{ section.settings.product_url | default: "/products/inscripcion-sede-5-taxco-final-urbano" }}';
+    sessionStorage.setItem('selectedCategory', categoryName);
+    window.location.href = productUrl;
+  }
+</script>
+
+{% schema %}
+{
+  "name": "Registro Taxco",
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Titulo",
+      "default": "Inscripciones Taxco 2026 - FINAL URBANO"
+    },
+    {
+      "type": "text",
+      "id": "subtitle",
+      "label": "Subtitulo",
+      "default": "Octubre 2026 • Taxco, Mexico"
+    },
+    {
+      "type": "text",
+      "id": "price",
+      "label": "Precio",
+      "default": "$1,300"
+    },
+    {
+      "type": "url",
+      "id": "product_url",
+      "label": "URL del Producto"
+    },
+    {
+      "type": "select",
+      "id": "status",
+      "label": "Estado",
+      "options": [
+        {
+          "value": "active",
+          "label": "Activo"
+        },
+        {
+          "value": "coming_soon",
+          "label": "Proximamente"
+        }
+      ],
+      "default": "coming_soon"
+    },
+    {
+      "type": "text",
+      "id": "coming_soon_message",
+      "label": "Mensaje Proximamente",
+      "default": "Las inscripciones estaran disponibles pronto"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Registro Taxco",
+      "category": "DHMEXRACES"
+    }
+  ]
+}
+{% endschema %}

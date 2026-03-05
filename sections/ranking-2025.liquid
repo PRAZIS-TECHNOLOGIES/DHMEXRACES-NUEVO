@@ -1,0 +1,298 @@
+{% comment %}
+  Ranking Section for DHMEXRACES - Campeonato 2025
+  Historical results from the inaugural championship
+  Editorial design composition
+{% endcomment %}
+
+<section class="ranking-section section">
+  <div class="container">
+    <!-- Page Hero - Left-aligned editorial style -->
+    {% if section.settings.title != blank or section.settings.subtitle != blank %}
+      <div class="page-hero reveal">
+        {% if section.settings.title != blank %}
+          <span class="page-hero__eyebrow">Temporada Inaugural</span>
+          <h1 class="page-hero__title">{{ section.settings.title }}</h1>
+        {% endif %}
+        {% if section.settings.subtitle != blank %}
+          <p class="page-hero__subtitle">{{ section.settings.subtitle }}</p>
+        {% endif %}
+      </div>
+    {% endif %}
+
+    <!-- Historical Banner - Callout with border-left accent -->
+    <div class="callout reveal">
+      <span class="callout__icon">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+          <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </span>
+      <span class="callout__text">{{ section.settings.historical_message }}</span>
+    </div>
+
+    <!-- Overall Button -->
+    <div class="reveal" style="margin-bottom: 60px;">
+      <a href="/pages/ranking-overall-2025" class="btn btn--primary" style="display: inline-flex; align-items: center; gap: 10px;">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+          <path d="M3 3h18v18H3V3zm16 16V5H5v14h14zM7 7h10v2H7V7zm0 4h10v2H7v-2zm0 4h7v2H7v-2z" fill="currentColor"/>
+        </svg>
+        <span>VER OVERALL 2025</span>
+      </a>
+    </div>
+
+    <div style="display: grid; gap: 48px;">
+      {% for block in section.blocks %}
+        <div class="ranking-sede reveal" {{ block.shopify_attributes }}>
+          <!-- Sede Card Header -->
+          <div class="ranking-sede-card">
+            <div class="ranking-sede-card__header">
+              <span class="ranking-sede-card__number">{{ forloop.index }}</span>
+              <div class="ranking-sede-card__info">
+                <h2 class="ranking-sede-card__name">{{ block.settings.race_name | upcase }}</h2>
+                <span class="ranking-sede-card__date">{{ block.settings.race_date }}</span>
+              </div>
+            </div>
+          </div>
+
+          {% if block.settings.status == 'upcoming' %}
+            <div class="ranking-sede__content" style="padding: 80px 32px; text-align: center;">
+              <div style="margin-bottom: 24px; color: var(--accent);">
+                <svg width="80" height="80" viewBox="0 0 80 80" fill="none">
+                  <circle cx="40" cy="40" r="35" stroke="currentColor" stroke-width="3"/>
+                  <path d="M40 20V40L52 52" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
+                </svg>
+              </div>
+              <h3 class="heading-sm">PROXIMAMENTE</h3>
+              <p class="body-text">Los resultados se publicaran despues de la carrera</p>
+            </div>
+          {% else %}
+            <div class="ranking-sede__content">
+              <!-- Category Filters -->
+              <div class="ranking-filters" data-block-id="block-2025-{{ forloop.index }}"></div>
+
+              <table class="ranking-table ranking-table--editorial" data-table-id="table-2025-{{ forloop.index }}">
+                <thead>
+                  <tr>
+                    <th>POS</th>
+                    <th>CORREDOR</th>
+                    <th>CATEGORIA</th>
+                    <th>EQUIPO</th>
+                    <th>TIEMPO</th>
+                    <th>PUNTOS</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% assign results = block.settings.results_data | split: '||' %}
+                  {% if results.size > 0 and results[0] != blank %}
+                    {% for result in results %}
+                      {% assign result_data = result | split: '|' %}
+                      {% if result_data.size >= 6 %}
+                        {% assign position = result_data[0] %}
+                        {% assign rider_name = result_data[1] %}
+                        {% assign category = result_data[2] %}
+                        {% assign team = result_data[3] %}
+                        {% assign time = result_data[4] %}
+                        {% assign points = result_data[5] %}
+
+                        <tr data-category="{{ category }}" data-position="{{ position }}">
+                          <td>
+                            <span class="ranking-medal{% if position == '1' %} ranking-medal--gold{% elsif position == '2' %} ranking-medal--silver{% elsif position == '3' %} ranking-medal--bronze{% endif %}">{{ position }}</span>
+                          </td>
+                          <td>
+                            <strong>{{ rider_name }}</strong>
+                          </td>
+                          <td>
+                            <span class="tag">{{ category }}</span>
+                          </td>
+                          <td>{{ team | default: 'Sin equipo' }}</td>
+                          <td>{{ time }}</td>
+                          <td>
+                            <strong>{{ points }}</strong>
+                          </td>
+                        </tr>
+                      {% endif %}
+                    {% endfor %}
+                  {% else %}
+                    <tr>
+                      <td colspan="6" style="text-align: center; padding: 60px 20px; color: var(--text-secondary);">No hay resultados disponibles</td>
+                    </tr>
+                  {% endif %}
+                </tbody>
+              </table>
+            </div>
+          {% endif %}
+        </div>
+      {% endfor %}
+
+      {% if section.blocks.size == 0 %}
+        <div class="page-hero reveal" style="padding: 100px 20px;">
+          <svg width="100" height="100" viewBox="0 0 100 100" fill="none">
+            <path d="M50 10L61.8 38.2L92 43.1L71 63.6L76.4 93.6L50 79.5L23.6 93.6L29 63.6L8 43.1L38.2 38.2L50 10Z" stroke="var(--accent)" stroke-width="3" fill="none"/>
+          </svg>
+          <h2 class="page-hero__title">Agrega resultados desde el editor</h2>
+          <p class="page-hero__subtitle">Configura las carreras y sus resultados desde el personalizador de tema</p>
+        </div>
+      {% endif %}
+    </div>
+  </div>
+</section>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    // Procesar cada tabla de ranking
+    const tables = document.querySelectorAll('[data-table-id^="table-2025-"]');
+
+    tables.forEach((table) => {
+      const tableId = table.getAttribute('data-table-id');
+      const blockIndex = tableId.replace('table-2025-', '');
+      const rows = table.querySelectorAll('tr[data-category]');
+      const filterContainer = document.querySelector(`[data-block-id="block-2025-${blockIndex}"]`);
+
+      if (!rows.length || !filterContainer) return;
+
+      // Obtener categorias unicas
+      const categories = new Set();
+      rows.forEach(row => {
+        const category = row.getAttribute('data-category');
+        if (category && category.trim()) {
+          categories.add(category.trim());
+        }
+      });
+
+      // Si hay mas de una categoria, crear botones de filtro
+      if (categories.size > 1) {
+        // Botones para cada categoria
+        let isFirst = true;
+        categories.forEach(category => {
+          const button = document.createElement('button');
+          button.className = isFirst ? 'ranking-filter is-active' : 'ranking-filter';
+          button.textContent = category;
+          button.setAttribute('data-category', category);
+          filterContainer.appendChild(button);
+          isFirst = false;
+        });
+
+        // Event listeners para filtrar
+        const filterButtons = filterContainer.querySelectorAll('.ranking-filter');
+
+        function filterByCategory(selectedCategory) {
+          let visiblePosition = 1;
+
+          rows.forEach(row => {
+            const rowCategory = row.getAttribute('data-category');
+
+            if (rowCategory === selectedCategory) {
+              row.style.display = '';
+
+              // Actualizar numero de posicion
+              const medalElement = row.querySelector('.ranking-medal');
+              if (medalElement) {
+                medalElement.textContent = visiblePosition;
+
+                // Update medal class
+                medalElement.className = 'ranking-medal';
+                if (visiblePosition === 1) medalElement.classList.add('ranking-medal--gold');
+                else if (visiblePosition === 2) medalElement.classList.add('ranking-medal--silver');
+                else if (visiblePosition === 3) medalElement.classList.add('ranking-medal--bronze');
+              }
+
+              visiblePosition++;
+            } else {
+              row.style.display = 'none';
+            }
+          });
+        }
+
+        filterButtons.forEach(button => {
+          button.addEventListener('click', function() {
+            const selectedCategory = this.getAttribute('data-category');
+
+            // Actualizar botones activos
+            filterButtons.forEach(btn => btn.classList.remove('is-active'));
+            this.classList.add('is-active');
+
+            // Filtrar
+            filterByCategory(selectedCategory);
+          });
+        });
+
+        // Filtrar por la primera categoria al cargar
+        const firstCategory = filterButtons[0].getAttribute('data-category');
+        filterByCategory(firstCategory);
+      }
+    });
+  });
+</script>
+
+{% schema %}
+{
+  "name": "Ranking 2025",
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Titulo",
+      "default": "Campeonato 2025"
+    },
+    {
+      "type": "textarea",
+      "id": "subtitle",
+      "label": "Subtitulo",
+      "default": "Resultados oficiales de la temporada inaugural"
+    },
+    {
+      "type": "textarea",
+      "id": "historical_message",
+      "label": "Mensaje Historico",
+      "default": "Los pioneros que marcaron el inicio de una nueva era en el downhill mexicano. Resultados oficiales de la primera temporada DHMEXRACES."
+    }
+  ],
+  "blocks": [
+    {
+      "type": "race",
+      "name": "Carrera",
+      "settings": [
+        {
+          "type": "text",
+          "id": "race_name",
+          "label": "Nombre de la Sede",
+          "default": "Guanajuato"
+        },
+        {
+          "type": "text",
+          "id": "race_date",
+          "label": "Fecha",
+          "default": "12 de Diciembre, 2025"
+        },
+        {
+          "type": "select",
+          "id": "status",
+          "label": "Estado",
+          "options": [
+            {
+              "value": "upcoming",
+              "label": "Proximamente"
+            },
+            {
+              "value": "completed",
+              "label": "Completada"
+            }
+          ],
+          "default": "completed"
+        },
+        {
+          "type": "textarea",
+          "id": "results_data",
+          "label": "Resultados",
+          "info": "Formato: posicion|nombre|categoria|equipo|tiempo|puntos separados por ||. Ejemplo: 1|Juan Perez|Elite|Team X|2:15:30|100||2|Maria Gonzalez|Amateur|Team Y|2:20:45|80"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Ranking 2025",
+      "category": "DHMEXRACES"
+    }
+  ]
+}
+{% endschema %}

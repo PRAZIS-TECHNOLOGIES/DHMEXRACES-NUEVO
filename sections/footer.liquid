@@ -1,0 +1,99 @@
+<footer class="footer">
+  <div class="container">
+    <div class="footer__grid">
+      <!-- Brand -->
+      <div class="footer__brand">
+        <div class="footer__logo">DHMEX<span>RACES</span></div>
+        <p class="footer__description">
+          {{ section.settings.description | default: 'El campeonato nacional de downhill MTB mas grande de Mexico. Copa Scott DHMEXRACES — Temporada 2026.' }}
+        </p>
+        <div class="footer__social" style="margin-top: var(--space-sm);">
+          {% if settings.social_instagram != blank %}
+            <a href="{{ settings.social_instagram }}" target="_blank" rel="noopener" class="footer__social-link" aria-label="Instagram">IG</a>
+          {% endif %}
+          {% if settings.social_youtube != blank %}
+            <a href="{{ settings.social_youtube }}" target="_blank" rel="noopener" class="footer__social-link" aria-label="YouTube">YT</a>
+          {% endif %}
+          {% if settings.social_facebook != blank %}
+            <a href="{{ settings.social_facebook }}" target="_blank" rel="noopener" class="footer__social-link" aria-label="Facebook">FB</a>
+          {% endif %}
+          {% if settings.social_tiktok != blank %}
+            <a href="{{ settings.social_tiktok }}" target="_blank" rel="noopener" class="footer__social-link" aria-label="TikTok">TK</a>
+          {% endif %}
+        </div>
+      </div>
+
+      <!-- Campeonato -->
+      <div>
+        <h4 class="footer__column-title">Campeonato</h4>
+        <div class="footer__links">
+          <a href="/#about" class="footer__link">Sobre el campeonato</a>
+          <a href="/#sedes" class="footer__link">Inscripciones</a>
+          <a href="/pages/ranking-2026" class="footer__link">Ranking 2026</a>
+          <a href="/pages/ranking-overall" class="footer__link">Ranking Overall</a>
+          <a href="/pages/kit-rider" class="footer__link">Kit del Rider</a>
+          <a href="/pages/bases-del-sorteo" class="footer__link">Sorteo FOX 40</a>
+        </div>
+      </div>
+
+      <!-- Tienda -->
+      <div>
+        <h4 class="footer__column-title">Tienda</h4>
+        <div class="footer__links">
+          <a href="/pages/merch-oficial" class="footer__link">Merch Oficial</a>
+          <a href="/cart" class="footer__link">Carrito</a>
+          <a href="/policies/refund-policy" class="footer__link">Devoluciones</a>
+          <a href="/policies/shipping-policy" class="footer__link">Envios</a>
+        </div>
+      </div>
+
+      <!-- Contacto -->
+      <div>
+        <h4 class="footer__column-title">Contacto</h4>
+        <div class="footer__links">
+          {% if section.settings.email != blank %}
+            <a href="mailto:{{ section.settings.email }}" class="footer__link">{{ section.settings.email }}</a>
+          {% endif %}
+          <a href="{{ settings.social_instagram }}" target="_blank" rel="noopener" class="footer__link">@dhmex_races</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bottom -->
+    <div class="footer__bottom">
+      <span class="footer__copyright">&copy; {{ 'now' | date: '%Y' }} DHMEXRACES. Todos los derechos reservados.</span>
+      <span class="footer__credit">Desarrollado por <a href="{{ section.settings.credit_url | default: '#' }}" target="_blank" rel="noopener">{{ section.settings.credit_name | default: 'PRAZIS DEV' }}</a></span>
+    </div>
+  </div>
+</footer>
+
+{% schema %}
+{
+  "name": "Footer",
+  "settings": [
+    {
+      "type": "textarea",
+      "id": "description",
+      "label": "Descripcion",
+      "default": "El campeonato nacional de downhill MTB mas grande de Mexico. Copa Scott DHMEXRACES — Temporada 2026."
+    },
+    {
+      "type": "text",
+      "id": "email",
+      "label": "Email de contacto",
+      "default": "endhurorace@gmail.com"
+    },
+    {
+      "type": "text",
+      "id": "credit_name",
+      "label": "Credito - Nombre",
+      "default": "PRAZIS DEV"
+    },
+    {
+      "type": "url",
+      "id": "credit_url",
+      "label": "Credito - URL"
+    }
+  ]
+}
+{% endschema %}

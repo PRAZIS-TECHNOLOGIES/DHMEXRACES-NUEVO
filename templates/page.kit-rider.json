@@ -1,0 +1,28 @@
+{
+  "sections": {
+    "main": {
+      "type": "kit-rider",
+      "settings": {
+        "subtitle": "Incluido en tu inscripcion",
+        "title": "Kit del Rider",
+        "prizes_subtitle": "Premios por sede",
+        "prizes_title": "Premiacion",
+        "cta_text": "Inscribirse Ahora"
+      },
+      "blocks": {
+        "item_1": { "type": "item", "settings": { "icon": "medal", "title": "Medalla Finisher", "description": "Medalla conmemorativa para todos los que crucen la meta" } },
+        "item_2": { "type": "item", "settings": { "icon": "tshirt", "title": "Jersey Oficial", "description": "Jersey exclusivo de la sede" } },
+        "item_3": { "type": "item", "settings": { "icon": "timer", "title": "Cronometraje Profesional", "description": "Chip de cronometraje individual" } },
+        "item_4": { "type": "item", "settings": { "icon": "plate", "title": "Placa de Numero", "description": "Placa con tu numero de competidor" } },
+        "item_5": { "type": "item", "settings": { "icon": "camera", "title": "Fotos y Video", "description": "Cobertura profesional de la carrera" } },
+        "item_6": { "type": "item", "settings": { "icon": "ambulance", "title": "Servicio Medico", "description": "Ambulancia y paramedicos en pista" } },
+        "item_7": { "type": "item", "settings": { "icon": "beer", "title": "Cerveza de Cortesia", "description": "Una cerveza al cruzar la meta" } },
+        "prize_1": { "type": "prize", "settings": { "category": "1er Lugar Elite/PRO", "value": "$15,000 MXN" } },
+        "prize_2": { "type": "prize", "settings": { "category": "2do Lugar Elite/PRO", "value": "$10,000 MXN" } },
+        "prize_3": { "type": "prize", "settings": { "category": "3er Lugar Elite/PRO", "value": "$5,000 MXN" } }
+      },
+      "block_order": ["item_1", "item_2", "item_3", "item_4", "item_5", "item_6", "item_7", "prize_1", "prize_2", "prize_3"]
+    }
+  },
+  "order": ["main"]
+}

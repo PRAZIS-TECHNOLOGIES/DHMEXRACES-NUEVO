@@ -1,0 +1,265 @@
+{% comment %}
+  Race Dates Section - DHMEX PRO
+  Shows race cards with open/closed/upcoming status
+{% endcomment %}
+
+<section class="section race-dates" id="sedes">
+  <div class="container">
+    <div class="section__header">
+      <div class="section__header-left">
+        <span class="label">{{ section.settings.subtitle | default: 'Temporada 2026' }}</span>
+        <h2 class="heading-lg">{{ section.settings.title | default: 'Sedes' }}</h2>
+      </div>
+      {% if section.settings.description != blank %}
+        <p class="body-text" style="max-width: 480px;">{{ section.settings.description }}</p>
+      {% endif %}
+    </div>
+
+    <div class="race-grid">
+      {% for block in section.blocks %}
+        {% if block.type == 'race' %}
+          <div class="race-card reveal" {{ block.shopify_attributes }}>
+            {% if block.settings.image != blank %}
+              <div class="race-card__image">
+                <img
+                  src="{{ block.settings.image | image_url: width: 800 }}"
+                  alt="{{ block.settings.title }}"
+                  loading="lazy"
+                  width="800"
+                  height="500"
+                >
+                <div class="race-card__overlay"></div>
+              </div>
+            {% else %}
+              <div class="race-card__image race-card__image--placeholder">
+                <div class="race-card__overlay"></div>
+              </div>
+            {% endif %}
+
+            <div class="race-card__content">
+              <div class="race-card__top">
+                <span class="race-card__round">{{ block.settings.round | default: 'R1' }}</span>
+                <span class="race-card__status race-card__status--{{ block.settings.status }}">
+                  {% case block.settings.status %}
+                    {% when 'open' %}
+                      Inscripciones Abiertas
+                    {% when 'upcoming' %}
+                      Proximamente
+                    {% when 'closed' %}
+                      Cerrada
+                  {% endcase %}
+                </span>
+              </div>
+
+              <div class="race-card__info">
+                <h3 class="race-card__title">{{ block.settings.title }}</h3>
+
+                <div class="race-card__meta">
+                  {% if block.settings.date != blank %}
+                    <span class="race-card__meta-item">
+                      <svg width="14" height="14" viewBox="0 0 20 20" fill="none">
+                        <path d="M6 2V5M14 2V5M3 8H17M5 4H15C16.1046 4 17 4.89543 17 6V16C17 17.1046 16.1046 18 15 18H5C3.89543 18 3 17.1046 3 16V6C3 4.89543 3.89543 4 5 4Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                      </svg>
+                      {{ block.settings.date }}
+                    </span>
+                  {% endif %}
+                  {% if block.settings.location != blank %}
+                    <span class="race-card__meta-item">
+                      <svg width="14" height="14" viewBox="0 0 20 20" fill="none">
+                        <path d="M10 2C7.23858 2 5 4.23858 5 7C5 11.5 10 18 10 18C10 18 15 11.5 15 7C15 4.23858 12.7614 2 10 2Z" stroke="currentColor" stroke-width="1.5"/>
+                        <circle cx="10" cy="7" r="2" stroke="currentColor" stroke-width="1.5"/>
+                      </svg>
+                      {{ block.settings.location }}
+                    </span>
+                  {% endif %}
+                  {% if block.settings.elevation != blank %}
+                    <span class="race-card__meta-item">
+                      <svg width="14" height="14" viewBox="0 0 20 20" fill="none">
+                        <path d="M3 17L8 7L13 14L17 10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                      </svg>
+                      {{ block.settings.elevation }}
+                    </span>
+                  {% endif %}
+                </div>
+
+                {% if block.settings.description != blank %}
+                  <p class="race-card__desc">{{ block.settings.description }}</p>
+                {% endif %}
+              </div>
+
+              {% if block.settings.link != blank %}
+                <a href="{{ block.settings.link }}" class="btn {% if block.settings.status == 'open' %}btn--primary{% else %}btn--outline{% endif %} race-card__cta">
+                  {% case block.settings.status %}
+                    {% when 'open' %}
+                      Inscribirse
+                    {% when 'upcoming' %}
+                      Ver Sede
+                    {% when 'closed' %}
+                      Ver Sede
+                  {% endcase %}
+                </a>
+                {% if block.settings.status == 'closed' and block.settings.results_link != blank %}
+                  <a href="{{ block.settings.results_link }}" class="btn btn--outline race-card__cta" style="margin-top: 8px;">Ver Resultados</a>
+                {% endif %}
+              {% endif %}
+            </div>
+          </div>
+        {% endif %}
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Fechas de Carrera",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "subtitle",
+      "label": "Subtitulo",
+      "default": "Temporada 2026"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Titulo",
+      "default": "Sedes"
+    },
+    {
+      "type": "textarea",
+      "id": "description",
+      "label": "Descripcion"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "race",
+      "name": "Carrera",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Imagen"
+        },
+        {
+          "type": "text",
+          "id": "round",
+          "label": "Ronda",
+          "default": "R1"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Titulo",
+          "default": "Guanajuato"
+        },
+        {
+          "type": "text",
+          "id": "date",
+          "label": "Fecha",
+          "default": "15 Mar 2026"
+        },
+        {
+          "type": "text",
+          "id": "location",
+          "label": "Ubicacion",
+          "default": "Guanajuato, GTO"
+        },
+        {
+          "type": "text",
+          "id": "elevation",
+          "label": "Elevacion",
+          "default": "2,100 msnm"
+        },
+        {
+          "type": "textarea",
+          "id": "description",
+          "label": "Descripcion"
+        },
+        {
+          "type": "select",
+          "id": "status",
+          "label": "Estado",
+          "options": [
+            { "value": "upcoming", "label": "Proximamente" },
+            { "value": "open", "label": "Inscripciones Abiertas" },
+            { "value": "closed", "label": "Cerrada" }
+          ],
+          "default": "upcoming"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Link de inscripcion"
+        },
+        {
+          "type": "url",
+          "id": "results_link",
+          "label": "Link a resultados (para carreras cerradas)"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Fechas de Carrera",
+      "blocks": [
+        {
+          "type": "race",
+          "settings": {
+            "round": "R1",
+            "title": "Guanajuato",
+            "date": "15 Mar 2026",
+            "location": "Guanajuato, GTO",
+            "elevation": "2,100 msnm",
+            "status": "closed"
+          }
+        },
+        {
+          "type": "race",
+          "settings": {
+            "round": "R2",
+            "title": "Puebla",
+            "date": "26 Abr 2026",
+            "location": "Puebla, PUE",
+            "elevation": "2,160 msnm",
+            "status": "open"
+          }
+        },
+        {
+          "type": "race",
+          "settings": {
+            "round": "R3",
+            "title": "Guadalajara",
+            "date": "14 Jun 2026",
+            "location": "Guadalajara, JAL",
+            "status": "upcoming"
+          }
+        },
+        {
+          "type": "race",
+          "settings": {
+            "round": "R4",
+            "title": "Ixtapan",
+            "date": "9 Ago 2026",
+            "location": "Ixtapan de la Sal, MEX",
+            "status": "upcoming"
+          }
+        },
+        {
+          "type": "race",
+          "settings": {
+            "round": "R5",
+            "title": "Taxco",
+            "date": "18 Oct 2026",
+            "location": "Taxco, GRO",
+            "status": "upcoming"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

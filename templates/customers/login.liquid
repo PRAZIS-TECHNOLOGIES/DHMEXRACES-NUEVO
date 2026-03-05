@@ -1,0 +1,158 @@
+{% comment %}
+  Login Page for DHMEXRACES
+  SKELETON design system - uses base.css classes only
+{% endcomment %}
+
+<section class="auth">
+  <div class="auth__card">
+
+    <div class="auth__brand">
+      <h1>DHMEXRACES</h1>
+      <p>COPA SCOTT 2026</p>
+    </div>
+
+    <!-- Login Form -->
+    <div id="LoginFormContent">
+      <h2 class="auth__title">Iniciar Sesion</h2>
+      <p class="auth__subtitle">Accede a tu cuenta de corredor</p>
+
+      {% form 'customer_login' %}
+        {% if form.errors %}
+          <div class="auth__error">
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+              <circle cx="10" cy="10" r="8" stroke="currentColor" stroke-width="2"/>
+              <path d="M10 6V10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+              <circle cx="10" cy="14" r="0.5" fill="currentColor"/>
+            </svg>
+            <div>
+              <strong>Error al iniciar sesion</strong>
+              {{ form.errors | default_errors }}
+            </div>
+          </div>
+        {% endif %}
+
+        <div class="auth__field">
+          <label for="CustomerEmail" class="auth__label">Correo Electronico</label>
+          <input
+            type="email"
+            name="customer[email]"
+            id="CustomerEmail"
+            class="auth__input"
+            autocomplete="email"
+            autocapitalize="off"
+            placeholder="corredor@ejemplo.com"
+            required>
+        </div>
+
+        {% if form.password_needed %}
+          <div class="auth__field">
+            <label for="CustomerPassword" class="auth__label">Contrasena</label>
+            <input
+              type="password"
+              name="customer[password]"
+              id="CustomerPassword"
+              class="auth__input"
+              placeholder="••••••••"
+              required>
+          </div>
+        {% endif %}
+
+        <button type="submit" class="auth__submit">Iniciar Sesion</button>
+
+        <div class="auth__links">
+          <a href="#recover" class="auth__link" id="RecoverPassword">Olvidaste tu contrasena?</a>
+        </div>
+      {% endform %}
+
+      <div class="auth__links" style="margin-top: var(--space-md); padding-top: var(--space-md); border-top: 1px solid rgba(0,0,0,0.06);">
+        <p style="color: var(--text-secondary); font-size: 13px; margin: 0 0 var(--space-xs) 0;">No tienes cuenta?</p>
+        <a href="{{ routes.account_register_url }}" class="auth__link">Crear Cuenta de Corredor</a>
+      </div>
+
+      {% if shop.checkout.guest_login %}
+        <div class="auth__links" style="margin-top: var(--space-sm);">
+          <p style="color: var(--text-secondary); font-size: 13px; margin: 0 0 var(--space-xs) 0;">O continua como invitado</p>
+          <a href="{{ routes.cart_url }}" class="auth__link">Ir al Carrito</a>
+        </div>
+      {% endif %}
+    </div>
+
+    <!-- Password Recovery Form (Hidden by default) -->
+    <div id="RecoverPasswordForm" style="display: none;">
+      <h2 class="auth__title">Recuperar Contrasena</h2>
+      <p class="auth__subtitle">Te enviaremos un correo para restablecer tu contrasena</p>
+
+      {% form 'recover_customer_password' %}
+        {% if form.posted_successfully? %}
+          <div class="auth__success">
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+              <circle cx="10" cy="10" r="8" stroke="currentColor" stroke-width="2"/>
+              <path d="M7 10L9 12L13 8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            <p>Te hemos enviado un correo con instrucciones para recuperar tu contrasena.</p>
+          </div>
+        {% endif %}
+
+        {% if form.errors %}
+          <div class="auth__error">
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+              <circle cx="10" cy="10" r="8" stroke="currentColor" stroke-width="2"/>
+              <path d="M10 6V10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+              <circle cx="10" cy="14" r="0.5" fill="currentColor"/>
+            </svg>
+            <div>{{ form.errors | default_errors }}</div>
+          </div>
+        {% endif %}
+
+        <div class="auth__field">
+          <label for="RecoverEmail" class="auth__label">Correo Electronico</label>
+          <input
+            type="email"
+            name="email"
+            id="RecoverEmail"
+            class="auth__input"
+            autocomplete="email"
+            placeholder="corredor@ejemplo.com"
+            required>
+        </div>
+
+        <button type="submit" class="auth__submit">Enviar Instrucciones</button>
+
+        <div class="auth__links">
+          <a href="#login" class="auth__link" id="HideRecoverPasswordLink">Volver a Iniciar Sesion</a>
+        </div>
+      {% endform %}
+    </div>
+
+  </div>
+</section>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const recoverLink = document.getElementById('RecoverPassword');
+    const hideRecoverLink = document.getElementById('HideRecoverPasswordLink');
+    const loginForm = document.getElementById('LoginFormContent');
+    const recoverForm = document.getElementById('RecoverPasswordForm');
+
+    if (recoverLink) {
+      recoverLink.addEventListener('click', function(e) {
+        e.preventDefault();
+        loginForm.style.display = 'none';
+        recoverForm.style.display = 'block';
+      });
+    }
+
+    if (hideRecoverLink) {
+      hideRecoverLink.addEventListener('click', function(e) {
+        e.preventDefault();
+        recoverForm.style.display = 'none';
+        loginForm.style.display = 'block';
+      });
+    }
+
+    if (window.location.hash === '#recover') {
+      loginForm.style.display = 'none';
+      recoverForm.style.display = 'block';
+    }
+  });
+</script>

@@ -1,0 +1,583 @@
+{% comment %}
+  Registration Form - DHMEX PRO
+  Multi-step participant data collection
+  Reads cart data from sessionStorage, collects participant info,
+  submits as cart attributes, redirects to checkout
+{% endcomment %}
+
+<section class="section registration">
+  <div class="container">
+    <div class="section__header">
+      <div class="section__header-left">
+        <span class="label">Registro</span>
+        <h2 class="heading-lg">Formulario de Inscripcion</h2>
+      </div>
+    </div>
+
+    <div id="registrationNoData" style="display: none; text-align: center; padding: var(--space-xl) 0;">
+      <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="var(--text-secondary)" stroke-width="1.5">
+        <circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/>
+      </svg>
+      <p class="heading-sm" style="margin-top: var(--space-sm);">No hay datos de inscripcion</p>
+      <p class="label" style="margin-top: 8px;">Agrega inscripciones al carrito primero</p>
+      <a href="/#sedes" class="btn btn--primary" style="margin-top: var(--space-md);">Ver inscripciones</a>
+    </div>
+
+    <div id="registrationContent" style="display: none;">
+      <div class="registration__progress">
+        <div class="registration__progress-bar">
+          <div class="registration__progress-fill" id="progressFill" style="width: 0%;"></div>
+        </div>
+        <span class="label" id="progressText">Participante 1 de 1</span>
+      </div>
+
+      <div class="registration__form-area" id="formArea">
+      </div>
+
+      <div class="registration__nav">
+        <button type="button" class="btn btn--outline" id="btnPrev" onclick="previousForm()" style="display: none;">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>
+          Anterior
+        </button>
+        <button type="button" class="btn btn--primary btn--large" id="btnNext" onclick="nextForm()">
+          Siguiente
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+        </button>
+        <button type="button" class="btn btn--primary btn--large" id="btnSubmit" onclick="submitAllForms()" style="display: none;">
+          Proceder al Pago
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+        </button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .registration {
+    padding: var(--space-lg) 0;
+    min-height: 70vh;
+  }
+  .registration__progress {
+    margin-bottom: var(--space-md);
+  }
+  .registration__progress-bar {
+    width: 100%;
+    height: 4px;
+    background: rgba(0,0,0,0.08);
+    border-radius: 2px;
+    overflow: hidden;
+    margin-bottom: 8px;
+  }
+  .registration__progress-fill {
+    height: 100%;
+    background: var(--accent);
+    border-radius: 2px;
+    transition: width 0.3s ease;
+  }
+  .registration__form-area {
+    max-width: 640px;
+  }
+  .registration__form-card {
+    display: none;
+    padding: var(--space-md);
+    border: 1px solid rgba(0,0,0,0.08);
+    border-radius: 8px;
+    background: var(--bg-secondary);
+  }
+  .registration__form-card.is-active {
+    display: block;
+  }
+  .registration__form-header {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    margin-bottom: var(--space-md);
+    padding-bottom: var(--space-sm);
+    border-bottom: 1px solid rgba(0,0,0,0.08);
+  }
+  .registration__form-number {
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: var(--accent);
+    color: #fff;
+    font-family: var(--font-heading);
+    font-size: 14px;
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+  .registration__field {
+    margin-bottom: var(--space-sm);
+  }
+  .registration__field label {
+    display: block;
+    font-family: var(--font-heading);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--text-secondary);
+    margin-bottom: 6px;
+  }
+  .registration__field label .required {
+    color: var(--accent);
+  }
+  .registration__field input,
+  .registration__field select {
+    width: 100%;
+    padding: 10px 14px;
+    background: var(--bg-primary);
+    border: 1px solid rgba(0,0,0,0.1);
+    border-radius: 6px;
+    color: var(--text-primary);
+    font-family: var(--font-body);
+    font-size: 14px;
+    transition: border-color 0.2s;
+  }
+  .registration__field input:focus,
+  .registration__field select:focus {
+    outline: none;
+    border-color: var(--accent);
+  }
+  .registration__field input.is-error,
+  .registration__field select.is-error {
+    border-color: #ff3b30;
+  }
+  .registration__field .field-error {
+    font-size: 12px;
+    color: #ff3b30;
+    margin-top: 4px;
+    display: none;
+  }
+  .registration__field-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-sm);
+  }
+  @media (max-width: 640px) {
+    .registration__field-row {
+      grid-template-columns: 1fr;
+    }
+  }
+  .registration__section-label {
+    font-family: var(--font-heading);
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text-secondary);
+    margin: var(--space-md) 0 var(--space-sm);
+    padding-bottom: 8px;
+    border-bottom: 1px solid rgba(0,0,0,0.05);
+  }
+  .registration__jersey-notice {
+    padding: var(--space-sm);
+    border: 1px solid rgba(var(--accent-rgb, 255,59,48), 0.3);
+    border-radius: 6px;
+    background: rgba(var(--accent-rgb, 255,59,48), 0.05);
+    margin-bottom: var(--space-sm);
+  }
+  .registration__jersey-notice p {
+    font-size: 13px;
+    color: var(--accent);
+    margin-bottom: 8px;
+  }
+  .registration__category-display {
+    display: inline-block;
+    padding: 4px 12px;
+    border: 1px solid rgba(0,0,0,0.15);
+    border-radius: 4px;
+    font-family: var(--font-heading);
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: var(--space-sm);
+  }
+  .registration__nav {
+    display: flex;
+    gap: var(--space-sm);
+    margin-top: var(--space-md);
+    max-width: 640px;
+  }
+  .registration__nav .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+  }
+</style>
+
+<script>
+let formsData = [];
+let currentFormIndex = 0;
+let totalForms = 0;
+let cartData = [];
+
+document.addEventListener('DOMContentLoaded', function() {
+  const raw = sessionStorage.getItem('registrationCartData');
+  if (!raw) {
+    document.getElementById('registrationNoData').style.display = 'block';
+    return;
+  }
+
+  try {
+    cartData = JSON.parse(raw);
+  } catch (e) {
+    document.getElementById('registrationNoData').style.display = 'block';
+    return;
+  }
+
+  if (!cartData || cartData.length === 0) {
+    document.getElementById('registrationNoData').style.display = 'block';
+    return;
+  }
+
+  document.getElementById('registrationContent').style.display = 'block';
+  generateForms();
+  showForm(0);
+});
+
+function generateForms() {
+  const formArea = document.getElementById('formArea');
+  let formIndex = 0;
+
+  let jerseyAvailable = false;
+  let jerseyCount = 0;
+  try {
+    const jerseyInfo = JSON.parse(sessionStorage.getItem('jerseyDisponible') || '{}');
+    jerseyAvailable = jerseyInfo.disponible === true;
+    jerseyCount = jerseyInfo.count || 0;
+  } catch (e) {}
+
+  cartData.forEach(function(item) {
+    for (let q = 0; q < item.quantity; q++) {
+      const showJersey = jerseyAvailable && formIndex < jerseyCount;
+      const card = document.createElement('div');
+      card.className = 'registration__form-card';
+      card.id = 'form-' + formIndex;
+      card.dataset.formIndex = formIndex;
+      card.dataset.variantId = item.variant_id;
+      card.dataset.variantTitle = item.variant_title;
+      card.dataset.productTitle = item.product_title;
+
+      card.innerHTML = `
+        <div class="registration__form-header">
+          <span class="registration__form-number">${formIndex + 1}</span>
+          <div>
+            <span class="heading-sm">Participante ${formIndex + 1}</span>
+            <div class="registration__category-display">${item.variant_title}</div>
+          </div>
+        </div>
+
+        <div class="registration__field">
+          <label>Nombre Completo <span class="required">*</span></label>
+          <input type="text" data-field="nombre" placeholder="Nombre completo del participante" required>
+          <span class="field-error">Este campo es obligatorio</span>
+        </div>
+
+        <div class="registration__field-row">
+          <div class="registration__field">
+            <label>Fecha de Nacimiento <span class="required">*</span></label>
+            <input type="date" data-field="fecha_nacimiento" required>
+            <span class="field-error">Selecciona una fecha</span>
+          </div>
+          <div class="registration__field">
+            <label>Equipo</label>
+            <input type="text" data-field="equipo" placeholder="Nombre del equipo (opcional)">
+          </div>
+        </div>
+
+        <div class="registration__field-row">
+          <div class="registration__field">
+            <label>Correo Electronico <span class="required">*</span></label>
+            <input type="email" data-field="email" placeholder="correo@ejemplo.com" required>
+            <span class="field-error">Ingresa un correo valido</span>
+          </div>
+          <div class="registration__field">
+            <label>Telefono <span class="required">*</span></label>
+            <input type="tel" data-field="telefono" placeholder="10 digitos" maxlength="10" required>
+            <span class="field-error">Ingresa 10 digitos</span>
+          </div>
+        </div>
+
+        <div class="registration__section-label">Contacto de Emergencia</div>
+
+        <div class="registration__field-row">
+          <div class="registration__field">
+            <label>Nombre <span class="required">*</span></label>
+            <input type="text" data-field="emergencia_nombre" placeholder="Nombre del contacto" required>
+            <span class="field-error">Ingresa un nombre valido</span>
+          </div>
+          <div class="registration__field">
+            <label>Telefono <span class="required">*</span></label>
+            <input type="tel" data-field="emergencia_telefono" placeholder="10 digitos" maxlength="10" required>
+            <span class="field-error">Ingresa 10 digitos</span>
+          </div>
+        </div>
+
+        <div class="registration__section-label">Informacion Medica</div>
+
+        <div class="registration__field-row">
+          <div class="registration__field">
+            <label>Tipo de Sangre <span class="required">*</span></label>
+            <select data-field="tipo_sangre" required>
+              <option value="">Seleccionar</option>
+              <option value="A+">A+</option>
+              <option value="A-">A-</option>
+              <option value="B+">B+</option>
+              <option value="B-">B-</option>
+              <option value="AB+">AB+</option>
+              <option value="AB-">AB-</option>
+              <option value="O+">O+</option>
+              <option value="O-">O-</option>
+            </select>
+            <span class="field-error">Selecciona tu tipo de sangre</span>
+          </div>
+          <div class="registration__field">
+            <label>Alergias</label>
+            <input type="text" data-field="alergias" placeholder="Alergias conocidas (opcional)">
+          </div>
+        </div>
+
+        ${showJersey ? `
+          <div class="registration__jersey-notice">
+            <p>Felicidades! Alcanzaste playera gratis por ser de los primeros inscritos</p>
+            <div class="registration__field" style="margin-bottom: 0;">
+              <label>Talla de Playera <span class="required">*</span></label>
+              <select data-field="talla_playera" required>
+                <option value="">Seleccionar talla</option>
+                <option value="S">S</option>
+                <option value="M">M</option>
+                <option value="L">L</option>
+                <option value="XL">XL</option>
+              </select>
+              <span class="field-error">Selecciona una talla</span>
+            </div>
+          </div>
+        ` : ''}
+      `;
+
+      formArea.appendChild(card);
+      formsData.push({});
+      formIndex++;
+    }
+  });
+
+  totalForms = formIndex;
+}
+
+function showForm(index) {
+  currentFormIndex = index;
+
+  document.querySelectorAll('.registration__form-card').forEach(c => c.classList.remove('is-active'));
+  const card = document.getElementById('form-' + index);
+  if (card) card.classList.add('is-active');
+
+  // Populate saved data
+  populateForm(index);
+
+  // Update progress
+  const pct = ((index + 1) / totalForms) * 100;
+  document.getElementById('progressFill').style.width = pct + '%';
+  document.getElementById('progressText').textContent = 'Participante ' + (index + 1) + ' de ' + totalForms;
+
+  // Update nav buttons
+  document.getElementById('btnPrev').style.display = index > 0 ? 'inline-flex' : 'none';
+  const isLast = index === totalForms - 1;
+  document.getElementById('btnNext').style.display = isLast ? 'none' : 'inline-flex';
+  document.getElementById('btnSubmit').style.display = isLast ? 'inline-flex' : 'none';
+
+  // Scroll to top of form
+  card.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+function populateForm(index) {
+  const card = document.getElementById('form-' + index);
+  const data = formsData[index] || {};
+  card.querySelectorAll('[data-field]').forEach(function(field) {
+    const key = field.dataset.field;
+    if (data[key] !== undefined) field.value = data[key];
+  });
+}
+
+function saveCurrentForm() {
+  const card = document.getElementById('form-' + currentFormIndex);
+  const data = {};
+  let valid = true;
+
+  card.querySelectorAll('[data-field]').forEach(function(field) {
+    const key = field.dataset.field;
+    const val = (field.value || '').trim();
+    data[key] = val;
+
+    // Clear previous errors
+    field.classList.remove('is-error');
+    const errorEl = field.parentElement.querySelector('.field-error');
+    if (errorEl) errorEl.style.display = 'none';
+  });
+
+  // Validate required fields
+  function showError(fieldName, msg) {
+    const field = card.querySelector('[data-field="' + fieldName + '"]');
+    if (field) {
+      field.classList.add('is-error');
+      const errorEl = field.parentElement.querySelector('.field-error');
+      if (errorEl) { errorEl.textContent = msg; errorEl.style.display = 'block'; }
+    }
+    valid = false;
+  }
+
+  if (!data.nombre) showError('nombre', 'Este campo es obligatorio');
+  if (!data.fecha_nacimiento) showError('fecha_nacimiento', 'Selecciona una fecha');
+
+  if (!data.email) {
+    showError('email', 'Este campo es obligatorio');
+  } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(data.email)) {
+    showError('email', 'Ingresa un correo valido');
+  }
+
+  if (!data.telefono) {
+    showError('telefono', 'Este campo es obligatorio');
+  } else if (!/^\d{10}$/.test(data.telefono)) {
+    showError('telefono', 'Ingresa exactamente 10 digitos');
+  }
+
+  if (!data.emergencia_nombre) {
+    showError('emergencia_nombre', 'Este campo es obligatorio');
+  } else if (/^\d+$/.test(data.emergencia_nombre)) {
+    showError('emergencia_nombre', 'Ingresa un nombre, no un numero');
+  }
+
+  if (!data.emergencia_telefono) {
+    showError('emergencia_telefono', 'Este campo es obligatorio');
+  } else if (!/^\d{10}$/.test(data.emergencia_telefono)) {
+    showError('emergencia_telefono', 'Ingresa exactamente 10 digitos');
+  }
+
+  if (!data.tipo_sangre) showError('tipo_sangre', 'Selecciona tu tipo de sangre');
+
+  const tallaField = card.querySelector('[data-field="talla_playera"]');
+  if (tallaField && !data.talla_playera) {
+    showError('talla_playera', 'Selecciona una talla');
+  }
+
+  formsData[currentFormIndex] = data;
+  return valid;
+}
+
+function nextForm() {
+  if (!saveCurrentForm()) return;
+  if (currentFormIndex < totalForms - 1) {
+    showForm(currentFormIndex + 1);
+  }
+}
+
+function previousForm() {
+  // Save without validation when going back
+  const card = document.getElementById('form-' + currentFormIndex);
+  const data = {};
+  card.querySelectorAll('[data-field]').forEach(function(field) {
+    data[field.dataset.field] = (field.value || '').trim();
+  });
+  formsData[currentFormIndex] = data;
+
+  if (currentFormIndex > 0) {
+    showForm(currentFormIndex - 1);
+  }
+}
+
+async function submitAllForms() {
+  if (!saveCurrentForm()) return;
+
+  // Validate ALL forms
+  for (let i = 0; i < totalForms; i++) {
+    const d = formsData[i];
+    if (!d.nombre || !d.fecha_nacimiento || !d.email || !d.telefono ||
+        !d.emergencia_nombre || !d.emergencia_telefono || !d.tipo_sangre) {
+      showForm(i);
+      saveCurrentForm();
+      return;
+    }
+  }
+
+  const btn = document.getElementById('btnSubmit');
+  btn.disabled = true;
+  btn.textContent = 'Procesando...';
+
+  const registrations = [];
+  let formIdx = 0;
+  cartData.forEach(function(item) {
+    for (let q = 0; q < item.quantity; q++) {
+      const d = formsData[formIdx];
+      registrations.push({
+        variant_id: item.variant_id,
+        variant_title: item.variant_title,
+        product_title: item.product_title,
+        nombre: d.nombre,
+        fecha_nacimiento: d.fecha_nacimiento,
+        equipo: d.equipo || '',
+        email: d.email,
+        telefono: d.telefono,
+        emergencia_nombre: d.emergencia_nombre,
+        emergencia_telefono: d.emergencia_telefono,
+        tipo_sangre: d.tipo_sangre,
+        alergias: d.alergias || '',
+        categoria: item.variant_title,
+        talla_playera: d.talla_playera || ''
+      });
+      formIdx++;
+    }
+  });
+
+  const registrationData = {
+    registrations: registrations,
+    timestamp: new Date().toISOString()
+  };
+
+  try {
+    const response = await fetch('/cart/update.js', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        attributes: {
+          registration_data: JSON.stringify(registrationData)
+        }
+      })
+    });
+
+    if (!response.ok) throw new Error('Failed to update cart');
+
+    sessionStorage.removeItem('registrationCartData');
+    sessionStorage.removeItem('jerseyDisponible');
+
+    const discountCode = sessionStorage.getItem('discountCode');
+    sessionStorage.removeItem('discountCode');
+
+    if (discountCode) {
+      window.location.href = '/checkout?discount=' + encodeURIComponent(discountCode);
+    } else {
+      window.location.href = '/checkout';
+    }
+  } catch (e) {
+    console.error('Submit error:', e);
+    alert('Error al procesar el registro. Intenta de nuevo.');
+    btn.disabled = false;
+    btn.innerHTML = 'Proceder al Pago <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>';
+  }
+}
+</script>
+
+{% schema %}
+{
+  "name": "Formulario de Registro",
+  "tag": "section",
+  "settings": [],
+  "presets": [
+    {
+      "name": "Formulario de Registro"
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,11 @@
+{
+  "sections": {
+    "main": {
+      "type": "race-registration-puebla",
+      "settings": {}
+    }
+  },
+  "order": [
+    "main"
+  ]
+}

@@ -1,0 +1,9 @@
+{
+  "sections": {
+    "main": {
+      "type": "ranking-overall-2025",
+      "settings": {}
+    }
+  },
+  "order": ["main"]
+}

@@ -1,0 +1,374 @@
+{% comment %}
+  Sponsor Contributions Page - DHMEXRACES
+  Editorial design - asymmetric layout, border-left accent cards
+{% endcomment %}
+
+<section class="section" id="contributions" style="padding-top: calc(var(--header-height) + var(--space-xl));">
+  <div class="container">
+
+    {%- comment -%} Page Hero - Left aligned editorial {%- endcomment -%}
+    <div class="page-hero reveal">
+      {% if section.settings.subtitle != blank %}
+        <span class="page-hero__eyebrow">{{ section.settings.subtitle }}</span>
+      {% endif %}
+      {% if section.settings.title != blank %}
+        <h1 class="page-hero__title">{{ section.settings.title }}</h1>
+      {% endif %}
+      {% if section.settings.description != blank %}
+        <p class="page-hero__subtitle">{{ section.settings.description }}</p>
+      {% endif %}
+    </div>
+
+    {%- comment -%} Stats Editorial {%- endcomment -%}
+    {% if section.settings.show_stats %}
+      <div class="stats-editorial reveal reveal--delay-1">
+        <div class="stats-editorial__item">
+          <span class="stats-editorial__number">{{ section.settings.total_sponsors | default: '15+' }}</span>
+          <span class="stats-editorial__label">Patrocinadores</span>
+        </div>
+        <div class="stats-editorial__item">
+          <span class="stats-editorial__number">{{ section.settings.total_value | default: '$500K+' }}</span>
+          <span class="stats-editorial__label">En Aportes</span>
+        </div>
+        <div class="stats-editorial__item">
+          <span class="stats-editorial__number">{{ section.settings.total_prizes | default: '$530K' }}</span>
+          <span class="stats-editorial__label">En Premios</span>
+        </div>
+      </div>
+    {% endif %}
+
+    {%- comment -%} TITULO PATROCINADORES {%- endcomment -%}
+    {% assign has_title = false %}
+    {% for block in section.blocks %}
+      {% if block.settings.tier == 'title' %}
+        {% assign has_title = true %}
+        {% break %}
+      {% endif %}
+    {% endfor %}
+
+    {% if has_title %}
+      <div class="tier-section reveal reveal--delay-2">
+        <div class="tier-section__header">
+          <span class="tier-section__badge" style="color: var(--accent); border-color: var(--accent);">Patrocinador Titulo</span>
+          <p class="body-text" style="opacity: 0.4; margin-top: var(--space-xs);">Maximo nivel de patrocinio</p>
+        </div>
+        <div style="display: grid; gap: var(--space-md); max-width: 800px;">
+          {% for block in section.blocks %}
+            {% if block.settings.tier == 'title' %}
+              <div class="sponsor-card" style="border-left-color: var(--accent);" {{ block.shopify_attributes }}>
+                {% if block.settings.logo != blank %}
+                  <div class="sponsor-card__logo">
+                    {{ block.settings.logo | image_url: width: 400 | image_tag: loading: 'lazy', alt: block.settings.name, style: 'max-height: 80px; object-fit: contain; filter: brightness(0) invert(1);' }}
+                  </div>
+                {% endif %}
+                <div class="sponsor-card__info">
+                  <h3 class="sponsor-card__name" style="color: var(--accent);">{{ block.settings.name }}</h3>
+                  {% if block.settings.contribution_type != blank %}
+                    <span class="sponsor-card__type">
+                      {{ block.settings.contribution_type_label | default: block.settings.contribution_type }}
+                    </span>
+                  {% endif %}
+                  {% if block.settings.contribution_detail != blank %}
+                    <p class="sponsor-card__detail">{{ block.settings.contribution_detail }}</p>
+                  {% endif %}
+                  {% if block.settings.contribution_value != blank %}
+                    <span class="sponsor-card__value" style="color: var(--accent);">{{ block.settings.contribution_value }}</span>
+                  {% endif %}
+                </div>
+              </div>
+            {% endif %}
+          {% endfor %}
+        </div>
+      </div>
+    {% endif %}
+
+    {%- comment -%} ORO PATROCINADORES {%- endcomment -%}
+    {% assign has_gold = false %}
+    {% for block in section.blocks %}
+      {% if block.settings.tier == 'gold' %}
+        {% assign has_gold = true %}
+        {% break %}
+      {% endif %}
+    {% endfor %}
+
+    {% if has_gold %}
+      <div class="tier-section reveal">
+        <div class="tier-section__header">
+          <span class="tier-section__badge" style="color: #FFD700; border-color: rgba(255,215,0,0.4);">Patrocinadores Oro</span>
+        </div>
+        <div style="display: grid; gap: var(--space-md);">
+          {% for block in section.blocks %}
+            {% if block.settings.tier == 'gold' %}
+              <div class="sponsor-card" style="border-left-color: rgba(255,215,0,0.5);" {{ block.shopify_attributes }}>
+                {% if block.settings.logo != blank %}
+                  <div class="sponsor-card__logo">
+                    {{ block.settings.logo | image_url: width: 300 | image_tag: loading: 'lazy', alt: block.settings.name, style: 'max-height: 80px; object-fit: contain; filter: brightness(0) invert(1);' }}
+                  </div>
+                {% endif %}
+                <div class="sponsor-card__info">
+                  <h3 class="sponsor-card__name" style="color: #FFD700;">{{ block.settings.name }}</h3>
+                  {% if block.settings.contribution_type != blank %}
+                    <span class="sponsor-card__type" style="color: rgba(255,215,0,0.7);">
+                      {{ block.settings.contribution_type_label | default: block.settings.contribution_type }}
+                    </span>
+                  {% endif %}
+                  {% if block.settings.contribution_detail != blank %}
+                    <p class="sponsor-card__detail">{{ block.settings.contribution_detail }}</p>
+                  {% endif %}
+                  {% if block.settings.contribution_value != blank %}
+                    <span class="sponsor-card__value" style="color: #FFD700;">{{ block.settings.contribution_value }}</span>
+                  {% endif %}
+                </div>
+              </div>
+            {% endif %}
+          {% endfor %}
+        </div>
+      </div>
+    {% endif %}
+
+    {%- comment -%} PLATA PATROCINADORES {%- endcomment -%}
+    {% assign has_silver = false %}
+    {% for block in section.blocks %}
+      {% if block.settings.tier == 'silver' %}
+        {% assign has_silver = true %}
+        {% break %}
+      {% endif %}
+    {% endfor %}
+
+    {% if has_silver %}
+      <div class="tier-section reveal">
+        <div class="tier-section__header">
+          <span class="tier-section__badge" style="color: #C0C0C0; border-color: rgba(192,192,192,0.4);">Patrocinadores Plata</span>
+        </div>
+        <div style="display: grid; gap: var(--space-md);">
+          {% for block in section.blocks %}
+            {% if block.settings.tier == 'silver' %}
+              <div class="sponsor-card" style="border-left-color: rgba(192,192,192,0.3);" {{ block.shopify_attributes }}>
+                {% if block.settings.logo != blank %}
+                  <div class="sponsor-card__logo">
+                    {{ block.settings.logo | image_url: width: 250 | image_tag: loading: 'lazy', alt: block.settings.name, style: 'max-height: 60px; object-fit: contain; filter: brightness(0) invert(1);' }}
+                  </div>
+                {% endif %}
+                <div class="sponsor-card__info">
+                  <h3 class="sponsor-card__name" style="color: #C0C0C0;">{{ block.settings.name }}</h3>
+                  {% if block.settings.contribution_detail != blank %}
+                    <p class="sponsor-card__detail">{{ block.settings.contribution_detail }}</p>
+                  {% endif %}
+                  {% if block.settings.contribution_value != blank %}
+                    <span class="sponsor-card__value" style="color: #C0C0C0;">{{ block.settings.contribution_value }}</span>
+                  {% endif %}
+                </div>
+              </div>
+            {% endif %}
+          {% endfor %}
+        </div>
+      </div>
+    {% endif %}
+
+    {%- comment -%} BRONCE PATROCINADORES {%- endcomment -%}
+    {% assign has_bronze = false %}
+    {% for block in section.blocks %}
+      {% if block.settings.tier == 'bronze' %}
+        {% assign has_bronze = true %}
+        {% break %}
+      {% endif %}
+    {% endfor %}
+
+    {% if has_bronze %}
+      <div class="tier-section reveal">
+        <div class="tier-section__header">
+          <span class="tier-section__badge" style="color: #CD7F32; border-color: rgba(205,127,50,0.4);">Patrocinadores Bronce</span>
+        </div>
+        <div style="display: grid; gap: var(--space-md);">
+          {% for block in section.blocks %}
+            {% if block.settings.tier == 'bronze' %}
+              <div class="sponsor-card" style="border-left-color: rgba(205,127,50,0.3);" {{ block.shopify_attributes }}>
+                {% if block.settings.logo != blank %}
+                  <div class="sponsor-card__logo">
+                    {{ block.settings.logo | image_url: width: 200 | image_tag: loading: 'lazy', alt: block.settings.name, style: 'max-height: 50px; object-fit: contain; filter: brightness(0) invert(1);' }}
+                  </div>
+                {% endif %}
+                <div class="sponsor-card__info">
+                  <h3 class="sponsor-card__name" style="color: #CD7F32;">{{ block.settings.name }}</h3>
+                  {% if block.settings.contribution_detail != blank %}
+                    <p class="sponsor-card__detail">{{ block.settings.contribution_detail }}</p>
+                  {% endif %}
+                </div>
+              </div>
+            {% endif %}
+          {% endfor %}
+        </div>
+      </div>
+    {% endif %}
+
+    {%- comment -%} CTA Final {%- endcomment -%}
+    {% if section.settings.cta_title != blank %}
+      <div class="cta-banner reveal">
+        <div class="cta-banner__text">
+          <h3 class="cta-banner__title">{{ section.settings.cta_title }}</h3>
+          {% if section.settings.cta_text != blank %}
+            <p class="cta-banner__subtitle">{{ section.settings.cta_text }}</p>
+          {% endif %}
+        </div>
+        {% if section.settings.cta_button != blank %}
+          <a href="{{ section.settings.cta_link }}" class="btn btn--primary btn--large">
+            {{ section.settings.cta_button }}
+          </a>
+        {% endif %}
+      </div>
+    {% endif %}
+
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Aportes Patrocinadores",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Encabezado"
+    },
+    {
+      "type": "text",
+      "id": "subtitle",
+      "label": "Subtitulo",
+      "default": "DHMEXRACES 2026"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Titulo",
+      "default": "Aportes de Patrocinadores"
+    },
+    {
+      "type": "textarea",
+      "id": "description",
+      "label": "Descripcion",
+      "default": "Gracias a nuestros patrocinadores, DHMEXRACES ofrece la mejor experiencia de downhill en Mexico"
+    },
+    {
+      "type": "header",
+      "content": "Estadisticas"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_stats",
+      "label": "Mostrar estadisticas",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "total_sponsors",
+      "label": "Total patrocinadores",
+      "default": "15+"
+    },
+    {
+      "type": "text",
+      "id": "total_value",
+      "label": "Valor total aportes",
+      "default": "$500K+"
+    },
+    {
+      "type": "text",
+      "id": "total_prizes",
+      "label": "Total en premios",
+      "default": "$530K"
+    },
+    {
+      "type": "header",
+      "content": "Llamado a la accion"
+    },
+    {
+      "type": "text",
+      "id": "cta_title",
+      "label": "Titulo CTA",
+      "default": "Quieres ser patrocinador?"
+    },
+    {
+      "type": "textarea",
+      "id": "cta_text",
+      "label": "Texto CTA",
+      "default": "Unete al campeonato de downhill mas grande de Mexico"
+    },
+    {
+      "type": "text",
+      "id": "cta_button",
+      "label": "Texto boton",
+      "default": "Contactar"
+    },
+    {
+      "type": "url",
+      "id": "cta_link",
+      "label": "Link boton"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "sponsor",
+      "name": "Patrocinador",
+      "settings": [
+        {
+          "type": "text",
+          "id": "name",
+          "label": "Nombre",
+          "default": "Patrocinador"
+        },
+        {
+          "type": "image_picker",
+          "id": "logo",
+          "label": "Logo"
+        },
+        {
+          "type": "select",
+          "id": "tier",
+          "label": "Nivel",
+          "options": [
+            { "value": "title", "label": "Titulo (Maximo)" },
+            { "value": "gold", "label": "Oro" },
+            { "value": "silver", "label": "Plata" },
+            { "value": "bronze", "label": "Bronce" }
+          ],
+          "default": "gold"
+        },
+        {
+          "type": "select",
+          "id": "contribution_type",
+          "label": "Tipo de aporte",
+          "options": [
+            { "value": "money", "label": "Dinero" },
+            { "value": "products", "label": "Productos" },
+            { "value": "services", "label": "Servicios" },
+            { "value": "mixed", "label": "Mixto" }
+          ],
+          "default": "products"
+        },
+        {
+          "type": "text",
+          "id": "contribution_type_label",
+          "label": "Etiqueta tipo (opcional)",
+          "info": "Ej: Productos, Efectivo, Mecanica"
+        },
+        {
+          "type": "textarea",
+          "id": "contribution_detail",
+          "label": "Detalle del aporte",
+          "info": "Descripcion de lo que aporta"
+        },
+        {
+          "type": "text",
+          "id": "contribution_value",
+          "label": "Valor del aporte",
+          "info": "Ej: $50,000 MXN, 100 productos"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Aportes Patrocinadores",
+      "category": "DHMEXRACES"
+    }
+  ]
+}
+{% endschema %}

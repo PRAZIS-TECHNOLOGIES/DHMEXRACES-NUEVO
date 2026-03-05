@@ -1,0 +1,105 @@
+{% comment %}
+  Register Page for DHMEXRACES
+  SKELETON design system - uses base.css classes only
+{% endcomment %}
+
+<section class="auth">
+  <div class="auth__card">
+
+    <div class="auth__brand">
+      <h1>DHMEXRACES</h1>
+      <p>COPA SCOTT 2026</p>
+    </div>
+
+    <h2 class="auth__title">Crear Cuenta de Corredor</h2>
+    <p class="auth__subtitle">Unete al campeonato nacional de DH mas grande de Mexico</p>
+
+    {% form 'create_customer' %}
+      {% if form.errors %}
+        <div class="auth__error">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+            <circle cx="10" cy="10" r="8" stroke="currentColor" stroke-width="2"/>
+            <path d="M10 6V10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+            <circle cx="10" cy="14" r="0.5" fill="currentColor"/>
+          </svg>
+          <div>
+            <strong>Error al crear cuenta</strong>
+            {{ form.errors | default_errors }}
+          </div>
+        </div>
+      {% endif %}
+
+      <div class="auth__field">
+        <label for="RegisterFirstName" class="auth__label">Nombre</label>
+        <input
+          type="text"
+          name="customer[first_name]"
+          id="RegisterFirstName"
+          class="auth__input"
+          autocomplete="given-name"
+          placeholder="Tu nombre"
+          required>
+      </div>
+
+      <div class="auth__field">
+        <label for="RegisterLastName" class="auth__label">Apellido</label>
+        <input
+          type="text"
+          name="customer[last_name]"
+          id="RegisterLastName"
+          class="auth__input"
+          autocomplete="family-name"
+          placeholder="Tu apellido"
+          required>
+      </div>
+
+      <div class="auth__field">
+        <label for="RegisterEmail" class="auth__label">Correo Electronico</label>
+        <input
+          type="email"
+          name="customer[email]"
+          id="RegisterEmail"
+          class="auth__input"
+          autocomplete="email"
+          autocapitalize="off"
+          placeholder="corredor@ejemplo.com"
+          required>
+      </div>
+
+      <div class="auth__field">
+        <label for="RegisterPassword" class="auth__label">Contrasena</label>
+        <input
+          type="password"
+          name="customer[password]"
+          id="RegisterPassword"
+          class="auth__input"
+          placeholder="Minimo 8 caracteres"
+          minlength="8"
+          required>
+      </div>
+
+      <div class="auth__benefits">
+        <div class="auth__benefit">
+          <svg width="16" height="16" viewBox="0 0 20 20" fill="none"><path d="M16.6667 5L7.5 14.1667L3.33337 10" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <span>Inscripciones rapidas a todas las sedes</span>
+        </div>
+        <div class="auth__benefit">
+          <svg width="16" height="16" viewBox="0 0 20 20" fill="none"><path d="M16.6667 5L7.5 14.1667L3.33337 10" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <span>Seguimiento de puntos del campeonato</span>
+        </div>
+        <div class="auth__benefit">
+          <svg width="16" height="16" viewBox="0 0 20 20" fill="none"><path d="M16.6667 5L7.5 14.1667L3.33337 10" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <span>Historial de inscripciones y resultados</span>
+        </div>
+      </div>
+
+      <button type="submit" class="auth__submit">Crear Cuenta</button>
+    {% endform %}
+
+    <div class="auth__links" style="margin-top: var(--space-md); padding-top: var(--space-md); border-top: 1px solid rgba(0,0,0,0.06);">
+      <p style="color: var(--text-secondary); font-size: 13px; margin: 0 0 var(--space-xs) 0;">Ya tienes cuenta?</p>
+      <a href="{{ routes.account_login_url }}" class="auth__link">Iniciar Sesion</a>
+    </div>
+
+  </div>
+</section>

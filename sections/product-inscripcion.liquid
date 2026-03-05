@@ -1,0 +1,1194 @@
+{% comment %}
+  Product Inscripcion - Layout especial para paginas de inscripcion DHMEXRACES
+  Orden Mobile-First: Titulo > Categorias Info > FOMO > Precio > Timeline > Selector > Cantidad > Pagar > Imagen
+{% endcomment %}
+
+{%- comment -%} Burbuja de Ayuda Flotante {%- endcomment -%}
+<div class="help-bubble" id="helpBubble">
+  <!-- Tooltip emergente - click abre el menú -->
+  <div class="help-bubble__tooltip" id="helpTooltip" onclick="abrirDesdeTooltip()">
+    <span>¿Necesitas ayuda?</span>
+    <button class="help-bubble__tooltip-close" onclick="cerrarTooltipAyuda(event)" aria-label="Cerrar">×</button>
+  </div>
+
+  <button class="help-bubble__btn" onclick="toggleHelpMenu()" aria-label="Ayuda">
+    <span class="help-bubble__icon">?</span>
+  </button>
+
+  <div class="help-bubble__menu" id="helpMenu">
+    <div class="help-bubble__header">
+      <span>¿Necesitas ayuda?</span>
+      <button onclick="toggleHelpMenu()" class="help-bubble__close">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+        </svg>
+      </button>
+    </div>
+    <div class="help-bubble__options">
+      <button class="help-bubble__option" onclick="iniciarTour()">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="10"/>
+          <polygon points="10 8 16 12 10 16 10 8"/>
+        </svg>
+        <span>No entendí cómo inscribirme</span>
+      </button>
+    </div>
+  </div>
+</div>
+
+{%- comment -%} Tour Guiado Overlay {%- endcomment -%}
+<div class="tour-overlay" id="tourOverlay">
+  <div class="tour-highlight" id="tourHighlight"></div>
+  <div class="tour-tooltip" id="tourTooltip">
+    <div class="tour-tooltip__content">
+      <span class="tour-tooltip__step" id="tourStepNumber">Paso 1 de 4</span>
+      <h3 class="tour-tooltip__title" id="tourTitle">Título</h3>
+      <p class="tour-tooltip__text" id="tourText">Descripción</p>
+    </div>
+    <div class="tour-tooltip__actions">
+      <button class="tour-tooltip__btn tour-tooltip__btn--skip" onclick="terminarTour()">Saltar</button>
+      <button class="tour-tooltip__btn tour-tooltip__btn--next" onclick="siguientePasoTour()" id="tourNextBtn">Siguiente</button>
+    </div>
+    <div class="tour-tooltip__progress">
+      <div class="tour-tooltip__progress-bar" id="tourProgress"></div>
+    </div>
+  </div>
+</div>
+
+{%- comment -%} Toast Notification - Fixed al top {%- endcomment -%}
+<div class="inscripcion__toast" id="toastNotification">
+  <div class="inscripcion__toast-content">
+    <svg class="inscripcion__toast-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+      <polyline points="22 4 12 14.01 9 11.01"/>
+    </svg>
+    <div class="inscripcion__toast-text">
+      <span class="inscripcion__toast-title">¡Agregado al carrito!</span>
+      <span class="inscripcion__toast-subtitle" id="toastSubtitle">1x Senior</span>
+    </div>
+    <a href="/cart" class="inscripcion__toast-btn">Ver carrito</a>
+    <button class="inscripcion__toast-close" onclick="cerrarToast()">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+      </svg>
+    </button>
+  </div>
+</div>
+
+<section class="inscripcion">
+  <div class="container">
+
+    {%- comment -%} 1. TITULO DEL PRODUCTO {%- endcomment -%}
+    <div class="inscripcion__header">
+      {% if product.metafields.custom.race_round != blank %}
+        <div class="inscripcion__badge">
+          {{ product.metafields.custom.race_round }}
+        </div>
+      {% endif %}
+      <h1 class="inscripcion__title">{{ product.title }}</h1>
+
+      {% if product.metafields.custom.race_date != blank or product.metafields.custom.race_location != blank %}
+        <div class="inscripcion__meta">
+          {% if product.metafields.custom.race_date != blank %}
+            <span class="inscripcion__meta-item">
+              <svg width="16" height="16" viewBox="0 0 20 20" fill="none">
+                <path d="M6 2V5M14 2V5M3 8H17M5 4H15C16.1046 4 17 4.89543 17 6V16C17 17.1046 16.1046 18 15 18H5C3.89543 18 3 17.1046 3 16V6C3 4.89543 3.89543 4 5 4Z" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+              </svg>
+              {{ product.metafields.custom.race_date }}
+            </span>
+          {% endif %}
+          {% if product.metafields.custom.race_location != blank %}
+            <span class="inscripcion__meta-item">
+              <svg width="16" height="16" viewBox="0 0 20 20" fill="none">
+                <path d="M10 2C7.23858 2 5 4.23858 5 7C5 11.5 10 18 10 18C10 18 15 11.5 15 7C15 4.23858 12.7614 2 10 2Z" stroke="currentColor" stroke-width="2"/>
+                <circle cx="10" cy="7" r="2" stroke="currentColor" stroke-width="2"/>
+              </svg>
+              {{ product.metafields.custom.race_location }}
+            </span>
+          {% endif %}
+        </div>
+      {% endif %}
+    </div>
+
+    {%- comment -%} 2. CATEGORIAS - Lista clickeable que funciona como selector {%- endcomment -%}
+    <div class="inscripcion__section">
+      <h2 class="inscripcion__section-title">1. Selecciona tu Categoría</h2>
+      <p class="inscripcion__categorias-subtitle">Toca tu categoría según tu edad</p>
+
+      {% assign current_variant = product.selected_or_first_available_variant %}
+      <input type="hidden" name="id" id="selectedVariantId" value="{{ current_variant.id }}" form="inscripcion-form">
+
+      <div class="inscripcion__categorias">
+        {% assign category_ages = "Minis:10 a 11 Años (Obligatorio Mochilero)|Infantil:12 a 14 Años|Cadetes:15 a 16 Años|Junior:17 a 18 Años|Senior:19 a 29 Años|Principiantes:Edad Libre|Master 30:30 a 39 Años|Master 40:40 a 49 Años|Master 50:50+ Años|Femenil:Edad Libre|PRO:19+ Años|Elite:19+ Años|EBIKE:Edad Libre|EBIKE Full Power:Edad Libre" | split: "|" %}
+
+        {% for variant in product.variants %}
+          {% assign age_info = "" %}
+          {% for cat_age in category_ages %}
+            {% assign cat_parts = cat_age | split: ":" %}
+            {% assign cat_name = cat_parts[0] | downcase | strip %}
+            {% assign variant_name = variant.title | downcase | strip %}
+            {% if variant_name contains cat_name %}
+              {% assign age_info = cat_parts[1] %}
+              {% break %}
+            {% endif %}
+          {% endfor %}
+
+          {% assign variant_lower = variant.title | downcase %}
+          {% assign sponsor_text = "" %}
+          {% if variant_lower contains "elite" or variant_lower contains "junior" %}
+            {% assign sponsor_text = "by Motul Official Care Partner" %}
+          {% elsif variant_lower contains "ebike" %}
+            {% assign sponsor_text = "by Megamo Reason" %}
+          {% endif %}
+
+          <button
+            type="button"
+            class="inscripcion__cat-btn {% if variant == current_variant %}is-selected{% endif %} {% unless variant.available %}is-sold-out{% endunless %}"
+            data-variant-id="{{ variant.id }}"
+            data-variant-title="{{ variant.title }}"
+            data-price="{{ variant.price | money }}"
+            {% unless variant.available %}disabled{% endunless %}
+            onclick="selectCategoria(this)">
+            <span class="inscripcion__cat-name">
+              {{ variant.title }}
+              <span class="inscripcion__cat-badge" data-cart-badge="{{ variant.id }}" style="display: none;">0</span>
+            </span>
+            <span class="inscripcion__cat-info">
+              {% if sponsor_text != "" %}
+                <span class="inscripcion__cat-sponsor">{{ sponsor_text }}</span>
+              {% endif %}
+              <span class="inscripcion__cat-age">
+                {% if variant.available %}
+                  {{ age_info | default: "—" }}
+                {% else %}
+                  AGOTADO
+                {% endif %}
+              </span>
+            </span>
+            <span class="inscripcion__cat-check">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                <polyline points="20 6 9 17 4 12"></polyline>
+              </svg>
+            </span>
+          </button>
+        {% endfor %}
+      </div>
+    </div>
+
+    {%- comment -%} Config para JS {%- endcomment -%}
+    <script id="sedeConfig" type="application/json">
+      {
+        "productTitle": {{ product.title | json }},
+        "apiUrl": "https://dhmexraces-webhooks.vercel.app/api/inventory",
+        "eventDate": "{{ product.metafields.custom.event_date | date: '%Y-%m-%dT%H:%M:%S' }}",
+        "eventDateLabel": {{ product.metafields.custom.event_date_label | default: "" | json }},
+        "closeDate": "{{ product.metafields.custom.close_date | date: '%Y-%m-%dT%H:%M:%S' }}",
+        "jerseyHandles": {
+          "guanajuato": "jersey-oficial-guanajuato-2026-promo",
+          "puebla": "jersey-oficial-puebla-2026-promo",
+          "guadalajara": "jersey-oficial-guadalajara-2026-promo",
+          "ixtapan": "jersey-oficial-ixtapan-2026-promo",
+          "taxco": "jersey-oficial-taxco-2026-promo"
+        }
+      }
+    </script>
+
+    {%- comment -%} 3. FOMO BADGES - Playeras y Medallas - DESHABILITADO TEMPORALMENTE
+    <div class="inscripcion__fomo" id="fomoContainer" style="display: none;">
+      <div class="inscripcion__fomo-badge inscripcion__fomo-badge--playeras" id="fomoPlayeras">
+        <div class="inscripcion__fomo-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+            <path d="M20 7L12 3L4 7M20 7V17L12 21M20 7L12 11M12 21L4 17V7M12 21V11M4 7L12 11" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <div class="inscripcion__fomo-content">
+          <span class="inscripcion__fomo-label">PLAYERA OFICIAL</span>
+          <span class="inscripcion__fomo-value" id="fomoPlayerasValue">Cargando...</span>
+        </div>
+      </div>
+      <div class="inscripcion__fomo-badge inscripcion__fomo-badge--medallas" id="fomoMedallas">
+        <div class="inscripcion__fomo-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+            <circle cx="12" cy="8" r="6" stroke="currentColor" stroke-width="2"/>
+            <path d="M9 13L7 22L12 19L17 22L15 13" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <div class="inscripcion__fomo-content">
+          <span class="inscripcion__fomo-label">MEDALLA CONMEMORATIVA</span>
+          <span class="inscripcion__fomo-value" id="fomoMedallasValue">Cargando...</span>
+        </div>
+      </div>
+    </div>
+    {%- endcomment -%}
+
+    {%- comment -%} 4. PRECIO {%- endcomment -%}
+    {% assign pricing_enabled = product.metafields.custom.pricing_enabled %}
+    <div class="inscripcion__price-card" id="dynamicPriceCard">
+      {% if pricing_enabled %}
+        <span class="inscripcion__price-badge" id="phaseBadge">PRECIO NORMAL</span>
+      {% endif %}
+      <div class="inscripcion__price-label">PRECIO POR INSCRIPCION</div>
+      <div class="inscripcion__price-row">
+        <span class="inscripcion__price" id="productPrice">
+          {{ product.selected_or_first_available_variant.price | money }}
+        </span>
+        <span class="inscripcion__price-currency">MXN</span>
+      </div>
+    </div>
+
+    {%- comment -%} 5. TIMELINE DE PRECIOS {%- endcomment -%}
+    {% if pricing_enabled %}
+      <div class="inscripcion__timeline" id="priceTimeline">
+        {% if product.metafields.custom.phase1_price != blank %}
+          <div class="inscripcion__timeline-phase" data-phase="1">
+            <div class="inscripcion__timeline-dot"></div>
+            <div class="inscripcion__timeline-info">
+              <span class="inscripcion__timeline-label">{{ product.metafields.custom.phase1_label | default: 'PRECIO NORMAL' }}</span>
+              <span class="inscripcion__timeline-price">${{ product.metafields.custom.phase1_price }}</span>
+            </div>
+          </div>
+        {% endif %}
+        {% if product.metafields.custom.phase2_price != blank %}
+          <div class="inscripcion__timeline-phase" data-phase="2">
+            <div class="inscripcion__timeline-dot"></div>
+            <div class="inscripcion__timeline-info">
+              <span class="inscripcion__timeline-label">{{ product.metafields.custom.phase2_label | default: 'INSCRIPCION TARDIA' }}</span>
+              <span class="inscripcion__timeline-price">${{ product.metafields.custom.phase2_price }}</span>
+            </div>
+          </div>
+        {% endif %}
+        {% if product.metafields.custom.phase3_price != blank %}
+          <div class="inscripcion__timeline-phase" data-phase="3">
+            <div class="inscripcion__timeline-dot"></div>
+            <div class="inscripcion__timeline-info">
+              <span class="inscripcion__timeline-label">{{ product.metafields.custom.phase3_label | default: 'ULTIMO MOMENTO' }}</span>
+              <span class="inscripcion__timeline-price">${{ product.metafields.custom.phase3_price }}</span>
+            </div>
+          </div>
+        {% endif %}
+      </div>
+
+      <script id="pricingConfig" type="application/json">
+        {
+          "enabled": true,
+          "phases": [
+            {
+              "start": "{{ product.metafields.custom.phase1_start }}",
+              "end": "{{ product.metafields.custom.phase1_end }}",
+              "price": {{ product.metafields.custom.phase1_price | default: 0 }},
+              "label": "{{ product.metafields.custom.phase1_label | default: 'PRECIO NORMAL' }}"
+            },
+            {
+              "start": "{{ product.metafields.custom.phase2_start }}",
+              "end": "{{ product.metafields.custom.phase2_end }}",
+              "price": {{ product.metafields.custom.phase2_price | default: 0 }},
+              "label": "{{ product.metafields.custom.phase2_label | default: 'INSCRIPCION TARDIA' }}"
+            },
+            {
+              "start": "{{ product.metafields.custom.phase3_start }}",
+              "end": "{{ product.metafields.custom.phase3_end }}",
+              "price": {{ product.metafields.custom.phase3_price | default: 0 }},
+              "label": "{{ product.metafields.custom.phase3_label | default: 'ULTIMO MOMENTO' }}"
+            }
+          ]
+        }
+      </script>
+    {% endif %}
+
+    {%- comment -%} Registration Status Check {%- endcomment -%}
+    {% assign registration_status = product.metafields.custom.registration_status | default: 'open' %}
+
+    {% if registration_status == 'coming_soon' %}
+      <div class="inscripcion__status inscripcion__status--coming-soon">
+        <svg viewBox="0 0 24 24" fill="none" width="48" height="48">
+          <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="1.5"/>
+          <path d="M12 6V12L16 14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+        </svg>
+        <h3>Proximamente</h3>
+        <p>Las inscripciones estaran disponibles pronto</p>
+      </div>
+    {% elsif registration_status == 'closed' %}
+      <div class="inscripcion__status inscripcion__status--closed">
+        <svg viewBox="0 0 24 24" fill="none" width="48" height="48">
+          <path d="M18.364 5.636a9 9 0 11-12.728 12.728 9 9 0 0112.728-12.728zM6 6l12 12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+        </svg>
+        <h3>Inscripciones Cerradas</h3>
+        <p>Las inscripciones para esta sede han finalizado</p>
+      </div>
+    {% else %}
+      {%- comment -%} 6. FORMULARIO SIMPLIFICADO {%- endcomment -%}
+      {% form 'product', product, class: 'inscripcion__form', id: 'inscripcion-form' %}
+        {% assign current_variant = product.selected_or_first_available_variant %}
+
+        {%- comment -%} Resumen de seleccion {%- endcomment -%}
+        <div class="inscripcion__resumen" id="resumenSeleccion">
+          <div class="inscripcion__resumen-header">
+            <span class="inscripcion__resumen-label">Tu selección:</span>
+          </div>
+          <div class="inscripcion__resumen-row">
+            <span class="inscripcion__resumen-cat" id="resumenCategoria">{{ current_variant.title }}</span>
+            <span class="inscripcion__resumen-price" id="resumenPrecio">{{ current_variant.price | money }}</span>
+          </div>
+        </div>
+
+        {%- comment -%} Carrito actual - Siempre visible {%- endcomment -%}
+        <div class="inscripcion__cart-summary" id="carritoResumen">
+          <div class="inscripcion__cart-header">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/>
+              <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
+            </svg>
+            <span>En tu carrito:</span>
+          </div>
+          <div class="inscripcion__cart-items" id="carritoItems">
+            <span class="inscripcion__cart-empty" id="carritoEmpty">Aún no has agregado inscripciones</span>
+          </div>
+          <a href="/cart" class="inscripcion__cart-link" id="carritoLink" style="display: none;">Ver carrito completo →</a>
+        </div>
+
+        {%- comment -%} 7. CANTIDAD {%- endcomment -%}
+        <div class="inscripcion__field">
+          <label class="inscripcion__label">2. ¿Cuántas inscripciones?</label>
+          <div class="inscripcion__quantity">
+            <button type="button" class="inscripcion__qty-btn inscripcion__qty-btn--minus" onclick="decreaseQty()" aria-label="Disminuir">
+              <svg width="16" height="2" viewBox="0 0 16 2" fill="none">
+                <path d="M0 1H16" stroke="currentColor" stroke-width="2"/>
+              </svg>
+            </button>
+            <input type="number" name="quantity" id="quantity" min="1" value="1" class="inscripcion__qty-input" readonly>
+            <button type="button" class="inscripcion__qty-btn inscripcion__qty-btn--plus" onclick="increaseQty()" aria-label="Aumentar">
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                <path d="M8 0V16M0 8H16" stroke="currentColor" stroke-width="2"/>
+              </svg>
+            </button>
+          </div>
+        </div>
+
+        {%- comment -%} Info del proceso {%- endcomment -%}
+        <div class="inscripcion__info-note">
+          <svg width="18" height="18" viewBox="0 0 20 20" fill="none">
+            <path d="M10 18C14.4183 18 18 14.4183 18 10C18 5.58172 14.4183 2 10 2C5.58172 2 2 5.58172 2 10C2 14.4183 5.58172 18 10 18Z" stroke="currentColor" stroke-width="1.5"/>
+            <path d="M10 10V14M10 6H10.01" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+          <span>Después de agregar al carrito, llenarás el formulario de cada participante</span>
+        </div>
+
+        {%- comment -%} 8. BOTONES DE ACCION {%- endcomment -%}
+        <div class="inscripcion__actions">
+          <div class="inscripcion__action-group">
+            <button type="button" class="inscripcion__btn inscripcion__btn--cart" onclick="agregarAlCarrito()" {% unless current_variant.available %}disabled{% endunless %}>
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/>
+                <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
+              </svg>
+              AGREGAR AL CARRITO
+            </button>
+            <p class="inscripcion__btn-hint">Para inscribir varias personas en diferentes categorías</p>
+          </div>
+
+          <div class="inscripcion__action-group">
+            <button type="submit" class="inscripcion__btn inscripcion__btn--pay" {% unless current_variant.available %}disabled{% endunless %}>
+              PAGAR AHORA
+            </button>
+            <p class="inscripcion__btn-hint">Ir directo al checkout</p>
+          </div>
+        </div>
+
+      {% endform %}
+    {% endif %}
+
+    {%- comment -%} 9. IMAGEN DEL PRODUCTO - Al final {%- endcomment -%}
+    <div class="inscripcion__gallery">
+      {% if product.images.size > 0 %}
+        <div class="inscripcion__main-image">
+          <img
+            src="{{ product.featured_image | image_url: width: 800 }}"
+            alt="{{ product.title }}"
+            id="mainProductImage"
+            class="inscripcion__image"
+            loading="lazy">
+        </div>
+        {% if product.images.size > 1 %}
+          <div class="inscripcion__thumbs">
+            {% for image in product.images %}
+              <button
+                type="button"
+                class="inscripcion__thumb {% if forloop.first %}is-active{% endif %}"
+                data-image="{{ image | image_url: width: 800 }}"
+                onclick="changeMainImage(this)">
+                <img src="{{ image | image_url: width: 150 }}" alt="{{ product.title }}">
+              </button>
+            {% endfor %}
+          </div>
+        {% endif %}
+      {% endif %}
+    </div>
+
+  </div>
+</section>
+
+{%- comment -%} DISCOUNT FLOATING NOTIFICATION - DESHABILITADO (CHILILOVE)
+<div class="discount-float" id="discountFloat">
+  <div class="discount-float__card">
+    <div class="discount-float__content">
+      <div class="discount-float__badge">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M21.41 11.58l-9-9C12.05 2.22 11.55 2 11 2H4c-1.1 0-2 .9-2 2v7c0 .55.22 1.05.59 1.42l9 9c.36.36.86.58 1.41.58.55 0 1.05-.22 1.41-.59l7-7c.37-.36.59-.86.59-1.41 0-.55-.23-1.06-.59-1.42zM5.5 7C4.67 7 4 6.33 4 5.5S4.67 4 5.5 4 7 4.67 7 5.5 6.33 7 5.5 7z"/>
+        </svg>
+        <span>DESCUENTO</span>
+      </div>
+      <div class="discount-float__code" id="discountCodeText">14% OFF: CHILILOVE</div>
+      <button type="button" class="discount-float__btn" id="copyDiscountBtn">
+        <span class="discount-float__btn-default">Copiar</span>
+        <span class="discount-float__btn-copied">✓</span>
+      </button>
+    </div>
+  </div>
+</div>
+{%- endcomment -%}
+
+<script>
+  function changeMainImage(button) {
+    const newImage = button.getAttribute('data-image');
+    document.getElementById('mainProductImage').src = newImage;
+    document.querySelectorAll('.inscripcion__thumb').forEach(thumb => thumb.classList.remove('is-active'));
+    button.classList.add('is-active');
+  }
+
+  function selectCategoria(button) {
+    if (button.disabled) return;
+
+    // Quitar seleccion anterior
+    document.querySelectorAll('.inscripcion__cat-btn').forEach(row => row.classList.remove('is-selected'));
+
+    // Seleccionar nueva
+    button.classList.add('is-selected');
+
+    // Actualizar hidden input
+    document.getElementById('selectedVariantId').value = button.getAttribute('data-variant-id');
+
+    // Actualizar resumen - usar data-variant-title para evitar el badge
+    const nombre = button.getAttribute('data-variant-title');
+    const precio = button.getAttribute('data-price');
+    document.getElementById('resumenCategoria').textContent = nombre;
+    document.getElementById('resumenPrecio').textContent = precio;
+
+    // Scroll suave al resumen
+    document.getElementById('resumenSeleccion').scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
+
+  function increaseQty() {
+    const input = document.getElementById('quantity');
+    input.value = parseInt(input.value) + 1;
+  }
+
+  function decreaseQty() {
+    const input = document.getElementById('quantity');
+    if (parseInt(input.value) > 1) input.value = parseInt(input.value) - 1;
+  }
+
+  function mostrarToast(cantidad, categoria) {
+    const toast = document.getElementById('toastNotification');
+    const subtitle = document.getElementById('toastSubtitle');
+    subtitle.textContent = cantidad + 'x ' + categoria;
+    toast.classList.add('is-visible');
+
+    // Auto cerrar despues de 4 segundos
+    setTimeout(() => {
+      cerrarToast();
+    }, 4000);
+  }
+
+  function cerrarToast() {
+    const toast = document.getElementById('toastNotification');
+    toast.classList.remove('is-visible');
+  }
+
+  async function actualizarBadgesCarrito() {
+    try {
+      const response = await fetch('/cart.js');
+      const cart = await response.json();
+
+      // Resetear todos los badges
+      document.querySelectorAll('[data-cart-badge]').forEach(badge => {
+        badge.style.display = 'none';
+        badge.textContent = '0';
+      });
+
+      // Filtrar items de este producto
+      const productItems = cart.items.filter(item => {
+        const badge = document.querySelector(`[data-cart-badge="${item.variant_id}"]`);
+        return badge !== null;
+      });
+
+      // Actualizar badges con items del carrito
+      productItems.forEach(item => {
+        const badge = document.querySelector(`[data-cart-badge="${item.variant_id}"]`);
+        if (badge) {
+          badge.textContent = item.quantity;
+          badge.style.display = 'inline-flex';
+        }
+      });
+
+      // Actualizar resumen del carrito (siempre visible)
+      const carritoItems = document.getElementById('carritoItems');
+      const carritoEmpty = document.getElementById('carritoEmpty');
+      const carritoLink = document.getElementById('carritoLink');
+
+      if (productItems.length > 0) {
+        // Crear lista de items
+        const itemsHTML = productItems.map(item => {
+          return `<span class="inscripcion__cart-item">${item.quantity}x ${item.variant_title}</span>`;
+        }).join('');
+
+        carritoItems.innerHTML = itemsHTML;
+        if (carritoLink) carritoLink.style.display = 'block';
+      } else {
+        // Mostrar mensaje de vacío
+        carritoItems.innerHTML = '<span class="inscripcion__cart-empty">Aún no has agregado inscripciones</span>';
+        if (carritoLink) carritoLink.style.display = 'none';
+      }
+
+      // Actualizar contador global del carrito
+      const cartCount = document.querySelector('.cart-count, .cart-item-count, [data-cart-count]');
+      if (cartCount) {
+        cartCount.textContent = cart.item_count;
+      }
+    } catch (error) {
+      console.error('Error actualizando badges:', error);
+    }
+  }
+
+  // Store jersey availability globally
+  let jerseyData = null;
+
+  async function agregarAlCarrito() {
+    const variantId = document.getElementById('selectedVariantId').value;
+    const quantity = document.getElementById('quantity').value;
+    const btn = document.querySelector('.inscripcion__btn--cart');
+    const selectedRow = document.querySelector('.inscripcion__cat-btn.is-selected');
+    const categoriaName = selectedRow ? selectedRow.getAttribute('data-variant-title') : 'Inscripción';
+
+    // Deshabilitar boton
+    btn.disabled = true;
+    btn.innerHTML = '<span class="loading-spinner"></span> Agregando...';
+
+    try {
+      // Add inscription to cart
+      const response = await fetch('/cart/add.js', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          id: variantId,
+          quantity: parseInt(quantity)
+        })
+      });
+
+      if (response.ok) {
+        // Check if jerseys are available and handle them properly
+        if (jerseyData && jerseyData.disponible && jerseyData.jerseyVariantId) {
+          try {
+            // IMPORTANT: Check if a promo jersey already exists in the cart
+            const cartResponse = await fetch('/cart.js');
+            const cart = await cartResponse.json();
+
+            // Count total inscriptions in cart (including the one we just added)
+            const totalInscriptions = cart.items
+              .filter(item => {
+                const title = (item.product_title || '').toLowerCase();
+                return title.includes('inscripcion') || title.includes('inscripción');
+              })
+              .reduce((total, item) => total + item.quantity, 0);
+
+            // Fetch available jerseys from inventory API to cap quantity
+            let jerseyQty = totalInscriptions;
+            try {
+              const invResponse = await fetch('https://dhmexraces-webhooks.vercel.app/api/inventory');
+              const invData = await invResponse.json();
+              const sede = (jerseyData.sede || 'guanajuato').toLowerCase();
+              const disponibles = invData.sedes?.[sede]?.playeras?.disponibles ?? 50;
+              jerseyQty = Math.min(totalInscriptions, disponibles);
+            } catch (invErr) {
+              console.error('Error fetching inventory, using totalInscriptions:', invErr);
+            }
+
+            // Find existing promo jersey
+            const existingPromoJersey = cart.items.find(item => {
+              const title = (item.product_title || '').toLowerCase();
+              const isJersey = title.includes('jersey') || title.includes('playera oficial');
+              const props = item.properties || {};
+              return isJersey && props['_promo_jersey'] === 'true';
+            });
+
+            if (jerseyQty <= 0) {
+              // No jerseys available - remove promo jersey if exists
+              if (existingPromoJersey) {
+                const jerseyLine = cart.items.indexOf(existingPromoJersey) + 1;
+                await fetch('/cart/change.js', {
+                  method: 'POST',
+                  headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify({ line: jerseyLine, quantity: 0 })
+                });
+              }
+            } else if (existingPromoJersey) {
+              // Promo jersey exists - update its quantity capped to available
+              const jerseyLine = cart.items.indexOf(existingPromoJersey) + 1;
+              await fetch('/cart/change.js', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                  line: jerseyLine,
+                  quantity: jerseyQty
+                })
+              });
+            } else {
+              // No promo jersey exists - add one with capped quantity
+              await fetch('/cart/add.js', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                  id: jerseyData.jerseyVariantId,
+                  quantity: jerseyQty,
+                  properties: {
+                    '_promo_jersey': 'true'
+                  }
+                })
+              });
+            }
+
+            // Store jersey info in sessionStorage for registration form
+            sessionStorage.setItem('jerseyDisponible', JSON.stringify({
+              disponible: true,
+              sede: jerseyData.sede,
+              count: jerseyQty
+            }));
+          } catch (jerseyError) {
+            console.error('Error handling jersey:', jerseyError);
+          }
+        }
+
+        // Mostrar toast
+        mostrarToast(quantity, categoriaName);
+
+        // Actualizar badges del carrito
+        await actualizarBadgesCarrito();
+      } else {
+        alert('Error al agregar al carrito. Intenta de nuevo.');
+      }
+    } catch (error) {
+      console.error('Error:', error);
+      alert('Error al agregar al carrito. Intenta de nuevo.');
+    }
+
+    // Restaurar boton
+    btn.disabled = false;
+    btn.innerHTML = `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/>
+      <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
+    </svg> AGREGAR AL CARRITO`;
+  }
+
+  // ============ TOUR GUIADO ============
+  const tourSteps = [
+    {
+      element: '.inscripcion__section',
+      title: '1. Selecciona tu categoría',
+      text: 'Toca la categoría que corresponde a tu edad. Verás un check verde cuando esté seleccionada.',
+      position: 'bottom'
+    },
+    {
+      element: '.inscripcion__price-card',
+      title: '2. Revisa el precio',
+      text: 'Aquí ves el precio actual de inscripción. Puede cambiar según la fase de venta.',
+      position: 'bottom'
+    },
+    {
+      element: '.inscripcion__cart-summary',
+      title: '3. Tu carrito',
+      text: 'Aquí verás todas las inscripciones que has agregado. Puedes inscribir personas en diferentes categorías.',
+      position: 'bottom'
+    },
+    {
+      element: '.inscripcion__quantity',
+      title: '4. Elige la cantidad',
+      text: '¿Inscribes a más personas en esta categoría? Ajusta la cantidad aquí.',
+      position: 'bottom'
+    },
+    {
+      element: '.inscripcion__actions',
+      title: '5. Agrega al carrito o paga',
+      text: 'Usa "Agregar al carrito" para inscribir en varias categorías, o "Pagar ahora" para ir directo al checkout.',
+      position: 'bottom'
+    }
+  ];
+
+  let currentTourStep = 0;
+  let tourActive = false;
+
+  function toggleHelpMenu() {
+    const menu = document.getElementById('helpMenu');
+    const bubble = document.getElementById('helpBubble');
+    const tooltip = document.getElementById('helpTooltip');
+    menu.classList.toggle('show');
+    bubble.classList.toggle('active');
+    // Ocultar tooltip cuando se abre el menú
+    if (tooltip) tooltip.style.display = 'none';
+  }
+
+  function cerrarTooltipAyuda(event) {
+    if (event) event.stopPropagation();
+    const tooltip = document.getElementById('helpTooltip');
+    if (tooltip) {
+      tooltip.style.display = 'none';
+      // Guardar solo para esta sesión
+      sessionStorage.setItem('helpTooltipClosed', 'true');
+    }
+  }
+
+  function abrirDesdeTooltip() {
+    const tooltip = document.getElementById('helpTooltip');
+    if (tooltip) tooltip.style.display = 'none';
+    sessionStorage.setItem('helpTooltipClosed', 'true');
+    toggleHelpMenu();
+  }
+
+  function mostrarTooltipAyuda() {
+    const tooltip = document.getElementById('helpTooltip');
+    if (tooltip) {
+      tooltip.style.display = 'flex';
+      // Auto-ocultar después de 10 segundos
+      setTimeout(() => {
+        if (tooltip && tooltip.style.display !== 'none') {
+          tooltip.style.opacity = '0';
+          setTimeout(() => {
+            if (tooltip) {
+              tooltip.style.display = 'none';
+              tooltip.style.opacity = '1';
+            }
+          }, 300);
+        }
+      }, 10000);
+    }
+  }
+
+  function iniciarTour() {
+    toggleHelpMenu();
+    currentTourStep = 0;
+    tourActive = true;
+
+    const overlay = document.getElementById('tourOverlay');
+    const helpBubble = document.getElementById('helpBubble');
+
+    overlay.classList.add('active');
+    // Esconder la burbuja de ayuda durante el tour
+    if (helpBubble) helpBubble.style.display = 'none';
+
+    // Iniciar primer paso
+    mostrarPasoTour();
+  }
+
+  function terminarTour() {
+    tourActive = false;
+    const overlay = document.getElementById('tourOverlay');
+    const highlight = document.getElementById('tourHighlight');
+    const tooltip = document.getElementById('tourTooltip');
+    const helpBubble = document.getElementById('helpBubble');
+
+    overlay.classList.remove('active');
+    highlight.style.opacity = '0';
+    tooltip.style.opacity = '0';
+
+    // Mostrar la burbuja de ayuda de nuevo
+    if (helpBubble) helpBubble.style.display = 'block';
+
+    // Guardar que el usuario ya vio el tour
+    localStorage.setItem('tourCompleted', 'true');
+  }
+
+  function posicionarHighlight() {
+    if (!tourActive) return;
+
+    const step = tourSteps[currentTourStep];
+    const element = document.querySelector(step.element);
+    if (!element) return;
+
+    const rect = element.getBoundingClientRect();
+    const highlight = document.getElementById('tourHighlight');
+    const tooltip = document.getElementById('tourTooltip');
+
+    // Posicionar highlight - FIXED usa coordenadas del viewport
+    highlight.style.top = (rect.top - 10) + 'px';
+    highlight.style.left = (rect.left - 10) + 'px';
+    highlight.style.width = (rect.width + 20) + 'px';
+    highlight.style.height = (rect.height + 20) + 'px';
+    highlight.style.opacity = '1';
+
+    // Posicionar tooltip - siempre en la parte inferior de la pantalla en mobile
+    const isMobile = window.innerWidth <= 768;
+
+    if (isMobile) {
+      tooltip.style.top = 'auto';
+      tooltip.style.bottom = '30px';
+      tooltip.style.left = '16px';
+      tooltip.style.right = '16px';
+      tooltip.style.width = 'auto';
+    } else {
+      tooltip.style.bottom = 'auto';
+      tooltip.style.right = 'auto';
+      tooltip.style.width = '320px';
+
+      // Posicionar cerca del elemento
+      const tooltipTop = rect.bottom + 20;
+      tooltip.style.top = Math.min(tooltipTop, window.innerHeight - 250) + 'px';
+      tooltip.style.left = Math.max(16, Math.min(rect.left, window.innerWidth - 340)) + 'px';
+    }
+
+    tooltip.style.opacity = '1';
+  }
+
+  function mostrarPasoTour() {
+    if (!tourActive) return;
+
+    const step = tourSteps[currentTourStep];
+    let element = document.querySelector(step.element);
+
+    // Si el elemento no existe o no es visible, intentar con fallback
+    if (!element || element.offsetParent === null || element.style.display === 'none') {
+      if (step.fallback) {
+        element = document.querySelector(step.fallback);
+      }
+    }
+
+    // Si aún no hay elemento, saltar al siguiente paso
+    if (!element || element.offsetParent === null) {
+      console.log('Elemento no encontrado:', step.element);
+      siguientePasoTour();
+      return;
+    }
+
+    // Ocultar mientras hacemos scroll
+    const highlight = document.getElementById('tourHighlight');
+    const tooltip = document.getElementById('tourTooltip');
+    highlight.style.opacity = '0';
+    tooltip.style.opacity = '0';
+
+    // Actualizar contenido del tooltip
+    document.getElementById('tourStepNumber').textContent = `Paso ${currentTourStep + 1} de ${tourSteps.length}`;
+    document.getElementById('tourTitle').textContent = step.title;
+    document.getElementById('tourText').textContent = step.text;
+    document.getElementById('tourProgress').style.width = ((currentTourStep + 1) / tourSteps.length * 100) + '%';
+
+    // Cambiar texto del botón en último paso
+    const nextBtn = document.getElementById('tourNextBtn');
+    nextBtn.textContent = currentTourStep === tourSteps.length - 1 ? '¡Entendido!' : 'Siguiente';
+
+    // Scroll al elemento - mostrar desde arriba con espacio para el header
+    const headerOffset = 120;
+    const elementPosition = element.getBoundingClientRect().top;
+    const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+
+    window.scrollTo({
+      top: offsetPosition,
+      behavior: 'smooth'
+    });
+
+    // Esperar a que termine el scroll y posicionar
+    setTimeout(() => {
+      posicionarHighlight();
+    }, 600);
+  }
+
+  function siguientePasoTour() {
+    currentTourStep++;
+    if (currentTourStep >= tourSteps.length) {
+      terminarTour();
+    } else {
+      mostrarPasoTour();
+    }
+  }
+
+  // Re-posicionar cuando el usuario hace scroll durante el tour
+  let scrollTimeout;
+  window.addEventListener('scroll', function() {
+    if (tourActive) {
+      clearTimeout(scrollTimeout);
+      scrollTimeout = setTimeout(posicionarHighlight, 100);
+    }
+  });
+
+  // ============ DISCOUNT BAR - CHILILOVE ============
+  function initPromoBanner() {
+    const copyBtn = document.getElementById('copyDiscountBtn');
+    if (!copyBtn) return;
+    const discountCode = 'CHILILOVE';
+    copyBtn.addEventListener('click', async function() {
+      try {
+        await navigator.clipboard.writeText(discountCode);
+      } catch (err) {
+        const textArea = document.createElement('textarea');
+        textArea.value = discountCode;
+        document.body.appendChild(textArea);
+        textArea.select();
+        document.execCommand('copy');
+        document.body.removeChild(textArea);
+      }
+      copyBtn.classList.add('copied');
+      localStorage.setItem('discountCode', discountCode);
+      setTimeout(() => {
+        copyBtn.classList.remove('copied');
+      }, 2000);
+    });
+  }
+
+  document.addEventListener('DOMContentLoaded', function() {
+    initDynamicPricing();
+    initFomoInventory();
+    actualizarBadgesCarrito();
+    initPromoBanner();
+
+    // Auto-seleccionar categoría si viene de una página de sede
+    const preselected = sessionStorage.getItem('selectedCategory');
+    if (preselected) {
+      sessionStorage.removeItem('selectedCategory');
+      const buttons = document.querySelectorAll('.inscripcion__cat-btn');
+      buttons.forEach(function(btn) {
+        if (btn.getAttribute('data-variant-title') === preselected) {
+          selectCategoria(btn);
+        }
+      });
+    }
+
+    // Mostrar tooltip de ayuda después de 3 segundos
+    setTimeout(mostrarTooltipAyuda, 3000);
+
+    // Interceptar el formulario "PAGAR AHORA" para agregar jersey promo
+    const form = document.getElementById('inscripcion-form');
+    if (form) {
+      form.addEventListener('submit', async function(e) {
+        // Verificar si hay jerseys disponibles
+        if (jerseyData && jerseyData.disponible && jerseyData.jerseyVariantId) {
+          e.preventDefault(); // Detener el submit normal
+
+          const btn = form.querySelector('.inscripcion__btn--pay');
+          if (btn) {
+            btn.disabled = true;
+            btn.textContent = 'Procesando...';
+          }
+
+          try {
+            // Obtener el carrito actual
+            const cartResponse = await fetch('/cart.js');
+            const cart = await cartResponse.json();
+
+            // Contar inscripciones actuales + la que se va a agregar
+            const currentInscriptions = cart.items
+              .filter(item => {
+                const title = (item.product_title || '').toLowerCase();
+                return title.includes('inscripcion') || title.includes('inscripción');
+              })
+              .reduce((total, item) => total + item.quantity, 0);
+
+            const quantity = parseInt(document.getElementById('quantity').value) || 1;
+            const totalInscriptions = currentInscriptions + quantity;
+
+            // Fetch available jerseys from inventory API to cap quantity
+            let jerseyQty = totalInscriptions;
+            try {
+              const invResponse = await fetch('https://dhmexraces-webhooks.vercel.app/api/inventory');
+              const invData = await invResponse.json();
+              const sede = (jerseyData.sede || 'guanajuato').toLowerCase();
+              const disponibles = invData.sedes?.[sede]?.playeras?.disponibles ?? 50;
+              jerseyQty = Math.min(totalInscriptions, disponibles);
+            } catch (invErr) {
+              console.error('Error fetching inventory:', invErr);
+            }
+
+            // Buscar si ya existe jersey promo en el carrito
+            const existingPromoJersey = cart.items.find(item => {
+              const props = item.properties || {};
+              return props['_promo_jersey'] === 'true';
+            });
+
+            if (jerseyQty <= 0) {
+              // No jerseys available - remove if exists
+              if (existingPromoJersey) {
+                const jerseyLine = cart.items.indexOf(existingPromoJersey) + 1;
+                await fetch('/cart/change.js', {
+                  method: 'POST',
+                  headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify({ line: jerseyLine, quantity: 0 })
+                });
+              }
+            } else if (existingPromoJersey) {
+              // Actualizar cantidad del jersey promo existente (capped)
+              const jerseyLine = cart.items.indexOf(existingPromoJersey) + 1;
+              await fetch('/cart/change.js', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                  line: jerseyLine,
+                  quantity: jerseyQty
+                })
+              });
+            } else {
+              // Agregar nuevo jersey promo (capped)
+              await fetch('/cart/add.js', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                  id: jerseyData.jerseyVariantId,
+                  quantity: jerseyQty,
+                  properties: {
+                    '_promo_jersey': 'true'
+                  }
+                })
+              });
+            }
+
+            // Guardar info de jersey para el formulario de registro
+            sessionStorage.setItem('jerseyDisponible', JSON.stringify({
+              disponible: true,
+              sede: jerseyData.sede,
+              count: jerseyQty
+            }));
+
+          } catch (error) {
+            console.error('Error agregando jersey promo:', error);
+          }
+
+          // Continuar con el submit del formulario
+          form.submit();
+        }
+        // Si no hay jersey disponible, el formulario se envía normalmente
+      });
+    }
+  });
+
+  function initDynamicPricing() {
+    const configEl = document.getElementById('pricingConfig');
+    if (!configEl) return;
+    try {
+      const config = JSON.parse(configEl.textContent);
+      if (!config.enabled) return;
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+      const validPhases = config.phases.filter(p => p.start && p.end && p.price > 0);
+      if (validPhases.length === 0) return;
+      let currentPhase = null;
+      let currentPhaseIndex = -1;
+      for (let i = 0; i < validPhases.length; i++) {
+        const phase = validPhases[i];
+        const startDate = new Date(phase.start);
+        const endDate = new Date(phase.end);
+        if (today >= startDate && today <= endDate) {
+          currentPhase = phase;
+          currentPhaseIndex = i;
+          break;
+        }
+      }
+      const priceEl = document.getElementById('productPrice');
+      const badgeEl = document.getElementById('phaseBadge');
+      if (currentPhase) {
+        priceEl.textContent = '$' + currentPhase.price.toLocaleString('es-MX');
+        if (badgeEl) badgeEl.textContent = currentPhase.label;
+        document.querySelectorAll('.inscripcion__timeline-phase').forEach((el, idx) => {
+          if (idx < currentPhaseIndex) el.classList.add('past');
+          else if (idx === currentPhaseIndex) el.classList.add('current');
+        });
+      }
+    } catch (e) {
+      console.error('Error pricing:', e);
+    }
+  }
+
+  async function initFomoInventory() {
+    const configEl = document.getElementById('sedeConfig');
+    if (!configEl) return;
+    try {
+      const config = JSON.parse(configEl.textContent);
+      const productTitle = config.productTitle.toLowerCase();
+      let sede = null;
+      if (productTitle.includes('guanajuato')) sede = 'guanajuato';
+      else if (productTitle.includes('puebla')) sede = 'puebla';
+      else if (productTitle.includes('guadalajara')) sede = 'guadalajara';
+      else if (productTitle.includes('ixtapan')) sede = 'ixtapan';
+      else if (productTitle.includes('taxco')) sede = 'taxco';
+      if (!sede) return;
+      const response = await fetch(`${config.apiUrl}?sede=${sede}`);
+      if (!response.ok) throw new Error('API error');
+      const data = await response.json();
+      if (!data.success) throw new Error(data.error);
+      const container = document.getElementById('fomoContainer');
+      const playerasEl = document.getElementById('fomoPlayeras');
+      const medallasEl = document.getElementById('fomoMedallas');
+      const playerasValueEl = document.getElementById('fomoPlayerasValue');
+      const medallasValueEl = document.getElementById('fomoMedallasValue');
+
+      // Store jersey availability for cart operations
+      const playerasDisponibles = !data.playeras.agotadas && data.playeras.disponibles > 0;
+
+      if (playerasDisponibles && config.jerseyHandles && config.jerseyHandles[sede]) {
+        // Fetch jersey product info to get variant ID
+        try {
+          const jerseyHandle = config.jerseyHandles[sede];
+          const jerseyResponse = await fetch(`/products/${jerseyHandle}.js`);
+          if (jerseyResponse.ok) {
+            const jerseyProduct = await jerseyResponse.json();
+            // Get first available variant
+            const availableVariant = jerseyProduct.variants.find(v => v.available);
+            if (availableVariant) {
+              jerseyData = {
+                disponible: true,
+                sede: sede,
+                jerseyVariantId: availableVariant.id,
+                jerseyProductTitle: jerseyProduct.title,
+                playerasDisponibles: data.playeras.disponibles
+              };
+            }
+          }
+        } catch (jerseyError) {
+          console.error('Error fetching jersey:', jerseyError);
+        }
+      }
+
+      // Clear jersey availability if no jerseys left
+      if (!playerasDisponibles) {
+        sessionStorage.removeItem('jerseyDisponible');
+      }
+
+      if (container && playerasEl && medallasEl && playerasValueEl && medallasValueEl) {
+        if (data.playeras.agotadas) {
+          playerasValueEl.textContent = 'Agotadas';
+          playerasEl.classList.add('inscripcion__fomo-badge--agotado');
+        } else if (data.playeras.disponibles <= 10) {
+          playerasValueEl.textContent = `${data.playeras.disponibles} de ${data.playeras.total} disponibles`;
+          playerasEl.classList.add('inscripcion__fomo-badge--urgente');
+        } else {
+          playerasValueEl.textContent = `${data.playeras.disponibles} de ${data.playeras.total} disponibles`;
+        }
+        if (data.medallas.agotadas) {
+          medallasValueEl.textContent = 'Agotadas';
+          medallasEl.classList.add('inscripcion__fomo-badge--agotado');
+        } else if (data.medallas.disponibles <= 20) {
+          medallasValueEl.textContent = `${data.medallas.disponibles} de ${data.medallas.total} disponibles`;
+          medallasEl.classList.add('inscripcion__fomo-badge--urgente');
+        } else {
+          medallasValueEl.textContent = `${data.medallas.disponibles} de ${data.medallas.total} disponibles`;
+        }
+        container.style.display = 'flex';
+      }
+    } catch (e) {
+      console.error('Error FOMO:', e);
+    }
+  }
+</script>
+
+{% schema %}
+{
+  "name": "Inscripcion Producto",
+  "settings": [],
+  "disabled_on": {
+    "groups": ["header", "footer"]
+  }
+}
+{% endschema %}

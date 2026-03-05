@@ -1,0 +1,389 @@
+{% comment %}
+  Ranking Section - DHMEX PRO
+  Rankings by race with category filter
+  Data format: position|name|category|team|time|points separated by ||
+{% endcomment %}
+
+<style>
+  .ranking-section { padding: var(--space-lg) 0; }
+  .ranking-sede {
+    border: 1px solid rgba(0,0,0,0.08);
+    border-radius: 8px;
+    background: var(--bg-secondary);
+    margin-bottom: var(--space-sm);
+    overflow: hidden;
+  }
+  .ranking-sede__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: var(--space-sm) var(--space-md);
+    cursor: pointer;
+  }
+  .ranking-sede__info {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    flex-wrap: wrap;
+  }
+  .ranking-sede__round {
+    font-family: var(--font-heading);
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    color: var(--accent);
+    padding: 2px 8px;
+    border: 1px solid var(--accent);
+    border-radius: 4px;
+  }
+  .ranking-sede__title {
+    font-family: var(--font-heading);
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin: 0;
+  }
+  .ranking-sede__toggle {
+    background: none;
+    border: none;
+    color: var(--text-secondary);
+    cursor: pointer;
+    padding: 8px;
+    transition: transform 0.3s;
+  }
+  .ranking-sede__toggle.is-open {
+    transform: rotate(180deg);
+  }
+  .ranking-sede__body {
+    padding: 0 var(--space-md) var(--space-md);
+  }
+  .ranking-filters {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+    margin-bottom: var(--space-sm);
+  }
+  .ranking-filter {
+    padding: 4px 12px;
+    background: none;
+    border: 1px solid rgba(0,0,0,0.1);
+    border-radius: 4px;
+    color: var(--text-secondary);
+    font-family: var(--font-heading);
+    font-size: 11px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .ranking-filter:hover {
+    border-color: rgba(0,0,0,0.3);
+    color: var(--text-primary);
+  }
+  .ranking-filter.is-active {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: #fff;
+  }
+  .ranking-table-wrap {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  .ranking-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-family: var(--font-body);
+    font-size: 13px;
+  }
+  .ranking-table thead th {
+    font-family: var(--font-heading);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--text-secondary);
+    padding: 8px 12px;
+    text-align: left;
+    border-bottom: 1px solid rgba(0,0,0,0.08);
+    white-space: nowrap;
+  }
+  .ranking-table tbody tr {
+    border-bottom: 1px solid rgba(0,0,0,0.04);
+    transition: background 0.15s;
+  }
+  .ranking-table tbody tr:hover {
+    background: rgba(0,0,0,0.03);
+  }
+  .ranking-table td {
+    padding: 10px 12px;
+    color: var(--text-primary);
+    white-space: nowrap;
+  }
+  .ranking-table__pos { width: 50px; text-align: center; }
+  .ranking-table__name { font-weight: 600; }
+  .ranking-table__cat { }
+  .ranking-table__team { color: var(--text-secondary); }
+  .ranking-table__time { font-family: var(--font-heading); }
+  .ranking-table__pts { font-weight: 700; text-align: center; }
+  .ranking-table__sede { text-align: center; font-size: 12px; }
+  .ranking-table__diff { text-align: center; color: var(--text-secondary); font-size: 12px; }
+  .ranking-medal {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    font-size: 12px;
+    font-weight: 700;
+    font-family: var(--font-heading);
+  }
+  .ranking-medal--gold { background: #FFD700; color: #000; }
+  .ranking-medal--silver { background: #C0C0C0; color: #000; }
+  .ranking-medal--bronze { background: #CD7F32; color: #fff; }
+  .ranking-empty {
+    text-align: center;
+    padding: var(--space-xl) var(--space-md);
+  }
+  .ranking-table--overall { font-size: 12px; }
+  .ranking-loading { text-align: center; padding: var(--space-lg); }
+  @media (max-width: 640px) {
+    .ranking-sede__header { padding: var(--space-sm); }
+    .ranking-sede__body { padding: 0 var(--space-sm) var(--space-sm); }
+    .ranking-table { font-size: 12px; }
+    .ranking-table td, .ranking-table th { padding: 6px 8px; }
+  }
+</style>
+
+<section class="section ranking-section">
+  <div class="container">
+    <div class="section__header">
+      <div class="section__header-left">
+        <span class="label">{{ section.settings.subtitle | default: 'Resultados' }}</span>
+        <h2 class="heading-lg">{{ section.settings.title | default: 'Ranking 2026' }}</h2>
+      </div>
+      {% if section.settings.overall_link != blank %}
+        <a href="{{ section.settings.overall_link }}" class="btn btn--outline">Ver Overall</a>
+      {% endif %}
+    </div>
+
+    {% for block in section.blocks %}
+      {% if block.type == 'sede' %}
+        <div class="ranking-sede reveal" data-sede="{{ block.id }}" {{ block.shopify_attributes }}>
+          <div class="ranking-sede__header">
+            <div class="ranking-sede__info">
+              <span class="ranking-sede__round">{{ block.settings.round | default: 'R1' }}</span>
+              <h3 class="ranking-sede__title">{{ block.settings.title }}</h3>
+              {% if block.settings.date != blank %}
+                <span class="label">{{ block.settings.date }}</span>
+              {% endif %}
+            </div>
+            <button class="ranking-sede__toggle" onclick="toggleRanking(this)" aria-label="Expandir">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="6 9 12 15 18 9"/>
+              </svg>
+            </button>
+          </div>
+
+          <div class="ranking-sede__body" style="display: none;">
+            {% if block.settings.status == 'upcoming' or block.settings.results == blank %}
+              <div class="ranking-upcoming" style="text-align: center; padding: var(--space-lg) var(--space-md);">
+                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="var(--text-secondary)" stroke-width="1.5">
+                  <circle cx="12" cy="12" r="10"/><path d="M12 6V12L16 14"/>
+                </svg>
+                <p class="label" style="margin-top: var(--space-sm);">Los resultados se publicaran despues de la carrera</p>
+              </div>
+            {% else %}
+              {% assign results_rows = block.settings.results | split: '||' %}
+              {% assign categories_list = '' %}
+
+              {% for row in results_rows %}
+                {% assign parts = row | strip | split: '|' %}
+                {% if parts.size >= 6 %}
+                  {% assign cat = parts[2] | strip %}
+                  {% unless categories_list contains cat %}
+                    {% if categories_list != '' %}{% assign categories_list = categories_list | append: '||' %}{% endif %}
+                    {% assign categories_list = categories_list | append: cat %}
+                  {% endunless %}
+                {% endif %}
+              {% endfor %}
+
+              {% assign unique_cats = categories_list | split: '||' %}
+
+              <div class="ranking-filters" data-sede-id="{{ block.id }}">
+                <button class="ranking-filter is-active" data-filter="all" onclick="filterCategory(this, '{{ block.id }}')">Todos</button>
+                {% for cat in unique_cats %}
+                  <button class="ranking-filter" data-filter="{{ cat }}" onclick="filterCategory(this, '{{ block.id }}')">{{ cat }}</button>
+                {% endfor %}
+              </div>
+
+              <div class="ranking-table-wrap">
+                <table class="ranking-table" data-table="{{ block.id }}">
+                  <thead>
+                    <tr>
+                      <th class="ranking-table__pos">#</th>
+                      <th class="ranking-table__name">Piloto</th>
+                      <th class="ranking-table__cat">Categoria</th>
+                      <th class="ranking-table__team">Equipo</th>
+                      <th class="ranking-table__time">Tiempo</th>
+                      <th class="ranking-table__pts">Pts</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {% for row in results_rows %}
+                      {% assign parts = row | strip | split: '|' %}
+                      {% if parts.size >= 6 %}
+                        {% assign pos = parts[0] | strip %}
+                        {% assign name = parts[1] | strip %}
+                        {% assign category = parts[2] | strip %}
+                        {% assign team = parts[3] | strip %}
+                        {% assign time = parts[4] | strip %}
+                        {% assign points = parts[5] | strip %}
+                        {% assign pos_num = pos | plus: 0 %}
+                        <tr data-category="{{ category }}">
+                          <td class="ranking-table__pos">
+                            {% if pos_num == 1 %}
+                              <span class="ranking-medal ranking-medal--gold">{{ pos }}</span>
+                            {% elsif pos_num == 2 %}
+                              <span class="ranking-medal ranking-medal--silver">{{ pos }}</span>
+                            {% elsif pos_num == 3 %}
+                              <span class="ranking-medal ranking-medal--bronze">{{ pos }}</span>
+                            {% else %}
+                              {{ pos }}
+                            {% endif %}
+                          </td>
+                          <td class="ranking-table__name">{{ name }}</td>
+                          <td class="ranking-table__cat"><span class="tag">{{ category }}</span></td>
+                          <td class="ranking-table__team">{{ team }}</td>
+                          <td class="ranking-table__time">{{ time }}</td>
+                          <td class="ranking-table__pts">{{ points }}</td>
+                        </tr>
+                      {% endif %}
+                    {% endfor %}
+                  </tbody>
+                </table>
+              </div>
+            {% endif %}
+          </div>
+        </div>
+      {% endif %}
+    {% endfor %}
+
+    {% if section.blocks.size == 0 %}
+      <div class="ranking-empty">
+        <span class="heading-md" style="color: var(--text-secondary);">Proximamente</span>
+        <p class="body-text" style="margin-top: var(--space-sm);">Los resultados se publicaran despues de cada carrera</p>
+      </div>
+    {% endif %}
+  </div>
+</section>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  // Auto-expand first sede with data
+  const firstSede = document.querySelector('.ranking-sede');
+  if (firstSede) {
+    const body = firstSede.querySelector('.ranking-sede__body');
+    const toggle = firstSede.querySelector('.ranking-sede__toggle');
+    if (body) body.style.display = 'block';
+    if (toggle) toggle.classList.add('is-open');
+  }
+});
+
+function toggleRanking(btn) {
+  const sede = btn.closest('.ranking-sede');
+  const body = sede.querySelector('.ranking-sede__body');
+  const isOpen = body.style.display !== 'none';
+  body.style.display = isOpen ? 'none' : 'block';
+  btn.classList.toggle('is-open');
+}
+
+function filterCategory(btn, sedeId) {
+  const sede = btn.closest('.ranking-sede');
+  const filter = btn.dataset.filter;
+
+  // Update active button
+  sede.querySelectorAll('.ranking-filter').forEach(b => b.classList.remove('is-active'));
+  btn.classList.add('is-active');
+
+  // Filter rows
+  sede.querySelectorAll('tbody tr').forEach(function(row) {
+    if (filter === 'all' || row.dataset.category === filter) {
+      row.style.display = '';
+    } else {
+      row.style.display = 'none';
+    }
+  });
+}
+</script>
+
+{% schema %}
+{
+  "name": "Ranking",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "subtitle",
+      "label": "Subtitulo",
+      "default": "Resultados"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Titulo",
+      "default": "Ranking 2026"
+    },
+    {
+      "type": "url",
+      "id": "overall_link",
+      "label": "Link al Overall"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "sede",
+      "name": "Sede",
+      "settings": [
+        {
+          "type": "text",
+          "id": "round",
+          "label": "Ronda",
+          "default": "R1"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Titulo sede",
+          "default": "Guanajuato"
+        },
+        {
+          "type": "text",
+          "id": "date",
+          "label": "Fecha"
+        },
+        {
+          "type": "select",
+          "id": "status",
+          "label": "Estado",
+          "options": [
+            { "value": "upcoming", "label": "Proximamente" },
+            { "value": "completed", "label": "Completada" }
+          ],
+          "default": "upcoming"
+        },
+        {
+          "type": "textarea",
+          "id": "results",
+          "label": "Resultados",
+          "info": "pos|nombre|cat|equipo|tiempo|puntos separados por ||"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Ranking"
+    }
+  ]
+}
+{% endschema %}

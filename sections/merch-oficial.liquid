@@ -1,0 +1,170 @@
+{% comment %}
+  Merch Oficial - DHMEX PRO
+  Premium merch page with product cards
+{% endcomment %}
+
+<section class="section merch-section">
+  <div class="container">
+    <div class="section__header">
+      <div class="section__header-left">
+        <span class="label">{{ section.settings.subtitle | default: 'Tienda Oficial' }}</span>
+        <h2 class="heading-lg">{{ section.settings.title | default: 'Merch Oficial' }}</h2>
+      </div>
+      {% if section.settings.description != blank %}
+        <p class="body-text" style="max-width: 480px;">{{ section.settings.description }}</p>
+      {% endif %}
+    </div>
+
+    {% for block in section.blocks %}
+      {% if block.type == 'product' %}
+        {% assign merch_product = all_products[block.settings.product_handle] %}
+        {% if merch_product != blank %}
+          <div class="merch-card reveal" {{ block.shopify_attributes }}>
+            <div class="merch-card__image">
+              {% if merch_product.featured_image != blank %}
+                <img
+                  src="{{ merch_product.featured_image | image_url: width: 800 }}"
+                  alt="{{ merch_product.title }}"
+                  loading="lazy"
+                  width="800"
+                  height="600"
+                >
+              {% else %}
+                <div class="merch-card__placeholder">
+                  <span class="label" style="opacity: 0.3;">Sin imagen</span>
+                </div>
+              {% endif %}
+            </div>
+            <div class="merch-card__info">
+              {% if block.settings.badge != blank %}
+                <span class="tag tag--accent">{{ block.settings.badge }}</span>
+              {% endif %}
+              <h3 class="merch-card__title">{{ merch_product.title }}</h3>
+              <p class="merch-card__desc body-text">{{ merch_product.description | strip_html | truncate: 160 }}</p>
+              <div class="merch-card__bottom">
+                <span class="merch-card__price">{{ merch_product.price | money }}</span>
+                <a href="{{ merch_product.url }}" class="btn btn--primary">Comprar</a>
+              </div>
+            </div>
+          </div>
+        {% else %}
+          <div class="merch-card reveal" {{ block.shopify_attributes }}>
+            <div class="merch-card__image merch-card__placeholder">
+              <span class="label" style="opacity: 0.3;">Producto no encontrado</span>
+            </div>
+            <div class="merch-card__info">
+              <h3 class="merch-card__title">{{ block.settings.product_handle }}</h3>
+              <p class="merch-card__desc body-text">Verifica el handle del producto</p>
+            </div>
+          </div>
+        {% endif %}
+      {% elsif block.type == 'coming_soon' %}
+        <div class="merch-coming-soon reveal" {{ block.shopify_attributes }}>
+          <div class="merch-coming-soon__content">
+            <span class="label">{{ block.settings.subtitle | default: 'Proximamente' }}</span>
+            <h3 class="heading-md">{{ block.settings.title | default: 'Mas productos en camino' }}</h3>
+            {% if block.settings.description != blank %}
+              <p class="body-text">{{ block.settings.description }}</p>
+            {% endif %}
+            {% if block.settings.link != blank %}
+              <a href="{{ block.settings.link }}" class="btn btn--outline" style="margin-top: var(--space-md);">
+                {{ block.settings.link_text | default: 'Siguenos en Instagram' }}
+              </a>
+            {% endif %}
+          </div>
+        </div>
+      {% endif %}
+    {% endfor %}
+
+    {% if section.blocks.size == 0 %}
+      <div class="ranking-empty">
+        <span class="heading-md" style="color: var(--text-secondary);">Proximamente</span>
+        <p class="body-text" style="margin-top: var(--space-sm);">La tienda oficial estara disponible pronto</p>
+      </div>
+    {% endif %}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Merch Oficial",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "subtitle",
+      "label": "Subtitulo",
+      "default": "Tienda Oficial"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Titulo",
+      "default": "Merch Oficial"
+    },
+    {
+      "type": "textarea",
+      "id": "description",
+      "label": "Descripcion"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "product",
+      "name": "Producto",
+      "settings": [
+        {
+          "type": "text",
+          "id": "product_handle",
+          "label": "Handle del producto",
+          "info": "El handle/url del producto en Shopify"
+        },
+        {
+          "type": "text",
+          "id": "badge",
+          "label": "Badge (ej: Nuevo, Edicion Limitada)"
+        }
+      ]
+    },
+    {
+      "type": "coming_soon",
+      "name": "Proximamente",
+      "settings": [
+        {
+          "type": "text",
+          "id": "subtitle",
+          "label": "Subtitulo",
+          "default": "Proximamente"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Titulo",
+          "default": "Mas productos en camino"
+        },
+        {
+          "type": "textarea",
+          "id": "description",
+          "label": "Descripcion"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Link"
+        },
+        {
+          "type": "text",
+          "id": "link_text",
+          "label": "Texto del link",
+          "default": "Siguenos en Instagram"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Merch Oficial"
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,176 @@
+{% comment %}
+  Race Registration Section for DHMEXRACES
+  Editorial card composition for registration categories
+{% endcomment %}
+
+<section class="section">
+  <div class="container">
+    <div class="section__header">
+      <div class="section__header-left">
+        {% if section.settings.title != blank %}
+          <div class="section__eyebrow">
+            <span class="section__number">01</span>
+            <span class="label">Inscripciones</span>
+          </div>
+          <h2 class="heading-lg reveal">{{ section.settings.title }}</h2>
+        {% endif %}
+      </div>
+    </div>
+
+    {% if section.settings.subtitle != blank %}
+      <p class="body-text--lg reveal reveal--delay-1" style="color: var(--text-secondary); margin-bottom: var(--space-lg);">{{ section.settings.subtitle }}</p>
+    {% endif %}
+
+    <div class="section__divider"></div>
+
+    {% if section.settings.product != blank %}
+      {% assign selected_product = all_products[section.settings.product] %}
+
+      {% if selected_product.featured_image %}
+        <div class="reveal" style="overflow: hidden; border: 1px solid rgba(0,0,0,0.06); margin-bottom: var(--space-lg); height: {{ section.settings.container_height }}px;">
+          {{ selected_product.featured_image | image_url: width: 1200 | image_tag: loading: 'lazy', alt: selected_product.title, style: 'width:100%;height:100%;display:block;object-fit:cover;object-position: ' | append: section.settings.image_position_x | append: '% ' | append: section.settings.image_position_y | append: '%;' }}
+        </div>
+      {% endif %}
+
+      <div class="products-grid">
+        {% for variant in selected_product.variants %}
+          <div class="editorial-card reveal reveal--delay-{{ forloop.index | at_most: 4 }}" onclick="goToVariant('{{ variant.title }}', '{{ selected_product.url }}')" style="cursor: pointer;">
+            <span class="editorial-card__number">{{ forloop.index | prepend: '00' | slice: -2, 2 }}</span>
+            <span class="editorial-card__meta">{{ selected_product.title }}</span>
+            <h3 class="editorial-card__title">{{ variant.title }}</h3>
+            <div class="editorial-card__features">
+              <span class="editorial-card__feature">Cronometraje profesional</span>
+              <span class="editorial-card__feature">Puntos campeonato</span>
+              <span class="editorial-card__feature">Premios en efectivo</span>
+            </div>
+            <div class="editorial-card__price">
+              {{ variant.price | money }}<small> MXN</small>
+            </div>
+            {% if variant.compare_at_price > variant.price %}
+              <span style="font-size: 12px; color: var(--text-secondary); text-decoration: line-through;">{{ variant.compare_at_price | money }}</span>
+            {% endif %}
+            <div class="editorial-card__cta">
+              <span class="btn btn--primary">Inscribirse</span>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    {% else %}
+      <div class="products-grid">
+        {% for i in (1..3) %}
+          <div class="editorial-card reveal reveal--delay-{{ forloop.index }}">
+            <span class="editorial-card__number">{{ forloop.index | prepend: '00' | slice: -2, 2 }}</span>
+            <span class="editorial-card__meta">Categoria {{ forloop.index }}</span>
+            <h3 class="editorial-card__title">
+              {% if forloop.index == 1 %}Elite{% elsif forloop.index == 2 %}Amateur{% else %}Junior{% endif %}
+            </h3>
+            <div class="editorial-card__features">
+              <span class="editorial-card__feature">Cronometraje profesional</span>
+              <span class="editorial-card__feature">Puntos campeonato</span>
+              <span class="editorial-card__feature">Premios en efectivo</span>
+            </div>
+            <div class="editorial-card__price">
+              $0.00<small> MXN</small>
+            </div>
+            <p class="body-text" style="color: var(--text-secondary); font-size: 13px;">Selecciona un producto en la configuracion del tema.</p>
+          </div>
+        {% endfor %}
+      </div>
+    {% endif %}
+
+    {% if section.settings.button_label != blank %}
+      <div class="reveal" style="text-align: center; margin-top: var(--space-lg);">
+        <a href="{{ section.settings.button_link }}" class="btn btn--outline btn--large">
+          {{ section.settings.button_label }}
+        </a>
+      </div>
+    {% endif %}
+  </div>
+</section>
+
+<script>
+  function goToVariant(variantTitle, productUrl) {
+    sessionStorage.setItem('selectedCategory', variantTitle);
+    window.location.href = productUrl;
+  }
+</script>
+
+{% schema %}
+{
+  "name": "Race Registration",
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Title",
+      "default": "Inscripciones"
+    },
+    {
+      "type": "textarea",
+      "id": "subtitle",
+      "label": "Subtitle",
+      "default": "Elige tu categoría y asegura tu lugar"
+    },
+    {
+      "type": "product",
+      "id": "product",
+      "label": "Product",
+      "info": "Select the product with multiple variants (categories)"
+    },
+    {
+      "type": "header",
+      "content": "Ajustes de Imagen"
+    },
+    {
+      "type": "range",
+      "id": "container_height",
+      "min": 200,
+      "max": 600,
+      "step": 10,
+      "unit": "px",
+      "label": "Altura del contenedor",
+      "default": 300,
+      "info": "Altura del área donde se muestra la imagen"
+    },
+    {
+      "type": "range",
+      "id": "image_position_x",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "%",
+      "label": "Posición Horizontal",
+      "default": 50,
+      "info": "Mueve la imagen a izquierda (0%) o derecha (100%)"
+    },
+    {
+      "type": "range",
+      "id": "image_position_y",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "%",
+      "label": "Posición Vertical",
+      "default": 50,
+      "info": "Mueve la imagen arriba (0%) o abajo (100%)"
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "CTA Button Label",
+      "default": "Ver todas las categorías"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "CTA Button Link"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Race Registration",
+      "category": "DHMEXRACES"
+    }
+  ]
+}
+{% endschema %}

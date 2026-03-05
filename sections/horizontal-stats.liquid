@@ -1,0 +1,50 @@
+<section id="calendar" class="horizontal-stats">
+  <div class="horizontal-stats__track">
+    {% for block in section.blocks %}
+      <div class="horizontal-stats__card" {{ block.shopify_attributes }}>
+        <div class="horizontal-stats__number">{{ block.settings.number }}</div>
+        <div class="horizontal-stats__text">{{ block.settings.text }}</div>
+      </div>
+    {% endfor %}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Stats Horizontales",
+  "settings": [],
+  "blocks": [
+    {
+      "type": "stat",
+      "name": "Stat",
+      "settings": [
+        {
+          "type": "text",
+          "id": "number",
+          "label": "Numero / dato",
+          "default": "01"
+        },
+        {
+          "type": "text",
+          "id": "text",
+          "label": "Descripcion",
+          "default": "Sede Guanajuato"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Stats Horizontales",
+      "blocks": [
+        { "type": "stat", "settings": { "number": "GTO", "text": "Sede 1 — Guanajuato / 21-22 Feb" } },
+        { "type": "stat", "settings": { "number": "PUE", "text": "Sede 2 — Puebla / 21-22 Mar" } },
+        { "type": "stat", "settings": { "number": "GDL", "text": "Sede 3 — Guadalajara / 30-31 May" } },
+        { "type": "stat", "settings": { "number": "IXT", "text": "Sede 4 — Ixtapan de la Sal / 18-19 Jul" } },
+        { "type": "stat", "settings": { "number": "TAX", "text": "Sede 5 — Taxco / 17-18 Oct — Final Nacional" } },
+        { "type": "stat", "settings": { "number": "$530K", "text": "Total en premios para la temporada 2026" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

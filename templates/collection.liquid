@@ -1,0 +1,31 @@
+<div class="collection-page">
+  <div class="container">
+    <div class="section__header">
+      <div class="section__header-left">
+        <span class="label reveal">Coleccion</span>
+        <h1 class="heading-lg collection-page__title reveal reveal--delay-1">{{ collection.title }}</h1>
+      </div>
+      {% if collection.description != blank %}
+        <p class="body-text reveal reveal--delay-2" style="max-width: 480px;">{{ collection.description }}</p>
+      {% endif %}
+    </div>
+
+    {% if collection.products.size > 0 %}
+      <div class="products-grid stagger-children">
+        {% for product in collection.products %}
+          {% render 'product-card', product: product %}
+        {% endfor %}
+      </div>
+
+      {% if paginate.pages > 1 %}
+        <div style="text-align: center; margin-top: var(--space-xl);">
+          {{ paginate | default_pagination }}
+        </div>
+      {% endif %}
+    {% else %}
+      <p class="body-text" style="text-align: center; padding: var(--space-xl) 0;">
+        No hay productos en esta coleccion.
+      </p>
+    {% endif %}
+  </div>
+</div>

@@ -1,0 +1,44 @@
+{% comment %}
+  This section is used in the blog template to render the blog page listing all
+  articles within a blog.
+
+  https://shopify.dev/docs/storefronts/themes/architecture/templates/blog
+{% endcomment %}
+
+<section class="section" style="padding-top: 140px;">
+  <div class="container">
+    <div class="page-hero" style="padding-top: 0; border-bottom: none;">
+      <span class="page-hero__eyebrow reveal">Blog</span>
+      <h1 class="page-hero__title reveal reveal--delay-1">{{ blog.title }}</h1>
+    </div>
+  </div>
+  {% paginate blog.articles by 9 %}
+    <div class="blog-grid stagger-children" style="margin-top: var(--space-md);">
+      {% for article in blog.articles %}
+        <a href="{{ article.url }}" class="blog-card reveal">
+          {% if article.image %}
+            <img src="{{ article.image | image_url: width: 900 }}" alt="{{ article.title }}" class="blog-card__image" loading="lazy">
+          {% endif %}
+          <div class="blog-card__overlay"></div>
+          <div class="blog-card__content">
+            <span class="blog-card__meta">{{ article.published_at | date: '%B %d, %Y' }} — {{ article.author }}</span>
+            <h2 class="blog-card__title">{{ article.title }}</h2>
+            <p class="blog-card__excerpt">{{ article.excerpt_or_content | strip_html | truncatewords: 20 }}</p>
+          </div>
+        </a>
+      {% endfor %}
+    </div>
+    {% if paginate.pages > 1 %}
+      <div class="container" style="text-align: center; padding: var(--space-lg) 0;">
+        {{ paginate | default_pagination }}
+      </div>
+    {% endif %}
+  {% endpaginate %}
+</section>
+
+{% schema %}
+{
+  "name": "t:general.blog",
+  "settings": []
+}
+{% endschema %}

@@ -1,0 +1,362 @@
+{% comment %}
+  Hero section with video background for DHMEXRACES
+  Editorial composition - left-aligned, split headline, info items
+  Supports separate videos for desktop (horizontal) and mobile (vertical)
+{% endcomment %}
+
+<section class="hero hero--editorial" id="hero">
+  {% if section.settings.video_url != blank or section.settings.video_url_mobile != blank %}
+    <div class="hero__bg">
+
+      {% comment %} Desktop Video (Horizontal) {% endcomment %}
+      {% if section.settings.video_url != blank %}
+        <div class="hero__bg-desktop">
+          {% if section.settings.video_url contains 'youtube.com' or section.settings.video_url contains 'youtu.be' %}
+            {% assign video_id = section.settings.video_url | split: 'v=' | last | split: '/' | last | split: '&' | first %}
+            <iframe
+              id="youtube-desktop"
+              src="https://www.youtube.com/embed/{{ video_id }}?autoplay=1&mute=1&loop=1&playlist={{ video_id }}&controls=0&showinfo=0&rel=0&modestbranding=1&enablejsapi=1"
+              frameborder="0"
+              allow="autoplay; encrypted-media"
+              allowfullscreen
+              style="position: absolute; top: 50%; left: 50%; min-width: 100%; min-height: 100%; width: auto; height: auto; transform: translate(-50%,-50%); object-fit: cover; pointer-events: none;">
+            </iframe>
+          {% elsif section.settings.video_url contains 'vimeo.com' %}
+            {% assign video_id = section.settings.video_url | split: '/' | last %}
+            <iframe
+              src="https://player.vimeo.com/video/{{ video_id }}?autoplay=1&muted=1&loop=1&background=1&controls=0"
+              frameborder="0"
+              allow="autoplay; encrypted-media"
+              allowfullscreen
+              style="position: absolute; top: 50%; left: 50%; min-width: 100%; min-height: 100%; width: auto; height: auto; transform: translate(-50%,-50%); object-fit: cover; pointer-events: none;">
+            </iframe>
+          {% else %}
+            <video autoplay muted loop playsinline style="position: absolute; top: 50%; left: 50%; min-width: 100%; min-height: 100%; width: auto; height: auto; transform: translate(-50%,-50%); object-fit: cover; pointer-events: none;">
+              <source src="{{ section.settings.video_url }}" type="video/mp4">
+            </video>
+          {% endif %}
+        </div>
+      {% endif %}
+
+      {% comment %} Mobile Video (Vertical) {% endcomment %}
+      {% if section.settings.video_url_mobile != blank %}
+        <div class="hero__bg-mobile">
+          {% if section.settings.video_url_mobile contains 'youtube.com' or section.settings.video_url_mobile contains 'youtu.be' %}
+            {% assign video_id_mobile = section.settings.video_url_mobile | split: 'v=' | last | split: '/' | last | split: '&' | first %}
+            <iframe
+              id="youtube-mobile"
+              src="https://www.youtube.com/embed/{{ video_id_mobile }}?autoplay=1&mute=1&loop=1&playlist={{ video_id_mobile }}&controls=0&showinfo=0&rel=0&modestbranding=1&enablejsapi=1"
+              frameborder="0"
+              allow="autoplay; encrypted-media"
+              allowfullscreen
+              style="position: absolute; top: 50%; left: 50%; min-width: 100%; min-height: 100%; width: auto; height: auto; transform: translate(-50%,-50%); object-fit: cover; pointer-events: none;">
+            </iframe>
+          {% elsif section.settings.video_url_mobile contains 'vimeo.com' %}
+            {% assign video_id_mobile = section.settings.video_url_mobile | split: '/' | last %}
+            <iframe
+              src="https://player.vimeo.com/video/{{ video_id_mobile }}?autoplay=1&muted=1&loop=1&background=1&controls=0"
+              frameborder="0"
+              allow="autoplay; encrypted-media"
+              allowfullscreen
+              style="position: absolute; top: 50%; left: 50%; min-width: 100%; min-height: 100%; width: auto; height: auto; transform: translate(-50%,-50%); object-fit: cover; pointer-events: none;">
+            </iframe>
+          {% else %}
+            <video autoplay muted loop playsinline style="position: absolute; top: 50%; left: 50%; min-width: 100%; min-height: 100%; width: auto; height: auto; transform: translate(-50%,-50%); object-fit: cover; pointer-events: none;">
+              <source src="{{ section.settings.video_url_mobile }}" type="video/mp4">
+            </video>
+          {% endif %}
+        </div>
+      {% endif %}
+
+      <div class="hero__overlay" style="background: {{ section.settings.overlay_color | default: '#000000' }}; opacity: {{ section.settings.overlay_opacity | default: 50 | divided_by: 100.0 }};"></div>
+
+      {% comment %} Sound Toggle Button {% endcomment %}
+      <button class="btn btn--outline" id="sound-toggle" aria-label="Activar sonido" style="position: absolute; bottom: var(--space-md); right: var(--space-md); z-index: 100; padding: 10px 16px; display: flex; align-items: center; gap: 8px; pointer-events: auto; font-size: 0.7rem;">
+        <span class="sound-label">Activar audio</span>
+        <svg class="sound-icon sound-icon--muted" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M11 5L6 9H2v6h4l5 4V5z"/>
+          <line x1="23" y1="9" x2="17" y2="15"/>
+          <line x1="17" y1="9" x2="23" y2="15"/>
+        </svg>
+        <svg class="sound-icon sound-icon--unmuted" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none;">
+          <path d="M11 5L6 9H2v6h4l5 4V5z"/>
+          <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"/>
+        </svg>
+      </button>
+    </div>
+  {% elsif section.settings.image != blank %}
+    <div class="hero__bg">
+      {{ section.settings.image | image_url: width: 1920 | image_tag: style: 'position: absolute; top: 50%; left: 50%; min-width: 100%; min-height: 100%; width: auto; height: auto; transform: translate(-50%,-50%); object-fit: cover;', loading: 'eager' }}
+      <div class="hero__overlay" style="background: {{ section.settings.overlay_color | default: '#000000' }}; opacity: {{ section.settings.overlay_opacity | default: 50 | divided_by: 100.0 }};"></div>
+    </div>
+  {% endif %}
+
+  <div class="hero__content">
+    {% if section.settings.title != blank %}
+      {% assign title_words = section.settings.title | split: ' ' %}
+      {% if title_words.size > 1 %}
+        {% assign last_word = title_words | last %}
+        {% assign main_words = '' %}
+        {% for word in title_words %}
+          {% unless forloop.last %}
+            {% if main_words == '' %}
+              {% assign main_words = word %}
+            {% else %}
+              {% assign main_words = main_words | append: ' ' | append: word %}
+            {% endif %}
+          {% endunless %}
+        {% endfor %}
+        <h1 class="heading-xl reveal">{{ main_words }} <span class="accent">{{ last_word }}</span></h1>
+      {% else %}
+        <h1 class="heading-xl reveal">{{ section.settings.title }}</h1>
+      {% endif %}
+    {% endif %}
+
+    <div class="hero__info reveal reveal--delay-2">
+      <div class="hero__info-item">
+        <span class="hero__info-label">Ubicacion</span>
+        <span class="hero__info-value">{{ section.settings.subtitle | default: 'Mexico' }}</span>
+      </div>
+      <div class="hero__info-item">
+        <span class="hero__info-label">Campeonato</span>
+        <span class="hero__info-value">{{ section.settings.description | default: 'Copa Scott 2026' }}</span>
+      </div>
+    </div>
+
+    <div class="hero__actions reveal reveal--delay-3">
+      {% if section.settings.button_label != blank %}
+        <a href="{{ section.settings.button_link }}" class="btn btn--primary btn--large">
+          {{ section.settings.button_label }}
+        </a>
+      {% endif %}
+
+      {% if section.settings.button_label_2 != blank %}
+        <a href="{{ section.settings.button_link_2 }}" class="btn btn--outline btn--large">
+          {{ section.settings.button_label_2 }}
+        </a>
+      {% endif %}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Hero Video",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Video Desktop (Horizontal)"
+    },
+    {
+      "type": "url",
+      "id": "video_url",
+      "label": "Video Desktop",
+      "info": "Video horizontal para computadora (YouTube, Vimeo, o MP4)"
+    },
+    {
+      "type": "header",
+      "content": "Video Movil (Vertical)"
+    },
+    {
+      "type": "url",
+      "id": "video_url_mobile",
+      "label": "Video Movil",
+      "info": "Video vertical para telefono (YouTube, Vimeo, o MP4)"
+    },
+    {
+      "type": "header",
+      "content": "Imagen de Respaldo"
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Fallback Image",
+      "info": "Se usa si no hay video configurado"
+    },
+    {
+      "type": "color",
+      "id": "overlay_color",
+      "label": "Overlay Color",
+      "default": "#000000"
+    },
+    {
+      "type": "range",
+      "id": "overlay_opacity",
+      "label": "Overlay Opacity",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "%",
+      "default": 50
+    },
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "type": "text",
+      "id": "subtitle",
+      "label": "Subtitle",
+      "default": "Downhill MTB Racing"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Title",
+      "default": "DHMEXRACES"
+    },
+    {
+      "type": "textarea",
+      "id": "description",
+      "label": "Description",
+      "default": "La mejor experiencia de downhill en Mexico. Adrenalina pura en cada carrera."
+    },
+    {
+      "type": "header",
+      "content": "Buttons"
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Primary Button Label",
+      "default": "Inscribete Ahora"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Primary Button Link"
+    },
+    {
+      "type": "text",
+      "id": "button_label_2",
+      "label": "Secondary Button Label",
+      "default": "Ver Fechas"
+    },
+    {
+      "type": "url",
+      "id": "button_link_2",
+      "label": "Secondary Button Link"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Hero Video",
+      "category": "DHMEXRACES"
+    }
+  ]
+}
+{% endschema %}
+
+<script>
+  // YouTube IFrame API for sound control
+  (function() {
+    // Load YouTube API
+    var tag = document.createElement('script');
+    tag.src = "https://www.youtube.com/iframe_api";
+    var firstScriptTag = document.getElementsByTagName('script')[0];
+    firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+
+    var desktopPlayer, mobilePlayer;
+    var isMuted = true;
+
+    // Check if mobile view
+    function isMobileView() {
+      return window.innerWidth <= 768;
+    }
+
+    // Get the active player based on screen size
+    function getActivePlayer() {
+      return isMobileView() ? mobilePlayer : desktopPlayer;
+    }
+
+    // Called when YouTube API is ready
+    window.onYouTubeIframeAPIReady = function() {
+      var desktopIframe = document.getElementById('youtube-desktop');
+      var mobileIframe = document.getElementById('youtube-mobile');
+
+      if (desktopIframe) {
+        desktopPlayer = new YT.Player('youtube-desktop', {
+          events: {
+            'onReady': function(event) {
+              event.target.mute();
+              event.target.playVideo();
+            },
+            'onStateChange': function(event) {
+              // Loop: when video ends, restart it
+              if (event.data === YT.PlayerState.ENDED) {
+                event.target.seekTo(0);
+                event.target.playVideo();
+              }
+            }
+          }
+        });
+      }
+
+      if (mobileIframe) {
+        mobilePlayer = new YT.Player('youtube-mobile', {
+          events: {
+            'onReady': function(event) {
+              event.target.mute();
+              event.target.playVideo();
+            },
+            'onStateChange': function(event) {
+              // Loop: when video ends, restart it
+              if (event.data === YT.PlayerState.ENDED) {
+                event.target.seekTo(0);
+                event.target.playVideo();
+              }
+            }
+          }
+        });
+      }
+    };
+
+    // Sound toggle functionality
+    document.addEventListener('DOMContentLoaded', function() {
+      var soundToggle = document.getElementById('sound-toggle');
+      if (!soundToggle) return;
+
+      var mutedIcon = soundToggle.querySelector('.sound-icon--muted');
+      var unmutedIcon = soundToggle.querySelector('.sound-icon--unmuted');
+
+      soundToggle.addEventListener('click', function() {
+        isMuted = !isMuted;
+        var activePlayer = getActivePlayer();
+
+        if (isMuted) {
+          // Mute only the active player
+          if (activePlayer && typeof activePlayer.mute === 'function') {
+            activePlayer.mute();
+          }
+          mutedIcon.style.display = 'inline';
+          unmutedIcon.style.display = 'none';
+          soundToggle.classList.remove('active');
+        } else {
+          // Unmute only the active player (keep the other muted)
+          if (activePlayer && typeof activePlayer.unMute === 'function') {
+            activePlayer.unMute();
+            activePlayer.setVolume(100);
+          }
+          mutedIcon.style.display = 'none';
+          unmutedIcon.style.display = 'inline';
+          soundToggle.classList.add('active');
+        }
+      });
+
+      // Handle resize - mute when switching views
+      window.addEventListener('resize', function() {
+        if (!isMuted) {
+          // Mute all and unmute only active
+          if (desktopPlayer && typeof desktopPlayer.mute === 'function') desktopPlayer.mute();
+          if (mobilePlayer && typeof mobilePlayer.mute === 'function') mobilePlayer.mute();
+
+          var activePlayer = getActivePlayer();
+          if (activePlayer && typeof activePlayer.unMute === 'function') {
+            activePlayer.unMute();
+            activePlayer.setVolume(100);
+          }
+        }
+      });
+    });
+  })();
+</script>

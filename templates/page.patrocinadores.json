@@ -1,0 +1,11 @@
+{
+  "sections": {
+    "main": {
+      "type": "sponsor-contributions",
+      "settings": {}
+    }
+  },
+  "order": [
+    "main"
+  ]
+}

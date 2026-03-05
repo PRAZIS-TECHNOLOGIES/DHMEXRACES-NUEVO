@@ -1,0 +1,46 @@
+<section class="section">
+  <div class="container" style="padding-top: calc(var(--header-height) + var(--space-lg)); padding-bottom: var(--space-xl);">
+    <div class="section__header">
+      <div class="section__header-left">
+        <span class="label">{{ 'search.title' | t }}</span>
+        <h1 class="heading-lg">{{ 'search.title' | t }}</h1>
+      </div>
+    </div>
+
+    <form action="/search" method="get" style="max-width: 600px; margin-bottom: var(--space-lg);">
+      <div style="display: flex; gap: 8px;">
+        <input type="text" name="q" value="{{ search.terms | escape }}" placeholder="{{ 'search.placeholder' | t }}"
+          style="flex: 1; padding: 10px 14px; background: var(--bg-secondary); border: 1px solid rgba(0,0,0,0.1); border-radius: 6px; color: var(--text-primary); font-family: var(--font-body);">
+        <button type="submit" class="btn btn--primary">{{ 'search.submit' | t }}</button>
+      </div>
+    </form>
+
+    {% if search.performed %}
+      {% if search.results_count > 0 %}
+        <div class="products-grid stagger-children">
+          {% for result in search.results %}
+            {% if result.object_type == 'product' %}
+              {% render 'product-card', product: result %}
+            {% else %}
+              <a href="{{ result.url }}" class="product-card reveal">
+                <div class="product-card__info">
+                  <span class="product-card__vendor">{{ result.object_type }}</span>
+                  <h3 class="product-card__title">{{ result.title }}</h3>
+                </div>
+              </a>
+            {% endif %}
+          {% endfor %}
+        </div>
+      {% else %}
+        <p class="body-text">{{ 'search.no_results_html' | t: terms: search.terms }}</p>
+      {% endif %}
+    {% endif %}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Search",
+  "settings": []
+}
+{% endschema %}

@@ -1,0 +1,21 @@
+{% comment %}
+  Default Page Template - DHMEX PRO
+  Renders page content with proper styling
+  Specific pages get their sections via alternate templates
+{% endcomment %}
+
+<div class="section">
+  <div class="container" style="padding-top: calc(var(--header-height) + var(--space-lg)); padding-bottom: var(--space-xl);">
+    <div class="section__header">
+      <div class="section__header-left">
+        <span class="label">{{ page.handle | replace: '-', ' ' }}</span>
+        <h1 class="heading-lg">{{ page.title }}</h1>
+      </div>
+    </div>
+    {% if page.content != blank %}
+      <div class="body-text">
+        {{ page.content }}
+      </div>
+    {% endif %}
+  </div>
+</div>

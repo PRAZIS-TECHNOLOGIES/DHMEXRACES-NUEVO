@@ -1,0 +1,46 @@
+{% comment %}
+  This section is used in the collection template to render collection page
+  listing all products within a collection.
+
+  https://shopify.dev/docs/storefronts/themes/architecture/templates/collection
+{% endcomment %}
+
+<section class="section" style="padding-top: 140px;">
+  <div class="container">
+    <div class="page-hero" style="padding-top: 0; border-bottom: none;">
+      <span class="page-hero__eyebrow reveal">{{ 'collections.title' | t }}</span>
+      <h1 class="page-hero__title reveal reveal--delay-1">{{ collection.title }}</h1>
+    </div>
+  </div>
+  {% paginate collection.products by 20 %}
+    <div class="container">
+      <div class="products-grid--editorial stagger-children">
+        {% for product in collection.products %}
+          <a href="{{ product.url }}" class="product-card--editorial reveal">
+            <div class="product-card__image">
+              {% if product.featured_image %}
+                <img src="{{ product.featured_image | image_url: width: 600 }}" alt="{{ product.title }}" loading="lazy">
+              {% endif %}
+            </div>
+            <div class="product-card__info">
+              <p class="product-card__title">{{ product.title }}</p>
+              <p class="product-card__price">{{ product.price | money }}</p>
+            </div>
+          </a>
+        {% endfor %}
+      </div>
+    </div>
+    {% if paginate.pages > 1 %}
+      <div style="text-align: center; padding: var(--space-lg) 0;">
+        {{ paginate | default_pagination }}
+      </div>
+    {% endif %}
+  {% endpaginate %}
+</section>
+
+{% schema %}
+{
+  "name": "t:general.collection",
+  "settings": []
+}
+{% endschema %}

@@ -1,0 +1,34 @@
+{
+  "sections": {
+    "main": {
+      "type": "bases-sorteo",
+      "settings": {
+        "badge": "Sorteo Exclusivo",
+        "title": "FOX 40",
+        "description": "Participa por una suspension FOX 40 valorada en $50,000 MXN",
+        "how_to": "Inscribete en cualquier sede de la temporada 2026",
+        "draw_date": "22 de Marzo, 2026",
+        "prize_value": "$50,000 MXN",
+        "cta_heading": "Inscribete y participa",
+        "cta_description": "Cada inscripcion es una oportunidad de ganar",
+        "cta_text": "Inscribirse Ahora"
+      },
+      "blocks": {
+        "base_1": { "type": "base", "settings": { "title": "Elegibilidad", "content": "Pueden participar todas las personas que se inscriban en cualquier sede de la Copa Scott DHMEXRACES Temporada 2026." } },
+        "base_2": { "type": "base", "settings": { "title": "Mecanica", "content": "Cada inscripcion pagada genera automaticamente un numero de participacion para el sorteo." } },
+        "base_3": { "type": "base", "settings": { "title": "Premio", "content": "El premio consiste en una suspension FOX 40 Factory valorada en $50,000 MXN aproximadamente." } },
+        "base_4": { "type": "base", "settings": { "title": "Fecha del Sorteo", "content": "El sorteo se realizara el 22 de Marzo de 2026 durante el evento de la primera sede." } },
+        "base_5": { "type": "base", "settings": { "title": "Seleccion del Ganador", "content": "El ganador sera seleccionado de manera aleatoria mediante un sistema digital verificable." } },
+        "base_6": { "type": "base", "settings": { "title": "Notificacion", "content": "El ganador sera notificado via Instagram y correo electronico registrado en su inscripcion." } },
+        "base_7": { "type": "base", "settings": { "title": "Entrega del Premio", "content": "El premio se entregara en la sede donde se realice el sorteo o se enviara sin costo adicional." } },
+        "base_8": { "type": "base", "settings": { "title": "Restricciones", "content": "El premio no es transferible ni canjeable por dinero en efectivo." } },
+        "base_9": { "type": "base", "settings": { "title": "Responsabilidad", "content": "DHMEXRACES no se hace responsable por el uso inadecuado del premio." } },
+        "base_10": { "type": "base", "settings": { "title": "Datos Personales", "content": "Los datos de los participantes seran tratados conforme a nuestra politica de privacidad." } },
+        "base_11": { "type": "base", "settings": { "title": "Modificaciones", "content": "DHMEXRACES se reserva el derecho de modificar las bases del sorteo." } },
+        "base_12": { "type": "base", "settings": { "title": "Aceptacion", "content": "La participacion en el sorteo implica la aceptacion total de estas bases." } }
+      },
+      "block_order": ["base_1", "base_2", "base_3", "base_4", "base_5", "base_6", "base_7", "base_8", "base_9", "base_10", "base_11", "base_12"]
+    }
+  },
+  "order": ["main"]
+}
