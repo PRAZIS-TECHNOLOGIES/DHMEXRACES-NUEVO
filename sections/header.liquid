@@ -2,9 +2,13 @@
   <div class="header__inner">
     <!-- Left: Logo -->
     <a href="/" class="header__logo">
-      <span class="header__logo-ff">DH</span>
-      <span class="header__logo-divider"></span>
-      <span class="header__logo-text">DHMEX<br>RACES</span>
+      {% if section.settings.logo != blank %}
+        <img src="{{ section.settings.logo | image_url: width: 400 }}" alt="{{ section.settings.logo_alt | default: shop.name }}" style="height: {{ section.settings.logo_height | default: 40 }}px; width: auto;">
+      {% else %}
+        <span class="header__logo-ff">DH</span>
+        <span class="header__logo-divider"></span>
+        <span class="header__logo-text">DHMEX<br>RACES</span>
+      {% endif %}
     </a>
 
     <!-- Center: Nav -->
@@ -55,8 +59,6 @@
           <span class="header__cart-count" data-cart-count>{{ cart.item_count }}</span>
         {% endif %}
       </a>
-      <a href="/products/inscripcion-sede-2-guadalajara" class="header__cta btn btn--primary">Inscribirse</a>
-
       <button class="header__menu-toggle" aria-label="Menu">
         <span></span>
         <span></span>
@@ -142,6 +144,26 @@
 {% schema %}
 {
   "name": "Header",
-  "settings": []
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "logo",
+      "label": "Logo"
+    },
+    {
+      "type": "text",
+      "id": "logo_alt",
+      "label": "Alt del logo"
+    },
+    {
+      "type": "range",
+      "id": "logo_height",
+      "label": "Altura del logo (px)",
+      "min": 20,
+      "max": 80,
+      "step": 2,
+      "default": 40
+    }
+  ]
 }
 {% endschema %}

@@ -17,11 +17,11 @@
       <div class="cart-layout" id="cartContent">
         <div class="cart-items" id="cartItems">
           {% for item in cart.items %}
-            {% assign title_lower = item.product_title | downcase %}
+            {% assign title_lower = item.product.title | downcase %}
             {% assign is_inscription = false %}
             {% assign is_promo_jersey = false %}
 
-            {% if title_lower contains 'inscripcion' or title_lower contains 'inscripción' %}
+            {% if title_lower contains 'inscripci' %}
               {% assign is_inscription = true %}
             {% endif %}
 
@@ -92,8 +92,8 @@
           {% assign promo_jersey_total = 0 %}
 
           {% for item in cart.items %}
-            {% assign t = item.product_title | downcase %}
-            {% if t contains 'inscripcion' or t contains 'inscripción' %}
+            {% assign t = item.product.title | downcase %}
+            {% if t contains 'inscripci' %}
               {% assign has_inscriptions = true %}
               {% assign inscription_count = inscription_count | plus: item.quantity %}
             {% endif %}
@@ -122,7 +122,7 @@
           </div>
 
           <div class="cart-summary__row" style="font-size: 11px; color: var(--text-secondary);">
-            <span>Impuestos y envio calculados en checkout</span>
+            <span>Impuestos incluidos</span>
           </div>
 
           <div class="cart-summary__discount" id="discountSection">
@@ -171,7 +171,7 @@
 
 <style>
   .cart-page {
-    padding: var(--space-lg) 0;
+    padding: calc(var(--header-height) + var(--space-lg)) 0 var(--space-lg);
     min-height: 60vh;
   }
   .cart-layout {
@@ -383,7 +383,7 @@ async function syncPromoJerseysWithInscriptions() {
 
     const inscriptions = cart.items.filter(i => {
       const t = (i.product_title || '').toLowerCase();
-      return t.includes('inscripcion') || t.includes('inscripción');
+      return t.includes('inscripci');
     });
     const totalInscriptions = inscriptions.reduce((sum, i) => sum + i.quantity, 0);
 
@@ -442,7 +442,7 @@ async function proceedToRegistration() {
 
     const cartItems = cart.items.filter(function(i) {
       var t = (i.product_title || '').toLowerCase();
-      return t.includes('inscripcion') || t.includes('inscripción');
+      return t.includes('inscripci');
     }).map(function(i) {
       return {
         variant_id: String(i.variant_id),

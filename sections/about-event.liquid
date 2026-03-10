@@ -11,6 +11,11 @@
         <p class="body-text body-text--lg about__text reveal reveal--delay-2">
           {{ section.settings.description | default: 'Copa Scott DHMEXRACES reune a los mejores pilotos del pais en 5 sedes a lo largo de la temporada. Desde principiantes hasta elite, 13 categorias compiten por el titulo nacional en las pistas mas exigentes del downhill mexicano. Velocidad, tecnica y adrenalina en estado puro.' }}
         </p>
+        {% if section.settings.logo != blank %}
+          <div class="about__logo reveal reveal--delay-3" style="margin-top: var(--space-lg);">
+            <img src="{{ section.settings.logo | image_url: width: 600 }}" alt="{{ section.settings.logo_alt | default: 'Logo' }}" loading="lazy" style="max-width: {{ section.settings.logo_width | default: 300 }}px; width: 100%; height: auto;">
+          </div>
+        {% endif %}
       </div>
     </div>
 
@@ -49,6 +54,26 @@
       "id": "description",
       "label": "Descripcion",
       "default": "Copa Scott DHMEXRACES reune a los mejores pilotos del pais en 5 sedes a lo largo de la temporada. Desde principiantes hasta elite, 13 categorias compiten por el titulo nacional en las pistas mas exigentes del downhill mexicano. Velocidad, tecnica y adrenalina en estado puro."
+    },
+    {
+      "type": "image_picker",
+      "id": "logo",
+      "label": "Logo"
+    },
+    {
+      "type": "text",
+      "id": "logo_alt",
+      "label": "Alt del logo",
+      "default": "Logo"
+    },
+    {
+      "type": "range",
+      "id": "logo_width",
+      "label": "Ancho del logo (px)",
+      "min": 100,
+      "max": 600,
+      "step": 20,
+      "default": 300
     }
   ],
   "blocks": [

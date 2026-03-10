@@ -106,9 +106,7 @@
     },
     "tickets": {
       "type": "tickets",
-      "settings": {
-        "collection": "inscripciones"
-      }
+      "settings": {}
     },
     "merch": {
       "type": "featured-collection",

@@ -7,8 +7,8 @@
 
 <section class="section registration">
   <div class="container">
-    <div class="section__header">
-      <div class="section__header-left">
+    <div class="section__header" style="text-align: center; justify-content: center;">
+      <div>
         <span class="label">Registro</span>
         <h2 class="heading-lg">Formulario de Inscripcion</h2>
       </div>
@@ -28,7 +28,7 @@
         <div class="registration__progress-bar">
           <div class="registration__progress-fill" id="progressFill" style="width: 0%;"></div>
         </div>
-        <span class="label" id="progressText">Participante 1 de 1</span>
+        <span class="heading-sm" id="progressText" style="display: block; text-align: center;">Participante 1 de 1</span>
       </div>
 
       <div class="registration__form-area" id="formArea">
@@ -54,11 +54,14 @@
 
 <style>
   .registration {
-    padding: var(--space-lg) 0;
+    padding: calc(var(--header-height) + var(--space-lg)) 0 var(--space-lg);
     min-height: 70vh;
   }
   .registration__progress {
     margin-bottom: var(--space-md);
+    max-width: 860px;
+    margin-left: auto;
+    margin-right: auto;
   }
   .registration__progress-bar {
     width: 100%;
@@ -75,7 +78,8 @@
     transition: width 0.3s ease;
   }
   .registration__form-area {
-    max-width: 640px;
+    max-width: 860px;
+    margin: 0 auto;
   }
   .registration__form-card {
     display: none;
@@ -200,7 +204,9 @@
     display: flex;
     gap: var(--space-sm);
     margin-top: var(--space-md);
-    max-width: 640px;
+    max-width: 860px;
+    margin-left: auto;
+    margin-right: auto;
   }
   .registration__nav .btn {
     display: inline-flex;

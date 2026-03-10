@@ -7,98 +7,90 @@
       </div>
     </div>
 
-    {% if section.settings.collection != blank %}
-      <div class="products-grid products-grid--tickets stagger-children">
-        {% for product in collections[section.settings.collection].products limit: 4 %}
-          <div class="ticket-card reveal">
-            <span class="label">{{ product.type | default: 'Inscripcion' }}</span>
-            <h3 class="ticket-card__type">{{ product.title }}</h3>
+    {% assign selected_product = all_products[section.settings.product] %}
+    {% if selected_product != blank %}
+      <div class="tickets-list">
+        <div class="ticket-row reveal">
+          <div class="ticket-row__image">
+            {% if selected_product.featured_image %}
+              <img src="{{ selected_product.featured_image | image_url: width: 800 }}" alt="{{ selected_product.title }}" loading="lazy">
+            {% else %}
+              <div class="ticket-row__image-placeholder">
+                <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
+              </div>
+            {% endif %}
+          </div>
+          <div class="ticket-row__info">
+            <span class="label">{{ selected_product.type | default: 'Inscripcion' }}</span>
+            <h3 class="ticket-card__type">{{ selected_product.title }}</h3>
             <div class="ticket-card__price">
-              {{ product.price | money }} <small>MXN</small>
+              {{ selected_product.price | money }} <small>MXN</small>
             </div>
 
             <div class="ticket-card__features">
-              {% for tag in product.tags %}
+              {% for tag in selected_product.tags %}
                 <span class="ticket-card__feature">{{ tag }}</span>
               {% endfor %}
             </div>
 
             <div class="ticket-card__cta">
-              {% form 'product', product %}
-                <input type="hidden" name="id" value="{{ product.variants.first.id }}">
-
-                <div class="line-property" style="margin-bottom: var(--space-sm);">
-                  <label class="line-property__label" for="attendee-{{ product.id }}">Nombre del piloto</label>
-                  <input
-                    class="line-property__input"
-                    type="text"
-                    id="attendee-{{ product.id }}"
-                    name="properties[Nombre del asistente]"
-                    placeholder="Nombre completo del corredor"
-                    required
-                  >
-                </div>
-
-                <button type="submit" class="btn btn--primary" style="width: 100%;">
-                  Inscribirme
-                </button>
-              {% endform %}
+              <a href="{{ selected_product.url }}" class="btn btn--primary" style="width: 100%;">
+                Inscribirme
+              </a>
             </div>
           </div>
-        {% endfor %}
-      </div>
-
-      <div style="text-align: center; margin-top: var(--space-lg);">
-        <a href="{{ collections[section.settings.collection].url }}" class="btn btn--outline btn--large">
-          Ver todas las inscripciones
-        </a>
+        </div>
       </div>
     {% else %}
       <!-- Demo placeholder -->
-      <div class="products-grid products-grid--tickets stagger-children">
-        <div class="ticket-card reveal">
-          <span class="label">Inscripcion</span>
-          <h3 class="ticket-card__type">Sede 2 — Puebla</h3>
-          <div class="ticket-card__price">$1,650 <small>MXN</small></div>
-
-          <div class="ticket-card__features">
-            <span class="ticket-card__feature">Acceso completo a practica y carrera</span>
-            <span class="ticket-card__feature">Jersey oficial de la temporada</span>
-            <span class="ticket-card__feature">Medalla conmemorativa</span>
-            <span class="ticket-card__feature">Seguro de accidentes</span>
-            <span class="ticket-card__feature">Puntos para ranking nacional</span>
-            <span class="ticket-card__feature">Participacion en sorteo FOX 40</span>
+      <div class="tickets-list stagger-children">
+        <div class="ticket-row reveal">
+          <div class="ticket-row__image">
+            <div class="ticket-row__image-placeholder">
+              <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
+            </div>
           </div>
-
-          <div class="ticket-card__cta">
-            <button class="btn btn--primary" style="width: 100%;">Inscribirme</button>
-          </div>
-        </div>
-
-        <div class="ticket-card reveal">
-          <span class="label">Inscripcion</span>
-          <h3 class="ticket-card__type">Sede 3 — Guadalajara</h3>
-          <div class="ticket-card__price">$1,650 <small>MXN</small></div>
-
-          <div class="ticket-card__features">
-            <span class="ticket-card__feature">Acceso completo a practica y carrera</span>
-            <span class="ticket-card__feature">Jersey oficial de la temporada</span>
-            <span class="ticket-card__feature">Medalla conmemorativa</span>
-            <span class="ticket-card__feature">Seguro de accidentes</span>
-            <span class="ticket-card__feature">Puntos para ranking nacional</span>
-            <span class="ticket-card__feature">Participacion en sorteo FOX 40</span>
-          </div>
-
-          <div class="ticket-card__cta">
-            <button class="btn btn--primary" style="width: 100%;">Inscribirme</button>
+          <div class="ticket-row__info">
+            <span class="label">Inscripcion</span>
+            <h3 class="ticket-card__type">Sede 2 — Puebla</h3>
+            <div class="ticket-card__price">$1,650 <small>MXN</small></div>
+            <div class="ticket-card__features">
+              <span class="ticket-card__feature">Acceso completo a practica y carrera</span>
+              <span class="ticket-card__feature">Jersey oficial de la temporada</span>
+              <span class="ticket-card__feature">Medalla conmemorativa</span>
+              <span class="ticket-card__feature">Seguro de accidentes</span>
+              <span class="ticket-card__feature">Puntos para ranking nacional</span>
+              <span class="ticket-card__feature">Participacion en sorteo FOX 40</span>
+            </div>
+            <div class="ticket-card__cta">
+              <button class="btn btn--primary" style="width: 100%;">Inscribirme</button>
+            </div>
           </div>
         </div>
-      </div>
 
-      <div style="text-align: center; margin-top: var(--space-lg);">
-        <a href="#tickets" class="btn btn--outline btn--large">
-          Ver todas las inscripciones
-        </a>
+        <div class="ticket-row reveal">
+          <div class="ticket-row__image">
+            <div class="ticket-row__image-placeholder">
+              <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
+            </div>
+          </div>
+          <div class="ticket-row__info">
+            <span class="label">Inscripcion</span>
+            <h3 class="ticket-card__type">Sede 3 — Guadalajara</h3>
+            <div class="ticket-card__price">$1,650 <small>MXN</small></div>
+            <div class="ticket-card__features">
+              <span class="ticket-card__feature">Acceso completo a practica y carrera</span>
+              <span class="ticket-card__feature">Jersey oficial de la temporada</span>
+              <span class="ticket-card__feature">Medalla conmemorativa</span>
+              <span class="ticket-card__feature">Seguro de accidentes</span>
+              <span class="ticket-card__feature">Puntos para ranking nacional</span>
+              <span class="ticket-card__feature">Participacion en sorteo FOX 40</span>
+            </div>
+            <div class="ticket-card__cta">
+              <button class="btn btn--primary" style="width: 100%;">Inscribirme</button>
+            </div>
+          </div>
+        </div>
       </div>
     {% endif %}
   </div>
@@ -121,9 +113,9 @@
       "default": "Asegura tu lugar en la pista"
     },
     {
-      "type": "collection",
-      "id": "collection",
-      "label": "Coleccion de inscripciones"
+      "type": "product",
+      "id": "product",
+      "label": "Producto de inscripcion"
     }
   ],
   "presets": [
