@@ -3,12 +3,15 @@
     "hero": {
       "type": "hero",
       "settings": {
+        "bg_mode": "gallery",
         "tag": "TEMPORADA 2026 — 5 SEDES",
         "heading": "DHMEX",
         "heading_accent": "RACES",
         "date_display": "21-22 MARZO 2026",
         "prize_display": "$530,000 MXN"
-      }
+      },
+      "blocks": {},
+      "block_order": []
     },
     "about": {
       "type": "about-event",
