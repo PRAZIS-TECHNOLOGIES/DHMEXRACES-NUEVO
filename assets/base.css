@@ -806,6 +806,7 @@ ul, ol {
   display: grid;
   grid-template-columns: 1fr;
   gap: var(--space-lg);
+  align-items: start;
 }
 
 @media (min-width: 768px) {

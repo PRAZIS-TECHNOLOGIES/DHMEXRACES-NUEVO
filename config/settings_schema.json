@@ -89,12 +89,12 @@
     ]
   },
   {
-    "name": "Campeonato",
+    "name": "Copa",
     "settings": [
       {
         "type": "text",
         "id": "event_name",
-        "label": "Nombre del campeonato",
+        "label": "Nombre de la copa",
         "default": "COPA SCOTT DHMEXRACES"
       },
       {

@@ -1,10 +1,10 @@
 <section id="about" class="about">
   <div class="container">
+    <span class="label reveal" style="margin-bottom: var(--space-sm);">{{ section.settings.label | default: 'La copa' }}</span>
     <div class="about__grid">
       <div>
-        <span class="label reveal">{{ section.settings.label | default: 'El campeonato' }}</span>
         <h2 class="heading-lg about__heading reveal reveal--delay-1">
-          {{ section.settings.heading | default: 'El campeonato nacional de downhill mas grande de Mexico' }}
+          {{ section.settings.heading | default: 'La copa nacional de downhill mas grande de Mexico' }}
         </h2>
       </div>
       <div>
@@ -35,19 +35,19 @@
 
 {% schema %}
 {
-  "name": "Sobre el Campeonato",
+  "name": "Sobre la Copa",
   "settings": [
     {
       "type": "text",
       "id": "label",
       "label": "Etiqueta",
-      "default": "El campeonato"
+      "default": "La copa"
     },
     {
       "type": "text",
       "id": "heading",
       "label": "Titulo",
-      "default": "El campeonato nacional de downhill mas grande de Mexico"
+      "default": "La copa nacional de downhill mas grande de Mexico"
     },
     {
       "type": "textarea",
@@ -108,7 +108,7 @@
   ],
   "presets": [
     {
-      "name": "Sobre el Campeonato",
+      "name": "Sobre la Copa",
       "blocks": [
         { "type": "stat", "settings": { "number": "5", "label": "Sedes nacionales" } },
         { "type": "stat", "settings": { "number": "13", "prefix": "+", "label": "Categorias" } },

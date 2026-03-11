@@ -182,7 +182,7 @@
     {% for block in section.blocks %}
       {% if block.type == 'sede' %}
         <div class="ranking-sede reveal" data-sede="{{ block.id }}" {{ block.shopify_attributes }}>
-          <div class="ranking-sede__header">
+          <div class="ranking-sede__header" onclick="toggleRanking(this)">
             <div class="ranking-sede__info">
               <span class="ranking-sede__round">{{ block.settings.round | default: 'R1' }}</span>
               <h3 class="ranking-sede__title">{{ block.settings.title }}</h3>
@@ -190,11 +190,11 @@
                 <span class="label">{{ block.settings.date }}</span>
               {% endif %}
             </div>
-            <button class="ranking-sede__toggle" onclick="toggleRanking(this)" aria-label="Expandir">
+            <span class="ranking-sede__toggle" aria-label="Expandir">
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <polyline points="6 9 12 15 18 9"/>
               </svg>
-            </button>
+            </span>
           </div>
 
           <div class="ranking-sede__body" style="display: none;">
@@ -375,12 +375,13 @@ document.addEventListener('DOMContentLoaded', function() {
   }
 });
 
-function toggleRanking(btn) {
-  var sede = btn.closest('.ranking-sede');
+function toggleRanking(el) {
+  var sede = el.closest('.ranking-sede');
   var body = sede.querySelector('.ranking-sede__body');
+  var toggle = sede.querySelector('.ranking-sede__toggle');
   var isOpen = body.style.display !== 'none';
   body.style.display = isOpen ? 'none' : 'block';
-  btn.classList.toggle('is-open');
+  if (toggle) toggle.classList.toggle('is-open');
 }
 
 function filterCategory(btn, sedeId) {
