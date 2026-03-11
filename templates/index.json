@@ -123,16 +123,16 @@
       "type": "sponsors",
       "settings": {},
       "blocks": {
-        "sp-1": { "type": "sponsor", "settings": { "name": "SCOTT" } },
-        "sp-2": { "type": "sponsor", "settings": { "name": "SHIMANO" } },
-        "sp-3": { "type": "sponsor", "settings": { "name": "RED BULL" } },
-        "sp-4": { "type": "sponsor", "settings": { "name": "MOTUL" } },
-        "sp-5": { "type": "sponsor", "settings": { "name": "SRAM" } },
-        "sp-6": { "type": "sponsor", "settings": { "name": "SCHWALBE" } },
-        "sp-7": { "type": "sponsor", "settings": { "name": "FOX FACTORY" } },
-        "sp-8": { "type": "sponsor", "settings": { "name": "VITTORIA" } },
-        "sp-9": { "type": "sponsor", "settings": { "name": "LAZER" } },
-        "sp-10": { "type": "sponsor", "settings": { "name": "ALPINESTARS" } }
+        "sp-1": { "type": "sponsor", "settings": { "name": "SCOTT", "tier": "gold" } },
+        "sp-2": { "type": "sponsor", "settings": { "name": "SHIMANO", "tier": "gold" } },
+        "sp-3": { "type": "sponsor", "settings": { "name": "RED BULL", "tier": "plata" } },
+        "sp-4": { "type": "sponsor", "settings": { "name": "MOTUL", "tier": "plata" } },
+        "sp-5": { "type": "sponsor", "settings": { "name": "SRAM", "tier": "plata" } },
+        "sp-6": { "type": "sponsor", "settings": { "name": "SCHWALBE", "tier": "bronce" } },
+        "sp-7": { "type": "sponsor", "settings": { "name": "FOX FACTORY", "tier": "bronce" } },
+        "sp-8": { "type": "sponsor", "settings": { "name": "VITTORIA", "tier": "bronce" } },
+        "sp-9": { "type": "sponsor", "settings": { "name": "LAZER", "tier": "bronce" } },
+        "sp-10": { "type": "sponsor", "settings": { "name": "ALPINESTARS", "tier": "bronce" } }
       },
       "block_order": ["sp-1", "sp-2", "sp-3", "sp-4", "sp-5", "sp-6", "sp-7", "sp-8", "sp-9", "sp-10"]
     },

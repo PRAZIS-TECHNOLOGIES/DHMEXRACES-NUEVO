@@ -653,6 +653,13 @@ ul, ol {
   animation: heroZoomB 24s ease-in-out infinite alternate;
 }
 
+.hero__gallery-placeholder-item {
+  background: var(--bg-secondary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 @keyframes heroGalleryFade {
   from { opacity: 0; }
   to { opacity: 1; }
@@ -979,6 +986,131 @@ ul, ol {
   color: var(--text-secondary);
   text-transform: uppercase;
   letter-spacing: 0.06em;
+}
+
+/* --- Sede Cards (dashed border) --- */
+.sede-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-md);
+}
+
+.sede-card {
+  border: 2px dashed rgba(0, 0, 0, 0.15);
+  border-radius: 16px;
+  padding: var(--space-lg) var(--space-md);
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  transition: border-color 0.3s ease, background 0.3s ease;
+}
+
+.sede-card:hover {
+  border-color: rgba(0, 0, 0, 0.35);
+  background: var(--bg-secondary);
+}
+
+.sede-card__top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.sede-card__round {
+  font-family: var(--font-heading);
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  color: var(--text-primary);
+}
+
+.sede-card__status {
+  font-family: var(--font-body);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 4px 10px;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.sede-card__status--open {
+  background: #22c55e;
+  color: #fff;
+}
+
+.sede-card__status--upcoming {
+  border: 1px solid rgba(0, 0, 0, 0.15);
+  color: var(--text-secondary);
+}
+
+.sede-card__status--closed {
+  background: rgba(0, 0, 0, 0.06);
+  color: var(--text-secondary);
+}
+
+.sede-card__status-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #fff;
+  animation: sedePulse 1.5s ease-in-out infinite;
+}
+
+@keyframes sedePulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
+
+.sede-card__title {
+  font-family: var(--font-heading);
+  font-size: clamp(1.25rem, 2.5vw, 1.75rem);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: -0.03em;
+  color: var(--text-primary);
+}
+
+.sede-card__meta {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.sede-card__meta-item {
+  font-family: var(--font-body);
+  font-size: 12px;
+  color: var(--text-secondary);
+  letter-spacing: 0.02em;
+}
+
+.sede-card__desc {
+  font-family: var(--font-body);
+  font-size: 13px;
+  color: var(--text-secondary);
+  line-height: 1.5;
+}
+
+.sede-card__actions {
+  margin-top: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding-top: 8px;
+}
+
+.sede-card__actions .btn {
+  width: fit-content;
+}
+
+@media (max-width: 768px) {
+  .sede-grid {
+    grid-template-columns: 1fr;
+    gap: var(--space-sm);
+  }
 }
 
 /* --- Ticket Card (special variant) --- */
@@ -4773,4 +4905,432 @@ ul, ol {
 .form-editorial__textarea {
   resize: vertical;
   min-height: 120px;
+}
+
+/* ── Race Dates / Sedes ── */
+.race-dates {
+  padding: var(--space-2xl) 0;
+  position: relative;
+}
+
+.race-dates--has-bg {
+  overflow: hidden;
+  padding: 100px 0;
+}
+
+.race-dates__bg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+
+.race-dates__bg img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.race-dates__overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background: rgba(0, 0, 0, 0.55);
+}
+
+.race-dates--has-bg .container {
+  position: relative;
+  z-index: 2;
+}
+
+.race-dates--has-bg .label,
+.race-dates--has-bg .heading-lg {
+  color: #fff;
+}
+
+.race-dates--has-bg .sede-card {
+  border-color: rgba(255, 255, 255, 0.2);
+  background: rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+.race-dates--has-bg .sede-card:hover {
+  border-color: rgba(255, 255, 255, 0.4);
+}
+
+.race-dates--has-bg .sede-card__round,
+.race-dates--has-bg .sede-card__meta-item,
+.race-dates--has-bg .sede-card__desc {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.race-dates--has-bg .sede-card__title {
+  color: #fff;
+}
+
+.race-dates--has-bg .sede-card__status--upcoming {
+  border-color: rgba(255, 255, 255, 0.25);
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.race-dates--has-bg .sede-card__status--closed {
+  background: rgba(255, 255, 255, 0.1);
+  color: rgba(255, 255, 255, 0.6);
+}
+
+/* Buttons on image bg */
+.race-dates--has-bg .btn--primary {
+  background: #fff;
+  color: #1a1a1a;
+  border-color: #fff;
+}
+
+.race-dates--has-bg .btn--primary:hover {
+  background: rgba(255, 255, 255, 0.85);
+}
+
+.race-dates--has-bg .btn--outline {
+  border-color: rgba(255, 255, 255, 0.5);
+  color: #fff;
+}
+
+.race-dates--has-bg .btn--outline:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: #fff;
+}
+
+.sede-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-md);
+}
+
+@media (max-width: 900px) {
+  .sede-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 600px) {
+  .sede-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.sede-card {
+  border: 2px dotted rgba(0, 0, 0, 0.15);
+  border-radius: 16px;
+  padding: var(--space-lg) var(--space-md);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+  transition: border-color 0.3s ease, transform 0.3s ease;
+  background: transparent;
+}
+
+.sede-card:hover {
+  border-color: rgba(0, 0, 0, 0.35);
+  transform: translateY(-2px);
+}
+
+.sede-card__top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.sede-card__round {
+  font-family: var(--font-heading);
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+}
+
+.sede-card__status {
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  padding: 4px 12px;
+  border-radius: 100px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.sede-card__status--open {
+  background: #16a34a;
+  color: #fff;
+}
+
+.sede-card__status--upcoming {
+  background: transparent;
+  border: 1px solid rgba(0, 0, 0, 0.15);
+  color: var(--text-secondary);
+}
+
+.sede-card__status--closed {
+  background: rgba(0, 0, 0, 0.06);
+  color: var(--text-secondary);
+}
+
+.sede-card__status-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #fff;
+  animation: pulse-dot 1.5s ease-in-out infinite;
+}
+
+@keyframes pulse-dot {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
+
+.sede-card__title {
+  font-family: var(--font-heading);
+  font-size: clamp(1.25rem, 2vw, 1.5rem);
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0;
+}
+
+.sede-card__meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 16px;
+}
+
+.sede-card__meta-item {
+  font-size: 13px;
+  color: var(--text-secondary);
+  letter-spacing: 0.02em;
+}
+
+.sede-card__desc {
+  font-size: 14px;
+  color: var(--text-secondary);
+  line-height: 1.5;
+  margin: 0;
+}
+
+.sede-card__actions {
+  display: flex;
+  gap: var(--space-xs);
+  margin-top: auto;
+  padding-top: var(--space-sm);
+}
+
+/* ── Sponsors Pro (Tiered) ── */
+.sponsors-pro {
+  padding: var(--space-md) 0;
+}
+
+/* Tier container */
+.sp-tier {
+  margin-bottom: var(--space-xs);
+}
+
+.sp-tier:last-child {
+  margin-bottom: 0;
+}
+
+.sp-tier__label {
+  display: block;
+  font-family: var(--font-heading);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+  opacity: 0.5;
+  margin-bottom: 4px;
+  text-align: center;
+}
+
+/* ── Gold — Title Sponsors ── */
+.sp-tier__row--gold {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: clamp(48px, 10vw, 120px);
+  padding: var(--space-xs) 0;
+  border-top: 1px solid rgba(0, 0, 0, 0.06);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+.sp-logo--gold {
+  position: relative;
+}
+
+.sp-logo--gold a,
+.sp-logo--gold > span,
+.sp-logo--gold > img {
+  display: block;
+}
+
+.sp-logo--gold img {
+  height: 140px;
+  width: auto;
+  object-fit: contain;
+  filter: grayscale(100%);
+  opacity: 0.75;
+  transition: all 0.15s ease;
+}
+
+.sp-logo--gold:hover img {
+  filter: grayscale(0%);
+  opacity: 1;
+  transform: scale(1.06);
+}
+
+.sp-logo__text--gold {
+  font-family: var(--font-heading);
+  font-size: clamp(2.5rem, 5vw, 4rem);
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  color: var(--text-primary);
+  opacity: 0.3;
+  transition: opacity 0.15s ease;
+  text-transform: uppercase;
+}
+
+.sp-logo--gold:hover .sp-logo__text--gold {
+  opacity: 0.7;
+}
+
+/* ── Plata — Official Sponsors ── */
+.sp-tier__row--plata {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: clamp(36px, 6vw, 80px);
+  padding: var(--space-xs) 0;
+}
+
+.sp-logo--plata a,
+.sp-logo--plata > span,
+.sp-logo--plata > img {
+  display: block;
+}
+
+.sp-logo--plata img {
+  height: 48px;
+  max-width: 160px;
+  object-fit: contain;
+  filter: grayscale(100%);
+  opacity: 0.6;
+  transition: all 0.15s ease;
+}
+
+.sp-logo--plata:hover img {
+  filter: grayscale(0%);
+  opacity: 1;
+  transform: scale(1.08);
+}
+
+.sp-logo__text--plata {
+  font-family: var(--font-heading);
+  font-size: clamp(1.5rem, 3vw, 2.2rem);
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: var(--text-primary);
+  opacity: 0.25;
+  transition: opacity 0.15s ease;
+  text-transform: uppercase;
+}
+
+.sp-logo--plata:hover .sp-logo__text--plata {
+  opacity: 0.7;
+}
+
+/* ── Bronce — Partners Marquee ── */
+.sp-marquee {
+  overflow: hidden;
+  width: 100%;
+  padding: var(--space-lg) 0;
+  border-top: 1px solid rgba(0, 0, 0, 0.04);
+  mask-image: linear-gradient(90deg, transparent, black 10%, black 90%, transparent);
+  -webkit-mask-image: linear-gradient(90deg, transparent, black 10%, black 90%, transparent);
+}
+
+.sp-marquee__track {
+  display: flex;
+  align-items: center;
+  gap: clamp(48px, 6vw, 80px);
+  width: max-content;
+  animation: sp-scroll 30s linear infinite;
+}
+
+.sp-marquee:hover .sp-marquee__track {
+  animation-play-state: paused;
+}
+
+@keyframes sp-scroll {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-33.333%);
+  }
+}
+
+.sp-marquee__item {
+  flex-shrink: 0;
+}
+
+.sp-marquee__item a {
+  display: block;
+}
+
+.sp-marquee__item img {
+  height: 32px;
+  width: auto;
+  object-fit: contain;
+  filter: grayscale(100%);
+  opacity: 0.45;
+  transition: all 0.15s ease;
+}
+
+.sp-marquee__item:hover img {
+  filter: grayscale(0%);
+  opacity: 0.9;
+}
+
+.sp-logo__text--bronce {
+  font-family: var(--font-heading);
+  font-size: 1.5rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  color: var(--text-primary);
+  opacity: 0.18;
+  transition: opacity 0.15s ease;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.sp-marquee__item:hover .sp-logo__text--bronce {
+  opacity: 0.6;
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+  .sp-logo--gold img {
+    height: 100px;
+  }
+  .sp-logo__text--gold {
+    font-size: 2rem;
+  }
+  .sp-logo--plata img {
+    height: 36px;
+    max-width: 120px;
+  }
+  .sp-logo__text--plata {
+    font-size: 1.2rem;
+  }
+  .sp-marquee__item img {
+    height: 24px;
+  }
 }

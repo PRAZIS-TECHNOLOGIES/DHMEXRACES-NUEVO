@@ -1,106 +1,67 @@
 {% comment %}
-  Race Dates Section - DHMEX PRO
-  Shows race cards with open/closed/upcoming status
+  Race Dates Section - Dashed Card Style
+  Editorial cards with dotted borders, no images
 {% endcomment %}
 
-<section class="section race-dates" id="sedes">
+<section class="section race-dates {% if section.settings.bg_image != blank %}race-dates--has-bg{% endif %}" id="sedes">
+  {% if section.settings.bg_image != blank %}
+    <div class="race-dates__bg">
+      <img src="{{ section.settings.bg_image | image_url: width: 2000 }}" alt="" loading="lazy">
+    </div>
+    <div class="race-dates__overlay"></div>
+  {% endif %}
   <div class="container">
     <div class="section__header">
       <div class="section__header-left">
-        <span class="label">{{ section.settings.subtitle | default: 'Temporada 2026' }}</span>
-        <h2 class="heading-lg">{{ section.settings.title | default: 'Sedes' }}</h2>
+        <span class="label reveal">{{ section.settings.subtitle | default: 'Temporada 2026' }}</span>
+        <h2 class="heading-lg reveal reveal--delay-1">{{ section.settings.title | default: 'Sedes & Inscripciones' }}</h2>
       </div>
-      {% if section.settings.description != blank %}
-        <p class="body-text" style="max-width: 480px;">{{ section.settings.description }}</p>
-      {% endif %}
     </div>
 
-    <div class="race-grid">
+    <div class="sede-grid stagger-children">
       {% for block in section.blocks %}
         {% if block.type == 'race' %}
-          <div class="race-card reveal" {{ block.shopify_attributes }}>
-            {% if block.settings.image != blank %}
-              <div class="race-card__image">
-                <img
-                  src="{{ block.settings.image | image_url: width: 800 }}"
-                  alt="{{ block.settings.title }}"
-                  loading="lazy"
-                  width="800"
-                  height="500"
-                >
-                <div class="race-card__overlay"></div>
-              </div>
-            {% else %}
-              <div class="race-card__image race-card__image--placeholder">
-                <div class="race-card__overlay"></div>
-              </div>
+          <div class="sede-card reveal" {{ block.shopify_attributes }}>
+            <div class="sede-card__top">
+              <span class="sede-card__round">{{ block.settings.round | default: 'R1' }}</span>
+              <span class="sede-card__status sede-card__status--{{ block.settings.status }}">
+                {% case block.settings.status %}
+                  {% when 'open' %}
+                    <span class="sede-card__status-dot"></span>Abiertas
+                  {% when 'upcoming' %}
+                    Proximamente
+                  {% when 'closed' %}
+                    Cerrada
+                {% endcase %}
+              </span>
+            </div>
+
+            <h3 class="sede-card__title">{{ block.settings.title }}</h3>
+
+            <div class="sede-card__meta">
+              {% if block.settings.date != blank %}
+                <span class="sede-card__meta-item">{{ block.settings.date }}</span>
+              {% endif %}
+              {% if block.settings.location != blank %}
+                <span class="sede-card__meta-item">{{ block.settings.location }}</span>
+              {% endif %}
+              {% if block.settings.elevation != blank %}
+                <span class="sede-card__meta-item">~ {{ block.settings.elevation }}</span>
+              {% endif %}
+            </div>
+
+            {% if block.settings.description != blank %}
+              <p class="sede-card__desc">{{ block.settings.description }}</p>
             {% endif %}
 
-            <div class="race-card__content">
-              <div class="race-card__top">
-                <span class="race-card__round">{{ block.settings.round | default: 'R1' }}</span>
-                <span class="race-card__status race-card__status--{{ block.settings.status }}">
-                  {% case block.settings.status %}
-                    {% when 'open' %}
-                      Inscripciones Abiertas
-                    {% when 'upcoming' %}
-                      Proximamente
-                    {% when 'closed' %}
-                      Cerrada
-                  {% endcase %}
-                </span>
-              </div>
-
-              <div class="race-card__info">
-                <h3 class="race-card__title">{{ block.settings.title }}</h3>
-
-                <div class="race-card__meta">
-                  {% if block.settings.date != blank %}
-                    <span class="race-card__meta-item">
-                      <svg width="14" height="14" viewBox="0 0 20 20" fill="none">
-                        <path d="M6 2V5M14 2V5M3 8H17M5 4H15C16.1046 4 17 4.89543 17 6V16C17 17.1046 16.1046 18 15 18H5C3.89543 18 3 17.1046 3 16V6C3 4.89543 3.89543 4 5 4Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
-                      </svg>
-                      {{ block.settings.date }}
-                    </span>
-                  {% endif %}
-                  {% if block.settings.location != blank %}
-                    <span class="race-card__meta-item">
-                      <svg width="14" height="14" viewBox="0 0 20 20" fill="none">
-                        <path d="M10 2C7.23858 2 5 4.23858 5 7C5 11.5 10 18 10 18C10 18 15 11.5 15 7C15 4.23858 12.7614 2 10 2Z" stroke="currentColor" stroke-width="1.5"/>
-                        <circle cx="10" cy="7" r="2" stroke="currentColor" stroke-width="1.5"/>
-                      </svg>
-                      {{ block.settings.location }}
-                    </span>
-                  {% endif %}
-                  {% if block.settings.elevation != blank %}
-                    <span class="race-card__meta-item">
-                      <svg width="14" height="14" viewBox="0 0 20 20" fill="none">
-                        <path d="M3 17L8 7L13 14L17 10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                      </svg>
-                      {{ block.settings.elevation }}
-                    </span>
-                  {% endif %}
-                </div>
-
-                {% if block.settings.description != blank %}
-                  <p class="race-card__desc">{{ block.settings.description }}</p>
-                {% endif %}
-              </div>
-
+            <div class="sede-card__actions">
               {% if block.settings.link != blank %}
-                <a href="{{ block.settings.link }}" class="btn {% if block.settings.status == 'open' %}btn--primary{% else %}btn--outline{% endif %} race-card__cta">
-                  {% case block.settings.status %}
-                    {% when 'open' %}
-                      Inscribirse
-                    {% when 'upcoming' %}
-                      Ver Sede
-                    {% when 'closed' %}
-                      Ver Sede
-                  {% endcase %}
+                <a href="{{ block.settings.link }}" class="btn {% if block.settings.status == 'open' %}btn--primary{% else %}btn--outline{% endif %}">
+                  {% if block.settings.status == 'open' %}Inscribirse{% else %}Ver Sede{% endif %}
                 </a>
-                {% if block.settings.status == 'closed' and block.settings.results_link != blank %}
-                  <a href="{{ block.settings.results_link }}" class="btn btn--outline race-card__cta" style="margin-top: 8px;">Ver Resultados</a>
-                {% endif %}
+              {% endif %}
+              {% if block.settings.status == 'closed' and block.settings.results_link != blank %}
+                <a href="{{ block.settings.results_link }}" class="btn btn--outline">Ver Resultados</a>
               {% endif %}
             </div>
           </div>
@@ -112,9 +73,15 @@
 
 {% schema %}
 {
-  "name": "Fechas de Carrera",
+  "name": "Sedes & Inscripciones",
   "tag": "section",
   "settings": [
+    {
+      "type": "image_picker",
+      "id": "bg_image",
+      "label": "Imagen de fondo",
+      "info": "Dejar vacio para fondo blanco"
+    },
     {
       "type": "text",
       "id": "subtitle",
@@ -125,24 +92,14 @@
       "type": "text",
       "id": "title",
       "label": "Titulo",
-      "default": "Sedes"
-    },
-    {
-      "type": "textarea",
-      "id": "description",
-      "label": "Descripcion"
+      "default": "Sedes & Inscripciones"
     }
   ],
   "blocks": [
     {
       "type": "race",
-      "name": "Carrera",
+      "name": "Sede",
       "settings": [
-        {
-          "type": "image_picker",
-          "id": "image",
-          "label": "Imagen"
-        },
         {
           "type": "text",
           "id": "round",
@@ -152,7 +109,7 @@
         {
           "type": "text",
           "id": "title",
-          "label": "Titulo",
+          "label": "Ciudad",
           "default": "Guanajuato"
         },
         {
@@ -197,67 +154,20 @@
         {
           "type": "url",
           "id": "results_link",
-          "label": "Link a resultados (para carreras cerradas)"
+          "label": "Link a resultados"
         }
       ]
     }
   ],
   "presets": [
     {
-      "name": "Fechas de Carrera",
+      "name": "Sedes & Inscripciones",
       "blocks": [
-        {
-          "type": "race",
-          "settings": {
-            "round": "R1",
-            "title": "Guanajuato",
-            "date": "15 Mar 2026",
-            "location": "Guanajuato, GTO",
-            "elevation": "2,100 msnm",
-            "status": "closed"
-          }
-        },
-        {
-          "type": "race",
-          "settings": {
-            "round": "R2",
-            "title": "Puebla",
-            "date": "26 Abr 2026",
-            "location": "Puebla, PUE",
-            "elevation": "2,160 msnm",
-            "status": "open"
-          }
-        },
-        {
-          "type": "race",
-          "settings": {
-            "round": "R3",
-            "title": "Guadalajara",
-            "date": "14 Jun 2026",
-            "location": "Guadalajara, JAL",
-            "status": "upcoming"
-          }
-        },
-        {
-          "type": "race",
-          "settings": {
-            "round": "R4",
-            "title": "Ixtapan",
-            "date": "9 Ago 2026",
-            "location": "Ixtapan de la Sal, MEX",
-            "status": "upcoming"
-          }
-        },
-        {
-          "type": "race",
-          "settings": {
-            "round": "R5",
-            "title": "Taxco",
-            "date": "18 Oct 2026",
-            "location": "Taxco, GRO",
-            "status": "upcoming"
-          }
-        }
+        { "type": "race", "settings": { "round": "R1", "title": "Guanajuato", "date": "21-22 Feb 2026", "location": "Guanajuato, GTO", "elevation": "2,100 msnm", "status": "closed" } },
+        { "type": "race", "settings": { "round": "R2", "title": "Puebla", "date": "21-22 Mar 2026", "location": "Puebla, PUE", "elevation": "2,160 msnm", "status": "open" } },
+        { "type": "race", "settings": { "round": "R3", "title": "Guadalajara", "date": "30-31 May 2026", "location": "Guadalajara, JAL", "status": "upcoming" } },
+        { "type": "race", "settings": { "round": "R4", "title": "Ixtapan de la Sal", "date": "18-19 Jul 2026", "location": "Ixtapan de la Sal, MEX", "status": "upcoming" } },
+        { "type": "race", "settings": { "round": "R5", "title": "Taxco", "date": "17-18 Oct 2026", "location": "Taxco, GRO", "status": "upcoming" } }
       ]
     }
   ]

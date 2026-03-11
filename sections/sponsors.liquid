@@ -1,4 +1,11 @@
-<section id="sponsors" class="sponsors">
+{% comment %}
+  Sponsors Section — Tiered Pro Display
+  Gold: Large prominent logos
+  Plata: Medium logos row
+  Bronce: Infinite marquee ticker
+{% endcomment %}
+
+<section id="sponsors" class="section sponsors-pro">
   <div class="container">
     <div class="section__header">
       <div class="section__header-left">
@@ -6,29 +13,109 @@
         <h2 class="heading-lg reveal reveal--delay-1">{{ section.settings.heading | default: 'Sponsors' }}</h2>
       </div>
     </div>
-
-    <div class="sponsors__grid stagger-children">
-      {% for block in section.blocks %}
-        <div class="sponsor reveal" {{ block.shopify_attributes }}>
-          {% if block.settings.logo != blank %}
-            <img
-              src="{{ block.settings.logo | image_url: width: 240 }}"
-              alt="{{ block.settings.name }}"
-              loading="lazy"
-            >
-          {% elsif block.settings.logo_url != blank %}
-            <img
-              src="{{ block.settings.logo_url }}"
-              alt="{{ block.settings.name }}"
-              loading="lazy"
-            >
-          {% else %}
-            <span class="heading-sm" style="opacity: 0.4;">{{ block.settings.name }}</span>
-          {% endif %}
-        </div>
-      {% endfor %}
-    </div>
   </div>
+
+  {% comment %} ── GOLD — Title Sponsors ── {% endcomment %}
+  {% assign has_gold = false %}
+  {% for block in section.blocks %}
+    {% if block.settings.tier == 'gold' %}{% assign has_gold = true %}{% endif %}
+  {% endfor %}
+
+  {% if has_gold %}
+    <div class="container">
+      <div class="sp-tier sp-tier--gold reveal">
+        <span class="sp-tier__label">Title Sponsors</span>
+        <div class="sp-tier__row sp-tier__row--gold">
+          {% for block in section.blocks %}
+            {% if block.settings.tier == 'gold' %}
+              <div class="sp-logo sp-logo--gold" {{ block.shopify_attributes }}>
+                {% if block.settings.url != blank %}<a href="{{ block.settings.url }}" target="_blank" rel="noopener">{% endif %}
+                  {% if block.settings.logo != blank %}
+                    <img src="{{ block.settings.logo | image_url: width: 500 }}" alt="{{ block.settings.name }}" loading="lazy">
+                  {% elsif block.settings.logo_url != blank %}
+                    <img src="{{ block.settings.logo_url }}" alt="{{ block.settings.name }}" loading="lazy">
+                  {% else %}
+                    <span class="sp-logo__text sp-logo__text--gold">{{ block.settings.name }}</span>
+                  {% endif %}
+                {% if block.settings.url != blank %}</a>{% endif %}
+              </div>
+            {% endif %}
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+  {% endif %}
+
+  {% comment %} ── PLATA — Official Sponsors ── {% endcomment %}
+  {% assign has_plata = false %}
+  {% for block in section.blocks %}
+    {% if block.settings.tier == 'plata' %}{% assign has_plata = true %}{% endif %}
+  {% endfor %}
+
+  {% if has_plata %}
+    <div class="container">
+      <div class="sp-tier sp-tier--plata reveal">
+        <span class="sp-tier__label">Official Sponsors</span>
+        <div class="sp-tier__row sp-tier__row--plata">
+          {% for block in section.blocks %}
+            {% if block.settings.tier == 'plata' %}
+              <div class="sp-logo sp-logo--plata" {{ block.shopify_attributes }}>
+                {% if block.settings.url != blank %}<a href="{{ block.settings.url }}" target="_blank" rel="noopener">{% endif %}
+                  {% if block.settings.logo != blank %}
+                    <img src="{{ block.settings.logo | image_url: width: 360 }}" alt="{{ block.settings.name }}" loading="lazy">
+                  {% elsif block.settings.logo_url != blank %}
+                    <img src="{{ block.settings.logo_url }}" alt="{{ block.settings.name }}" loading="lazy">
+                  {% else %}
+                    <span class="sp-logo__text sp-logo__text--plata">{{ block.settings.name }}</span>
+                  {% endif %}
+                {% if block.settings.url != blank %}</a>{% endif %}
+              </div>
+            {% endif %}
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+  {% endif %}
+
+  {% comment %} ── BRONCE — Partners Marquee ── {% endcomment %}
+  {% assign has_bronce = false %}
+  {% assign bronce_count = 0 %}
+  {% for block in section.blocks %}
+    {% if block.settings.tier == 'bronce' %}
+      {% assign has_bronce = true %}
+      {% assign bronce_count = bronce_count | plus: 1 %}
+    {% endif %}
+  {% endfor %}
+
+  {% if has_bronce %}
+    <div class="sp-tier sp-tier--bronce reveal">
+      <div class="container">
+        <span class="sp-tier__label">Partners</span>
+      </div>
+      <div class="sp-marquee" aria-label="Partners">
+        <div class="sp-marquee__track">
+          {% comment %} Duplicate content for seamless loop {% endcomment %}
+          {% for i in (1..3) %}
+            {% for block in section.blocks %}
+              {% if block.settings.tier == 'bronce' %}
+                <div class="sp-marquee__item" {{ block.shopify_attributes }}>
+                  {% if block.settings.url != blank %}<a href="{{ block.settings.url }}" target="_blank" rel="noopener">{% endif %}
+                    {% if block.settings.logo != blank %}
+                      <img src="{{ block.settings.logo | image_url: width: 240 }}" alt="{{ block.settings.name }}" loading="lazy">
+                    {% elsif block.settings.logo_url != blank %}
+                      <img src="{{ block.settings.logo_url }}" alt="{{ block.settings.name }}" loading="lazy">
+                    {% else %}
+                      <span class="sp-logo__text sp-logo__text--bronce">{{ block.settings.name }}</span>
+                    {% endif %}
+                  {% if block.settings.url != blank %}</a>{% endif %}
+                </div>
+              {% endif %}
+            {% endfor %}
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+  {% endif %}
 </section>
 
 {% schema %}
@@ -53,6 +140,17 @@
       "type": "sponsor",
       "name": "Sponsor",
       "settings": [
+        {
+          "type": "select",
+          "id": "tier",
+          "label": "Nivel",
+          "options": [
+            { "value": "gold", "label": "Gold" },
+            { "value": "plata", "label": "Plata" },
+            { "value": "bronce", "label": "Bronce" }
+          ],
+          "default": "plata"
+        },
         {
           "type": "image_picker",
           "id": "logo",
@@ -81,16 +179,16 @@
     {
       "name": "Sponsors",
       "blocks": [
-        { "type": "sponsor", "settings": { "name": "SCOTT" } },
-        { "type": "sponsor", "settings": { "name": "SHIMANO" } },
-        { "type": "sponsor", "settings": { "name": "RED BULL" } },
-        { "type": "sponsor", "settings": { "name": "MOTUL" } },
-        { "type": "sponsor", "settings": { "name": "SRAM" } },
-        { "type": "sponsor", "settings": { "name": "SCHWALBE" } },
-        { "type": "sponsor", "settings": { "name": "FOX FACTORY" } },
-        { "type": "sponsor", "settings": { "name": "VITTORIA" } },
-        { "type": "sponsor", "settings": { "name": "LAZER" } },
-        { "type": "sponsor", "settings": { "name": "ALPINESTARS" } }
+        { "type": "sponsor", "settings": { "name": "SCOTT", "tier": "gold" } },
+        { "type": "sponsor", "settings": { "name": "SHIMANO", "tier": "gold" } },
+        { "type": "sponsor", "settings": { "name": "RED BULL", "tier": "plata" } },
+        { "type": "sponsor", "settings": { "name": "MOTUL", "tier": "plata" } },
+        { "type": "sponsor", "settings": { "name": "SRAM", "tier": "plata" } },
+        { "type": "sponsor", "settings": { "name": "SCHWALBE", "tier": "bronce" } },
+        { "type": "sponsor", "settings": { "name": "FOX FACTORY", "tier": "bronce" } },
+        { "type": "sponsor", "settings": { "name": "VITTORIA", "tier": "bronce" } },
+        { "type": "sponsor", "settings": { "name": "LAZER", "tier": "bronce" } },
+        { "type": "sponsor", "settings": { "name": "ALPINESTARS", "tier": "bronce" } }
       ]
     }
   ]
