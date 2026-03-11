@@ -12,7 +12,11 @@
       {% if section.settings.video_url != blank %}
         <div class="hero__bg-desktop">
           {% if section.settings.video_url contains 'youtube.com' or section.settings.video_url contains 'youtu.be' %}
-            {% assign video_id = section.settings.video_url | split: 'v=' | last | split: '/' | last | split: '&' | first %}
+            {% if section.settings.video_url contains '/shorts/' %}
+              {% assign video_id = section.settings.video_url | split: '/shorts/' | last | split: '?' | first | split: '&' | first %}
+            {% else %}
+              {% assign video_id = section.settings.video_url | split: 'v=' | last | split: '/' | last | split: '&' | first %}
+            {% endif %}
             <iframe
               id="youtube-desktop"
               src="https://www.youtube.com/embed/{{ video_id }}?autoplay=1&mute=1&loop=1&playlist={{ video_id }}&controls=0&showinfo=0&rel=0&modestbranding=1&enablejsapi=1"
@@ -42,7 +46,11 @@
       {% if section.settings.video_url_mobile != blank %}
         <div class="hero__bg-mobile">
           {% if section.settings.video_url_mobile contains 'youtube.com' or section.settings.video_url_mobile contains 'youtu.be' %}
-            {% assign video_id_mobile = section.settings.video_url_mobile | split: 'v=' | last | split: '/' | last | split: '&' | first %}
+            {% if section.settings.video_url_mobile contains '/shorts/' %}
+              {% assign video_id_mobile = section.settings.video_url_mobile | split: '/shorts/' | last | split: '?' | first | split: '&' | first %}
+            {% else %}
+              {% assign video_id_mobile = section.settings.video_url_mobile | split: 'v=' | last | split: '/' | last | split: '&' | first %}
+            {% endif %}
             <iframe
               id="youtube-mobile"
               src="https://www.youtube.com/embed/{{ video_id_mobile }}?autoplay=1&mute=1&loop=1&playlist={{ video_id_mobile }}&controls=0&showinfo=0&rel=0&modestbranding=1&enablejsapi=1"

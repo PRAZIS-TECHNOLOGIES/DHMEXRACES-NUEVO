@@ -5,7 +5,7 @@
 {% endcomment %}
 
 <style>
-  .ranking-section { padding: var(--space-lg) 0; }
+  .ranking-section { padding: 120px 0 var(--space-lg); }
   .ranking-sede {
     border: 1px solid rgba(0,0,0,0.08);
     border-radius: 8px;
@@ -97,35 +97,48 @@
   .ranking-table thead th {
     font-family: var(--font-heading);
     font-size: 11px;
-    font-weight: 600;
-    letter-spacing: 0.05em;
+    font-weight: 700;
+    letter-spacing: 0.06em;
     text-transform: uppercase;
-    color: var(--text-secondary);
-    padding: 8px 12px;
+    color: var(--text-primary);
+    padding: 10px 12px;
     text-align: left;
-    border-bottom: 1px solid rgba(0,0,0,0.08);
+    border-bottom: 2px solid rgba(0,0,0,0.12);
     white-space: nowrap;
+    background: rgba(0,0,0,0.02);
   }
   .ranking-table tbody tr {
-    border-bottom: 1px solid rgba(0,0,0,0.04);
+    border-bottom: 1px solid rgba(0,0,0,0.06);
     transition: background 0.15s;
   }
+  .ranking-table tbody tr:nth-child(even) {
+    background: rgba(0,0,0,0.015);
+  }
   .ranking-table tbody tr:hover {
-    background: rgba(0,0,0,0.03);
+    background: rgba(0,0,0,0.04);
   }
   .ranking-table td {
-    padding: 10px 12px;
+    padding: 11px 12px;
     color: var(--text-primary);
     white-space: nowrap;
   }
   .ranking-table__pos { width: 50px; text-align: center; }
-  .ranking-table__name { font-weight: 600; }
+  .ranking-table__name { font-weight: 700; font-size: 13px; }
   .ranking-table__cat { }
-  .ranking-table__team { color: var(--text-secondary); }
-  .ranking-table__time { font-family: var(--font-heading); }
-  .ranking-table__pts { font-weight: 700; text-align: center; }
+  .ranking-table__team { color: var(--text-secondary); font-size: 12.5px; }
+  .ranking-table__time { font-family: var(--font-heading); font-weight: 700; }
+  .ranking-table__pts { font-weight: 800; text-align: center; font-size: 14px; }
   .ranking-table__sede { text-align: center; font-size: 12px; }
-  .ranking-table__diff { text-align: center; color: var(--text-secondary); font-size: 12px; }
+  .ranking-table__diff {
+    font-family: var(--font-heading);
+    font-size: 11.5px;
+    color: var(--text-secondary);
+    white-space: nowrap;
+  }
+  .ranking-table__diff--leader {
+    color: var(--text-primary);
+    font-weight: 700;
+  }
   .ranking-medal {
     display: inline-flex;
     align-items: center;
@@ -194,25 +207,53 @@
               </div>
             {% else %}
               {% assign results_rows = block.settings.results | split: '||' %}
-              {% assign categories_list = '' %}
 
+              {%- comment -%} Collect existing categories from data {%- endcomment -%}
+              {% assign existing_cats = '' %}
               {% for row in results_rows %}
                 {% assign parts = row | strip | split: '|' %}
                 {% if parts.size >= 6 %}
                   {% assign cat = parts[2] | strip %}
-                  {% unless categories_list contains cat %}
-                    {% if categories_list != '' %}{% assign categories_list = categories_list | append: '||' %}{% endif %}
-                    {% assign categories_list = categories_list | append: cat %}
+                  {% unless existing_cats contains cat %}
+                    {% if existing_cats != '' %}{% assign existing_cats = existing_cats | append: '||' %}{% endif %}
+                    {% assign existing_cats = existing_cats | append: cat %}
                   {% endunless %}
                 {% endif %}
               {% endfor %}
+              {% assign existing_arr = existing_cats | split: '||' %}
 
-              {% assign unique_cats = categories_list | split: '||' %}
+              {%- comment -%} Fixed display order - case-insensitive matching {%- endcomment -%}
+              {% assign cat_order = "pro elite,senior,junior,cadetes,infantil,principiantes,master 50,master 40,master 30,femenil,ebike" | split: ',' %}
+              {% assign ordered_cats = '' %}
+              {% assign used_cats = '' %}
+
+              {% for ord in cat_order %}
+                {% assign ord_clean = ord | strip %}
+                {% for ex in existing_arr %}
+                  {% assign ex_down = ex | downcase %}
+                  {% if ex_down contains ord_clean %}
+                    {% unless used_cats contains ex %}
+                      {% if ordered_cats != '' %}{% assign ordered_cats = ordered_cats | append: '|||' %}{% endif %}
+                      {% assign ordered_cats = ordered_cats | append: ex %}
+                      {% if used_cats != '' %}{% assign used_cats = used_cats | append: '|||' %}{% endif %}
+                      {% assign used_cats = used_cats | append: ex %}
+                    {% endunless %}
+                  {% endif %}
+                {% endfor %}
+              {% endfor %}
+
+              {%- comment -%} Append any remaining categories not matched {%- endcomment -%}
+              {% for ex in existing_arr %}
+                {% unless used_cats contains ex %}
+                  {% if ordered_cats != '' %}{% assign ordered_cats = ordered_cats | append: '|||' %}{% endif %}
+                  {% assign ordered_cats = ordered_cats | append: ex %}
+                {% endunless %}
+              {% endfor %}
+              {% assign unique_cats = ordered_cats | split: '|||' %}
 
               <div class="ranking-filters" data-sede-id="{{ block.id }}">
-                <button class="ranking-filter is-active" data-filter="all" onclick="filterCategory(this, '{{ block.id }}')">Todos</button>
                 {% for cat in unique_cats %}
-                  <button class="ranking-filter" data-filter="{{ cat }}" onclick="filterCategory(this, '{{ block.id }}')">{{ cat }}</button>
+                  <button class="ranking-filter {% if forloop.first %}is-active{% endif %}" data-filter="{{ cat }}" onclick="filterCategory(this, '{{ block.id }}')">{{ cat }}</button>
                 {% endfor %}
               </div>
 
@@ -225,6 +266,7 @@
                       <th class="ranking-table__cat">Categoria</th>
                       <th class="ranking-table__team">Equipo</th>
                       <th class="ranking-table__time">Tiempo</th>
+                      <th class="ranking-table__diff">Dif</th>
                       <th class="ranking-table__pts">Pts</th>
                     </tr>
                   </thead>
@@ -254,7 +296,8 @@
                           <td class="ranking-table__name">{{ name }}</td>
                           <td class="ranking-table__cat"><span class="tag">{{ category }}</span></td>
                           <td class="ranking-table__team">{{ team }}</td>
-                          <td class="ranking-table__time">{{ time }}</td>
+                          <td class="ranking-table__time" data-time="{{ time }}">{{ time }}</td>
+                          <td class="ranking-table__diff" data-pos="{{ pos_num }}">—</td>
                           <td class="ranking-table__pts">{{ points }}</td>
                         </tr>
                       {% endif %}
@@ -278,41 +321,80 @@
 </section>
 
 <script>
+function parseTime(str) {
+  if (!str || str === '—' || str === '-') return null;
+  var parts = str.split(':');
+  if (parts.length === 2) return parseFloat(parts[0]) * 60 + parseFloat(parts[1]);
+  if (parts.length === 3) return parseFloat(parts[0]) * 3600 + parseFloat(parts[1]) * 60 + parseFloat(parts[2]);
+  return parseFloat(str) || null;
+}
+
+function formatDiff(secs) {
+  if (secs < 60) return '+' + secs.toFixed(2) + 's';
+  var m = Math.floor(secs / 60);
+  var s = (secs % 60).toFixed(2);
+  return '+' + m + ':' + (s < 10 ? '0' : '') + s;
+}
+
+function calcDiffs(sede) {
+  var rows = sede.querySelectorAll('tbody tr');
+  var activeFilter = sede.querySelector('.ranking-filter.is-active');
+  var filter = activeFilter ? activeFilter.dataset.filter : null;
+
+  var leaderTime = null;
+  rows.forEach(function(row) {
+    var diffCell = row.querySelector('.ranking-table__diff');
+    if (!diffCell) return;
+    var isVisible = !filter || row.dataset.category === filter;
+    if (!isVisible) return;
+    var timeStr = row.querySelector('.ranking-table__time').dataset.time;
+    var t = parseTime(timeStr);
+    if (t === null) { diffCell.textContent = '—'; return; }
+    if (leaderTime === null) {
+      leaderTime = t;
+      diffCell.textContent = '—';
+      diffCell.className = 'ranking-table__diff ranking-table__diff--leader';
+    } else {
+      var diff = t - leaderTime;
+      diffCell.textContent = formatDiff(diff);
+      diffCell.className = 'ranking-table__diff';
+    }
+  });
+}
+
 document.addEventListener('DOMContentLoaded', function() {
-  // Auto-expand first sede with data
-  const firstSede = document.querySelector('.ranking-sede');
+  var firstSede = document.querySelector('.ranking-sede');
   if (firstSede) {
-    const body = firstSede.querySelector('.ranking-sede__body');
-    const toggle = firstSede.querySelector('.ranking-sede__toggle');
+    var body = firstSede.querySelector('.ranking-sede__body');
+    var toggle = firstSede.querySelector('.ranking-sede__toggle');
     if (body) body.style.display = 'block';
     if (toggle) toggle.classList.add('is-open');
+
+    var firstFilter = firstSede.querySelector('.ranking-filter');
+    if (firstFilter) firstFilter.click();
   }
 });
 
 function toggleRanking(btn) {
-  const sede = btn.closest('.ranking-sede');
-  const body = sede.querySelector('.ranking-sede__body');
-  const isOpen = body.style.display !== 'none';
+  var sede = btn.closest('.ranking-sede');
+  var body = sede.querySelector('.ranking-sede__body');
+  var isOpen = body.style.display !== 'none';
   body.style.display = isOpen ? 'none' : 'block';
   btn.classList.toggle('is-open');
 }
 
 function filterCategory(btn, sedeId) {
-  const sede = btn.closest('.ranking-sede');
-  const filter = btn.dataset.filter;
+  var sede = btn.closest('.ranking-sede');
+  var filter = btn.dataset.filter;
 
-  // Update active button
-  sede.querySelectorAll('.ranking-filter').forEach(b => b.classList.remove('is-active'));
+  sede.querySelectorAll('.ranking-filter').forEach(function(b) { b.classList.remove('is-active'); });
   btn.classList.add('is-active');
 
-  // Filter rows
   sede.querySelectorAll('tbody tr').forEach(function(row) {
-    if (filter === 'all' || row.dataset.category === filter) {
-      row.style.display = '';
-    } else {
-      row.style.display = 'none';
-    }
+    row.style.display = (row.dataset.category === filter) ? '' : 'none';
   });
+
+  calcDiffs(sede);
 }
 </script>
 

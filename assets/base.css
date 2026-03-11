@@ -2635,6 +2635,7 @@ ul, ol {
   padding-bottom: var(--space-xl);
 }
 
+/* --- Kit Grid --- */
 .kit-grid {
   display: grid;
   grid-template-columns: 1fr;
@@ -2649,54 +2650,106 @@ ul, ol {
 
 @media (min-width: 1024px) {
   .kit-grid {
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(4, 1fr);
   }
 }
 
 .kit-item {
   display: flex;
-  align-items: flex-start;
-  gap: var(--space-sm);
-  padding: var(--space-md);
+  flex-direction: column;
+  padding: 24px;
   border: 1px solid rgba(0, 0, 0, 0.06);
   transition: border-color 0.3s ease;
+  position: relative;
 }
 
 .kit-item:hover {
-  border-color: rgba(0, 0, 0, 0.12);
+  border-color: rgba(0, 0, 0, 0.15);
 }
 
 @media (min-width: 640px) {
   .kit-item--featured {
     grid-column: span 2;
+    text-align: center;
+    align-items: center;
+  }
+  .kit-item--featured .kit-item__badge {
+    width: 100%;
   }
 }
 
 .kit-item__icon {
-  flex-shrink: 0;
-  width: 48px;
-  height: 48px;
+  width: 40px;
+  height: 40px;
   display: flex;
   align-items: center;
   justify-content: center;
-  color: var(--accent);
+  color: var(--text-primary);
+  margin-bottom: 16px;
 }
 
 .kit-item__title {
   font-family: var(--font-heading);
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: -0.02em;
-  margin-bottom: 4px;
+  letter-spacing: -0.01em;
+  margin-bottom: 8px;
+  line-height: 1.2;
+}
+
+.kit-item__badge {
+  display: inline-block;
+  padding: 3px 10px;
+  font-family: var(--font-body);
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+  background: rgba(0, 0, 0, 0.04);
+  border-radius: 2px;
+  margin-bottom: 12px;
+  line-height: 1.4;
 }
 
 .kit-item__desc {
-  font-size: 13px;
+  font-size: 12px;
   color: var(--text-secondary);
-  line-height: 1.5;
+  line-height: 1.55;
+  flex: 1;
 }
 
+.kit-item__sponsor {
+  font-family: var(--font-body);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: var(--text-secondary);
+  margin-top: auto;
+  padding-top: 12px;
+}
+
+.kit-item__tag {
+  font-family: var(--font-body);
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-primary);
+  opacity: 0.7;
+  text-align: right;
+  margin-top: 8px;
+  padding-top: 12px;
+  border-top: 1px solid rgba(0, 0, 0, 0.06);
+  width: 100%;
+}
+
+.kit-item--featured .kit-item__tag {
+  text-align: center;
+}
+
+/* --- Prize Grid --- */
 .prize-grid {
   display: grid;
   grid-template-columns: 1fr;
@@ -2716,38 +2769,86 @@ ul, ol {
 }
 
 .prize-card {
-  padding: var(--space-md);
+  padding: 24px;
   border: 1px solid rgba(0, 0, 0, 0.06);
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 8px;
   transition: border-color 0.3s ease;
 }
 
 .prize-card:hover {
-  border-color: var(--accent);
+  border-color: rgba(0, 0, 0, 0.15);
+}
+
+.prize-card--wide {
+  grid-column: 1 / -1;
+  text-align: center;
+  align-items: center;
+}
+
+.prize-card--wide .prize-card__amount {
+  width: 100%;
+  align-items: center;
+}
+
+.prize-card__icon {
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-primary);
+  margin-bottom: 4px;
 }
 
 .prize-card__category {
+  font-family: var(--font-heading);
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  text-transform: uppercase;
+  color: var(--text-primary);
+}
+
+.prize-card__desc {
+  font-size: 12px;
+  color: var(--text-secondary);
+  line-height: 1.5;
+}
+
+.prize-card__amount {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2px;
+  margin-top: 8px;
+  padding: 12px 16px;
+  background: rgba(0, 0, 0, 0.03);
+  border-radius: 4px;
+}
+
+.prize-card__value {
+  font-family: var(--font-heading);
+  font-size: clamp(1.1rem, 2vw, 1.5rem);
+  font-weight: 700;
+  color: var(--accent);
+  letter-spacing: -0.03em;
+}
+
+.prize-card__label {
   font-family: var(--font-body);
-  font-size: 11px;
+  font-size: 10px;
   font-weight: 600;
   letter-spacing: 0.08em;
   text-transform: uppercase;
   color: var(--text-secondary);
 }
 
-.prize-card__value {
-  font-family: var(--font-heading);
-  font-size: clamp(1.25rem, 2vw, 1.75rem);
-  font-weight: 700;
-  color: var(--accent);
-  letter-spacing: -0.03em;
-}
-
 .prize-card__sponsor {
-  font-size: 12px;
+  font-size: 11px;
   color: var(--text-secondary);
+  opacity: 0.6;
 }
 
 .kit-cta {
