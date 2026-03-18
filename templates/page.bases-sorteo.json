@@ -3,31 +3,95 @@
     "main": {
       "type": "bases-sorteo",
       "settings": {
-        "badge": "Sorteo Exclusivo",
-        "title": "FOX 40",
-        "description": "Participa por una suspension FOX 40 valorada en $50,000 MXN",
-        "how_to": "Inscribete en cualquier sede de la temporada 2026",
-        "draw_date": "22 de Marzo, 2026",
-        "prize_value": "$50,000 MXN",
-        "cta_heading": "Inscribete y participa",
-        "cta_description": "Cada inscripcion es una oportunidad de ganar",
         "cta_text": "Inscribirse Ahora"
       },
       "blocks": {
-        "base_1": { "type": "base", "settings": { "title": "Elegibilidad", "content": "Pueden participar todas las personas que se inscriban en cualquier sede de la Copa Scott DHMEXRACES Temporada 2026." } },
-        "base_2": { "type": "base", "settings": { "title": "Mecanica", "content": "Cada inscripcion pagada genera automaticamente un numero de participacion para el sorteo." } },
-        "base_3": { "type": "base", "settings": { "title": "Premio", "content": "El premio consiste en una suspension FOX 40 Factory valorada en $50,000 MXN aproximadamente." } },
-        "base_4": { "type": "base", "settings": { "title": "Fecha del Sorteo", "content": "El sorteo se realizara el 22 de Marzo de 2026 durante el evento de la primera sede." } },
-        "base_5": { "type": "base", "settings": { "title": "Seleccion del Ganador", "content": "El ganador sera seleccionado de manera aleatoria mediante un sistema digital verificable." } },
-        "base_6": { "type": "base", "settings": { "title": "Notificacion", "content": "El ganador sera notificado via Instagram y correo electronico registrado en su inscripcion." } },
-        "base_7": { "type": "base", "settings": { "title": "Entrega del Premio", "content": "El premio se entregara en la sede donde se realice el sorteo o se enviara sin costo adicional." } },
-        "base_8": { "type": "base", "settings": { "title": "Restricciones", "content": "El premio no es transferible ni canjeable por dinero en efectivo." } },
-        "base_9": { "type": "base", "settings": { "title": "Responsabilidad", "content": "DHMEXRACES no se hace responsable por el uso inadecuado del premio." } },
-        "base_10": { "type": "base", "settings": { "title": "Datos Personales", "content": "Los datos de los participantes seran tratados conforme a nuestra politica de privacidad." } },
-        "base_11": { "type": "base", "settings": { "title": "Modificaciones", "content": "DHMEXRACES se reserva el derecho de modificar las bases del sorteo." } },
-        "base_12": { "type": "base", "settings": { "title": "Aceptacion", "content": "La participacion en el sorteo implica la aceptacion total de estas bases." } }
+        "base_01": {
+          "type": "base",
+          "settings": {
+            "title": "Organizador",
+            "content": "DHMEXRACES — Organizador de la Copa SCOTT DHMEXRACES 2026.\nContacto: Instagram @dhmex_races | Correo: endhurorace@gmail.com"
+          }
+        },
+        "base_02": {
+          "type": "base",
+          "settings": {
+            "title": "Vigencia y Fechas",
+            "content": "Periodo de participacion: Desde el 12 de enero de 2026 hasta el cierre de inscripciones de Puebla (22 de marzo 2026).\nFecha del sorteo: Domingo 22 de marzo de 2026 al finalizar la fecha de Puebla.\nTransmision EN VIVO por redes sociales oficiales."
+          }
+        },
+        "base_03": {
+          "type": "base",
+          "settings": {
+            "title": "Mecanica de Participacion",
+            "content": "Automatico por inscripcion: Cada inscripcion pagada y confirmada a Guanajuato o Puebla otorga 1 boleto.\nRiders que se inscriban a AMBAS fechas = 2 boletos.\nFechas: Guanajuato (21-22 Feb) • Puebla (22 Mar).\nBoletos: Max 2 por rider."
+          }
+        },
+        "base_04": {
+          "type": "base",
+          "settings": {
+            "title": "Requisitos",
+            "content": "Para ser elegible: Inscrito con pago confirmado, inscripcion activa (no cancelada), mayor de 18 anos o con tutor.\nNO participan: Inscripciones canceladas, no pagadas o no presentados."
+          }
+        },
+        "base_05": {
+          "type": "base",
+          "settings": {
+            "title": "Premio",
+            "content": "FOX 40 GRIP 2 — Valor: $50,000 MXN.\nSin cambio por efectivo. Solo la suspension. No incluye instalacion. Garantia del fabricante."
+          }
+        },
+        "base_06": {
+          "type": "base",
+          "settings": {
+            "title": "Entrega del Premio",
+            "content": "OPCION 1: En Puebla durante premiacion.\nOPCION 2: En siguiente sede (Guadalajara, Ixtapan, Taxco).\nOPCION 3: Envio por paqueteria (costo a cargo del ganador).\n48 hrs para elegir opcion • 7 dias para confirmar."
+          }
+        },
+        "base_07": {
+          "type": "base",
+          "settings": {
+            "title": "Sorteo y Seleccion",
+            "content": "Fecha: Domingo 22 de marzo 2026. Lugar: Sede Puebla, durante premiacion.\nTransmision: EN VIVO @dhmex_races. Metodo: Sistema aleatorio transparente."
+          }
+        },
+        "base_08": {
+          "type": "base",
+          "settings": {
+            "title": "Condiciones Generales",
+            "content": "Responsabilidades: Participante debe mantener datos actualizados.\nExclusiones: Empleados, familiares del organizador, sponsors y proveedores.\nImpuestos: El ganador es responsable de cualquier carga fiscal."
+          }
+        },
+        "base_09": {
+          "type": "base",
+          "settings": {
+            "title": "Aceptacion de Bases",
+            "content": "Al inscribirse, el participante acepta: Haber leido estas bases, participar automaticamente, publicacion de nombre y boleto, uso de imagen si gana, decision del sorteo es final."
+          }
+        },
+        "base_10": {
+          "type": "base",
+          "settings": {
+            "title": "Consultas",
+            "content": "Correo: endhurorace@gmail.com\nInstagram: @dhmex_races\nHorario: Lun-Vie 9AM - 6PM"
+          }
+        },
+        "base_11": {
+          "type": "base",
+          "settings": {
+            "title": "Jurisdiccion",
+            "content": "Estas bases se rigen por las leyes de los Estados Unidos Mexicanos. Cualquier controversia sera resuelta conforme a la legislacion mexicana vigente."
+          }
+        },
+        "base_12": {
+          "type": "base",
+          "settings": {
+            "title": "Privacidad",
+            "content": "Datos utilizados para: registro, contacto y comunicaciones DHMEXRACES. NO se comparten con terceros sin consentimiento."
+          }
+        }
       },
-      "block_order": ["base_1", "base_2", "base_3", "base_4", "base_5", "base_6", "base_7", "base_8", "base_9", "base_10", "base_11", "base_12"]
+      "block_order": ["base_01", "base_02", "base_03", "base_04", "base_05", "base_06", "base_07", "base_08", "base_09", "base_10", "base_11", "base_12"]
     }
   },
   "order": ["main"]

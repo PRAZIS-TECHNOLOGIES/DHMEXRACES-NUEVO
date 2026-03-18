@@ -1,71 +1,323 @@
 <footer class="footer">
   <div class="container">
     <div class="footer__grid">
-      <!-- Brand -->
+      <!-- Brand + Stats -->
       <div class="footer__brand">
-        <div class="footer__logo">DHMEX<span>RACES</span></div>
+        <h4 class="footer__title">COPA SCOTT DHMEXRACES 2026</h4>
+        <div class="footer__accent-line"></div>
         <p class="footer__description">
-          {{ section.settings.description | default: 'El copa nacional de downhill MTB mas grande de Mexico. Copa Scott DHMEXRACES — Temporada 2026.' }}
+          El campeonato nacional de downhill MTB mas grande de Mexico.
+          $500,000 MXN en premios totales distribuidos en 5 sedes a lo largo del ano.
         </p>
-        <div class="footer__social" style="margin-top: var(--space-sm);">
-          {% if settings.social_instagram != blank %}
-            <a href="{{ settings.social_instagram }}" target="_blank" rel="noopener" class="footer__social-link" aria-label="Instagram">IG</a>
-          {% endif %}
-          {% if settings.social_youtube != blank %}
-            <a href="{{ settings.social_youtube }}" target="_blank" rel="noopener" class="footer__social-link" aria-label="YouTube">YT</a>
-          {% endif %}
-          {% if settings.social_facebook != blank %}
-            <a href="{{ settings.social_facebook }}" target="_blank" rel="noopener" class="footer__social-link" aria-label="Facebook">FB</a>
-          {% endif %}
-          {% if settings.social_tiktok != blank %}
-            <a href="{{ settings.social_tiktok }}" target="_blank" rel="noopener" class="footer__social-link" aria-label="TikTok">TK</a>
-          {% endif %}
+        <div class="footer__stats">
+          <div class="footer__stat">
+            <span class="footer__stat-number">5</span>
+            <span class="footer__stat-label">SEDES</span>
+          </div>
+          <div class="footer__stat">
+            <span class="footer__stat-number">14</span>
+            <span class="footer__stat-label">CATEGORIAS</span>
+          </div>
+          <div class="footer__stat">
+            <span class="footer__stat-number footer__stat-number--accent">$500K</span>
+            <span class="footer__stat-label">PREMIOS</span>
+          </div>
         </div>
       </div>
 
-      <!-- Copa -->
+      <!-- Enlaces Rapidos -->
       <div>
-        <h4 class="footer__column-title">Copa</h4>
+        <h4 class="footer__column-title">Enlaces Rapidos</h4>
         <div class="footer__links">
-          <a href="/#about" class="footer__link">Sobre la copa</a>
-          <a href="/#sedes" class="footer__link">Inscripciones</a>
+          <a href="/" class="footer__link">Inicio</a>
           <a href="/pages/ranking-2026" class="footer__link">Ranking 2026</a>
-          <a href="/pages/ranking-overall" class="footer__link">Ranking Overall</a>
-          <a href="/pages/kit-rider" class="footer__link">Kit del Rider</a>
-          <a href="/pages/bases-del-sorteo" class="footer__link">Sorteo FOX 40</a>
-        </div>
-      </div>
-
-      <!-- Tienda -->
-      <div>
-        <h4 class="footer__column-title">Tienda</h4>
-        <div class="footer__links">
-          <a href="/pages/merch-oficial" class="footer__link">Merch Oficial</a>
+          <a href="/pages/ranking-overall" class="footer__link">Overall</a>
+          <a href="/#sedes" class="footer__link">Inscripciones</a>
           <a href="/cart" class="footer__link">Carrito</a>
-          <a href="/policies/refund-policy" class="footer__link">Devoluciones</a>
-          <a href="/policies/shipping-policy" class="footer__link">Envios</a>
         </div>
       </div>
 
-      <!-- Contacto -->
+      <!-- Sedes 2026 -->
       <div>
-        <h4 class="footer__column-title">Contacto</h4>
+        <h4 class="footer__column-title">Sedes 2026</h4>
         <div class="footer__links">
-          {% if section.settings.email != blank %}
-            <a href="mailto:{{ section.settings.email }}" class="footer__link">{{ section.settings.email }}</a>
-          {% endif %}
-          <a href="{{ settings.social_instagram }}" target="_blank" rel="noopener" class="footer__link">@dhmex_races</a>
+          <div class="footer__sede">
+            <span class="footer__link">SEDE 1 - Guanajuato</span>
+            <span class="footer__sede-date">21-22 Feb</span>
+          </div>
+          <div class="footer__sede">
+            <span class="footer__link">SEDE 2 - Guadalajara</span>
+            <span class="footer__sede-date">30-31 May</span>
+          </div>
+          <div class="footer__sede">
+            <span class="footer__link">SEDE 3 - Ixtapan de la Sal</span>
+            <span class="footer__sede-date">18-19 Jul</span>
+          </div>
+          <div class="footer__sede">
+            <span class="footer__link">SEDE 4 - Puebla</span>
+            <span class="footer__sede-date">Por confirmar</span>
+          </div>
+          <div class="footer__sede">
+            <span class="footer__link">SEDE 5 - Taxco</span>
+            <span class="footer__sede-date">17-18 Oct</span>
+          </div>
         </div>
       </div>
+
+      <!-- Siguenos + Contacto -->
+      <div>
+        <h4 class="footer__column-title">Siguenos</h4>
+        <a href="https://www.instagram.com/dhmex_races/" target="_blank" rel="noopener" class="footer__ig-btn">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="5"/><circle cx="17.5" cy="6.5" r="1.5" fill="currentColor" stroke="none"/></svg>
+          @dhmex_races
+        </a>
+
+        <h4 class="footer__column-title" style="margin-top: var(--space-md);">Contacto</h4>
+        <div class="footer__links">
+          <a href="mailto:endhurorace@gmail.com" class="footer__link">endhurorace@gmail.com</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Patrocinadores -->
+    <div class="footer__sponsors">
+      <span class="footer__sponsors-title">PATROCINADORES OFICIALES:</span>
+      <p class="footer__sponsors-list">
+        SCOTT &bull; MOTUL &bull; SRAM &bull; RED BULL &bull; ROCKSHOX &bull; SCHWALBE &bull; FOX FACTORY &bull; VITTORIA &bull; GIRO &bull; ALPINESTARS &bull; RACE FACE &bull; SYNCROS &bull; ZEFAL &bull; MULA PRIETA &bull; TRAXION &bull; BIKEXTORE &bull; BIKECHECK &bull; RACECLIP
+      </p>
     </div>
 
     <!-- Bottom -->
     <div class="footer__bottom">
       <span class="footer__copyright">&copy; {{ 'now' | date: '%Y' }} DHMEXRACES. Todos los derechos reservados.</span>
-      <span class="footer__credit">Desarrollado por <a href="{{ section.settings.credit_url | default: '#' }}" target="_blank" rel="noopener">{{ section.settings.credit_name | default: 'PRAZIS DEV' }}</a></span>
+      <span class="footer__credit">Sitio web desarrollado por <a href="https://prazis.mx" target="_blank" rel="noopener">&rarr; PRAZIS.MX</a></span>
     </div>
   </div>
 </footer>
+
+<style>
+  .footer {
+    padding: 32px 0 0;
+    background: var(--bg-primary);
+    border-top: 1px solid rgba(255, 255, 255, 0.06);
+  }
+
+  .footer__grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-sm);
+    padding-bottom: 0;
+    margin-bottom: 0;
+  }
+
+  @media (min-width: 900px) {
+    .footer__grid {
+      grid-template-columns: 2fr 1fr 1.5fr 1fr;
+    }
+  }
+
+  /* Brand */
+  .footer__title {
+    font-family: var(--font-heading);
+    font-size: 16px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+    color: var(--text-primary);
+    margin: 0;
+  }
+
+  .footer__accent-line {
+    width: 32px;
+    height: 2px;
+    background: #E42C2C;
+    margin: var(--space-sm) 0;
+  }
+
+  .footer__description {
+    font-size: 13px;
+    color: var(--text-secondary);
+    line-height: 1.7;
+    max-width: 420px;
+  }
+
+  .footer__stats {
+    display: flex;
+    gap: var(--space-md);
+    margin-top: 12px;
+  }
+
+  .footer__stat {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .footer__stat-number {
+    font-family: var(--font-heading);
+    font-size: 24px;
+    font-weight: 700;
+    color: var(--text-primary);
+    line-height: 1;
+  }
+
+  .footer__stat-number--accent {
+    color: #3B82F6;
+  }
+
+  .footer__stat-label {
+    font-family: var(--font-body);
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text-secondary);
+  }
+
+  /* Columns */
+  .footer__column-title {
+    font-family: var(--font-heading);
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: #E42C2C;
+    margin-bottom: 10px;
+  }
+
+  .footer__links {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .footer__link {
+    font-size: 13px;
+    color: var(--text-secondary);
+    transition: color 0.3s ease;
+  }
+
+  a.footer__link:hover {
+    color: var(--text-primary);
+  }
+
+  /* Sedes */
+  .footer__sede {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: var(--space-sm);
+  }
+
+  .footer__sede-date {
+    font-family: var(--font-body);
+    font-size: 12px;
+    color: var(--text-secondary);
+    opacity: 0.6;
+    white-space: nowrap;
+  }
+
+  /* Instagram button */
+  .footer__ig-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    border: 1px solid #E42C2C;
+    border-radius: 4px;
+    font-family: var(--font-body);
+    font-size: 13px;
+    font-weight: 600;
+    color: #E42C2C;
+    transition: all 0.3s ease;
+  }
+
+  .footer__ig-btn:hover {
+    background: rgba(228, 44, 44, 0.1);
+  }
+
+  /* Sponsors bar */
+  .footer__sponsors {
+    padding: 16px 0 12px;
+    margin-top: 16px;
+    border-top: 1px solid rgba(255, 255, 255, 0.06);
+    text-align: center;
+  }
+
+  .footer__sponsors-title {
+    font-family: var(--font-body);
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--text-primary);
+    display: block;
+    margin-bottom: var(--space-sm);
+  }
+
+  .footer__sponsors-list {
+    font-family: var(--font-body);
+    font-size: 11px;
+    font-weight: 400;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text-secondary);
+    line-height: 2.2;
+    max-width: 800px;
+    margin: 0 auto;
+  }
+
+  /* Bottom */
+  .footer__bottom {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    gap: var(--space-sm);
+    padding: 10px 0;
+  }
+
+  .footer__copyright {
+    font-size: 12px;
+    color: var(--text-secondary);
+  }
+
+  .footer__credit {
+    font-size: 12px;
+    color: var(--text-secondary);
+  }
+
+  .footer__credit a {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 4px 12px;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 4px;
+    color: var(--text-primary);
+    font-weight: 600;
+    margin-left: 4px;
+    transition: all 0.3s ease;
+  }
+
+  .footer__credit a:hover {
+    border-color: var(--text-primary);
+  }
+
+  @media (max-width: 767px) {
+    .footer__sede {
+      flex-direction: column;
+      gap: 2px;
+    }
+    .footer__sponsors-list {
+      font-size: 11px;
+    }
+    .footer__bottom {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+  }
+</style>
 
 {% schema %}
 {
@@ -75,7 +327,7 @@
       "type": "textarea",
       "id": "description",
       "label": "Descripcion",
-      "default": "El copa nacional de downhill MTB mas grande de Mexico. Copa Scott DHMEXRACES — Temporada 2026."
+      "default": "El campeonato nacional de downhill MTB mas grande de Mexico. $500,000 MXN en premios totales distribuidos en 5 sedes a lo largo del ano."
     },
     {
       "type": "text",
@@ -87,7 +339,7 @@
       "type": "text",
       "id": "credit_name",
       "label": "Credito - Nombre",
-      "default": "PRAZIS DEV"
+      "default": "PRAZIS.MX"
     },
     {
       "type": "url",

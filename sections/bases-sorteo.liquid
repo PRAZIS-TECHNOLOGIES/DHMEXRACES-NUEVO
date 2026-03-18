@@ -1,159 +1,545 @@
 {% comment %}
-  Bases del Sorteo FOX 40 - DHMEX PRO
-  Raffle page with hero, info cards, bases legales, CTA
+  Sorteo FOX 40 - DHMEXRACES
+  Editorial design with Fox Factory Orange #F26522 accents
+  Animated prize image, split hero, visual bases
 {% endcomment %}
 
+<style>
+  :root {
+    --fox: #F26522;
+    --fox-light: rgba(242, 101, 34, 0.07);
+    --fox-border: rgba(242, 101, 34, 0.2);
+    --fox-glow: rgba(242, 101, 34, 0.15);
+  }
+
+  .sorteo {
+    padding: calc(var(--header-height) + var(--space-md)) 0 var(--space-md);
+    overflow: hidden;
+  }
+
+  /* ── HERO ── */
+  .sorteo__hero {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-lg);
+    align-items: center;
+    min-height: auto;
+    padding: var(--space-lg) var(--space-md);
+    background: var(--bg-secondary);
+    border-radius: 12px;
+    margin-bottom: var(--space-md);
+  }
+  @media (max-width: 768px) {
+    .sorteo__hero {
+      grid-template-columns: 1fr;
+      min-height: auto;
+      text-align: center;
+      padding: var(--space-lg);
+    }
+  }
+  .sorteo__hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 14px;
+    font-family: var(--font-heading);
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--fox);
+    border: 1px solid var(--fox-border);
+    background: var(--fox-light);
+    margin-bottom: var(--space-md);
+  }
+  .sorteo__hero-pre {
+    font-family: var(--font-body);
+    font-size: 14px;
+    font-weight: 500;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--text-secondary);
+    margin-bottom: var(--space-xs);
+  }
+  .sorteo__hero-title {
+    font-family: var(--font-heading);
+    font-size: clamp(3.5rem, 8vw, 6.5rem);
+    font-weight: 900;
+    text-transform: uppercase;
+    line-height: 1;
+    letter-spacing: 0.02em;
+    margin-bottom: var(--space-md);
+  }
+  .sorteo__hero-title span {
+    color: var(--fox);
+  }
+  .sorteo__hero-value {
+    font-family: var(--font-heading);
+    font-size: 28px;
+    font-weight: 800;
+    color: var(--fox);
+    margin-bottom: 4px;
+  }
+  .sorteo__hero-model {
+    font-size: 13px;
+    color: var(--text-secondary);
+    letter-spacing: 0.04em;
+    margin-bottom: var(--space-md);
+  }
+  .sorteo__hero-cta-line {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    padding-top: var(--space-md);
+    border-top: 1px solid rgba(0,0,0,0.08);
+  }
+  @media (max-width: 768px) {
+    .sorteo__hero-cta-line { justify-content: center; }
+  }
+  .sorteo__hero-cta-line .sorteo__pill {
+    padding: 8px 20px;
+    font-family: var(--font-heading);
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: #fff;
+    background: var(--fox);
+    text-decoration: none;
+    transition: opacity 0.15s ease;
+  }
+  .sorteo__hero-cta-line .sorteo__pill:hover { opacity: 0.85; }
+  .sorteo__hero-cta-line span {
+    font-size: 12px;
+    color: var(--text-secondary);
+  }
+
+  /* Image container with float animation */
+  .sorteo__hero-visual {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .sorteo__hero-img-wrap {
+    position: relative;
+    animation: sorteoFloat 4s ease-in-out infinite;
+  }
+  .sorteo__hero-img-wrap img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+    filter: drop-shadow(0 20px 40px rgba(0,0,0,0.12));
+  }
+  .sorteo__hero-img-glow {
+    position: absolute;
+    inset: 10%;
+    background: radial-gradient(circle, var(--fox-glow) 0%, transparent 70%);
+    border-radius: 50%;
+    z-index: -1;
+    filter: blur(40px);
+  }
+  @keyframes sorteoFloat {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-16px); }
+  }
+
+  /* ── PARTICIPATE ── */
+  .sorteo__participate {
+    padding: var(--space-md) 0;
+    border-top: 1px solid rgba(0,0,0,0.06);
+  }
+  .sorteo__participate-label {
+    font-family: var(--font-heading);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--fox);
+    margin-bottom: var(--space-xs);
+  }
+  .sorteo__participate-title {
+    font-family: var(--font-heading);
+    font-size: clamp(1.5rem, 3vw, 2.2rem);
+    font-weight: 800;
+    text-transform: uppercase;
+    margin-bottom: var(--space-md);
+  }
+  .sorteo__steps {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr auto 1fr;
+    gap: var(--space-sm);
+    align-items: center;
+    padding: var(--space-md);
+    background: var(--bg-secondary);
+    border: 1px solid rgba(0,0,0,0.06);
+    border-radius: 12px;
+  }
+  @media (max-width: 768px) {
+    .sorteo__steps {
+      grid-template-columns: 1fr;
+      text-align: center;
+      gap: var(--space-md);
+    }
+    .sorteo__step-divider { display: none; }
+  }
+  .sorteo__step {
+    text-align: center;
+    padding: var(--space-sm);
+  }
+  .sorteo__step-tag {
+    font-family: var(--font-heading);
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: #22C55E;
+    margin-bottom: 6px;
+  }
+  .sorteo__step-tag--fire {
+    color: var(--fox);
+  }
+  .sorteo__step-sede {
+    font-family: var(--font-heading);
+    font-size: 18px;
+    font-weight: 800;
+    text-transform: uppercase;
+  }
+  .sorteo__step-boleto {
+    font-size: 13px;
+    color: var(--text-secondary);
+    margin-top: 4px;
+  }
+  .sorteo__step-divider {
+    font-family: var(--font-heading);
+    font-size: 20px;
+    font-weight: 800;
+    color: rgba(0,0,0,0.15);
+  }
+  .sorteo__step--combo .sorteo__step-sede {
+    color: var(--fox);
+  }
+  .sorteo__step-note {
+    font-size: 12px;
+    color: var(--text-secondary);
+    text-align: center;
+    margin-top: var(--space-md);
+  }
+
+  /* ── INFO STRIP ── */
+  .sorteo__strip {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1px;
+    background: rgba(0,0,0,0.06);
+    border: 1px solid rgba(0,0,0,0.06);
+    border-radius: 12px;
+    overflow: hidden;
+    margin: var(--space-md) 0;
+  }
+  @media (max-width: 768px) {
+    .sorteo__strip {
+      grid-template-columns: 1fr;
+    }
+  }
+  .sorteo__strip-item {
+    padding: var(--space-md);
+    background: var(--bg-primary);
+    text-align: center;
+  }
+  .sorteo__strip-label {
+    font-family: var(--font-heading);
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--fox);
+    margin-bottom: var(--space-sm);
+  }
+  .sorteo__strip-big {
+    font-family: var(--font-heading);
+    font-size: 26px;
+    font-weight: 900;
+    text-transform: uppercase;
+    line-height: 1.1;
+  }
+  .sorteo__strip-sub {
+    font-size: 13px;
+    color: var(--text-secondary);
+    margin-top: 4px;
+  }
+  .sorteo__strip-foot {
+    font-size: 11px;
+    color: var(--text-secondary);
+    margin-top: var(--space-sm);
+    padding-top: var(--space-sm);
+    border-top: 1px solid rgba(0,0,0,0.06);
+  }
+
+  /* ── BASES ── */
+  .sorteo__bases-section {
+    padding: var(--space-md) 0;
+    border-top: 1px solid rgba(0,0,0,0.06);
+  }
+  .sorteo__bases-label {
+    font-family: var(--font-heading);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--fox);
+    margin-bottom: var(--space-xs);
+  }
+  .sorteo__bases-title {
+    font-family: var(--font-heading);
+    font-size: clamp(1.5rem, 3vw, 2.2rem);
+    font-weight: 800;
+    text-transform: uppercase;
+    margin-bottom: 4px;
+  }
+  .sorteo__bases-sub {
+    font-size: 13px;
+    color: var(--text-secondary);
+    margin-bottom: var(--space-md);
+  }
+  .sorteo__bases-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-sm);
+  }
+  @media (max-width: 768px) {
+    .sorteo__bases-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+  .sorteo__base {
+    padding: var(--space-md);
+    border-left: 2px solid var(--fox-border);
+    transition: border-color 0.15s ease;
+  }
+  .sorteo__base:hover {
+    border-left-color: var(--fox);
+  }
+  .sorteo__base-num {
+    font-family: var(--font-heading);
+    font-size: 10px;
+    font-weight: 700;
+    color: var(--fox);
+    letter-spacing: 0.08em;
+    margin-bottom: 6px;
+  }
+  .sorteo__base-title {
+    font-family: var(--font-heading);
+    font-size: 13px;
+    font-weight: 700;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+  .sorteo__base-text {
+    font-size: 12px;
+    color: var(--text-secondary);
+    line-height: 1.65;
+  }
+
+  /* ── CTA ── */
+  .sorteo__cta {
+    margin-top: var(--space-md);
+    padding: var(--space-lg) var(--space-md);
+    text-align: center;
+    background: var(--text-primary);
+    color: #fff;
+    border-radius: 12px;
+    position: relative;
+    overflow: hidden;
+  }
+  .sorteo__cta::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    right: -20%;
+    width: 300px;
+    height: 300px;
+    background: radial-gradient(circle, var(--fox) 0%, transparent 70%);
+    opacity: 0.15;
+    border-radius: 50%;
+  }
+  .sorteo__cta-label {
+    font-family: var(--font-heading);
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--fox);
+    margin-bottom: var(--space-sm);
+    position: relative;
+  }
+  .sorteo__cta-heading {
+    font-family: var(--font-heading);
+    font-size: clamp(1.8rem, 4vw, 2.5rem);
+    font-weight: 900;
+    text-transform: uppercase;
+    margin-bottom: var(--space-xs);
+    position: relative;
+  }
+  .sorteo__cta-desc {
+    font-size: 14px;
+    color: rgba(255,255,255,0.6);
+    margin-bottom: var(--space-md);
+    position: relative;
+  }
+  .sorteo__cta .btn--fox {
+    display: inline-block;
+    padding: 16px 40px;
+    font-family: var(--font-heading);
+    font-size: 13px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: #fff;
+    background: var(--fox);
+    text-decoration: none;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+    position: relative;
+  }
+  .sorteo__cta .btn--fox:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(242, 101, 34, 0.3);
+  }
+
+  .sorteo__footer {
+    text-align: center;
+    margin-top: var(--space-lg);
+    font-size: 11px;
+    color: var(--text-secondary);
+  }
+</style>
+
 <section class="sorteo">
-  {%- comment -%} Hero {%- endcomment -%}
-  <div class="sorteo__hero">
-    <div class="container">
-      <div class="sorteo__hero-content">
-        <span class="tag tag--accent">{{ section.settings.badge | default: 'Sorteo Exclusivo' }}</span>
-        <h1 class="heading-xl sorteo__title">{{ section.settings.title | default: 'FOX 40' }}</h1>
-        <p class="body-text--lg" style="max-width: 560px; color: var(--text-secondary);">
-          {{ section.settings.description | default: 'Participa por una suspension FOX 40 valorada en $50,000 MXN' }}
-        </p>
-      </div>
-      {% if section.settings.prize_image != blank %}
-        <div class="sorteo__hero-image">
-          <img
-            src="{{ section.settings.prize_image | image_url: width: 600 }}"
-            alt="{{ section.settings.title }}"
-            loading="lazy"
-          >
-        </div>
-      {% endif %}
-    </div>
-  </div>
-
-  {%- comment -%} Info Cards {%- endcomment -%}
   <div class="container">
-    <div class="sorteo__info-grid">
-      <div class="sorteo__info-card reveal">
-        <div class="sorteo__info-icon">
-          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-            <circle cx="12" cy="12" r="10"/>
-            <path d="M12 6V12L16 14"/>
-          </svg>
-        </div>
-        <span class="label">Como participar</span>
-        <p class="body-text">{{ section.settings.how_to | default: 'Inscribete en cualquier sede de la temporada 2026' }}</p>
-      </div>
-      <div class="sorteo__info-card reveal">
-        <div class="sorteo__info-icon">
-          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-            <path d="M6 2V5M18 2V5M3 8H21M5 4H19C20.1046 4 21 4.89543 21 6V20C21 21.1046 20.1046 22 19 22H5C3.89543 22 3 21.1046 3 20V6C3 4.89543 3.89543 4 5 4Z"/>
-          </svg>
-        </div>
-        <span class="label">Fecha del sorteo</span>
-        <p class="body-text">{{ section.settings.draw_date | default: '22 de Marzo, 2026' }}</p>
-      </div>
-      <div class="sorteo__info-card reveal">
-        <div class="sorteo__info-icon">
-          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-            <path d="M12 1V23M17 5H9.5C7 5 5 7 5 9.5C5 12 7 14 9.5 14H14.5C17 14 19 16 19 18.5C19 21 17 23 14.5 23H7"/>
-          </svg>
-        </div>
-        <span class="label">Valor del premio</span>
-        <p class="body-text">{{ section.settings.prize_value | default: '$50,000 MXN' }}</p>
-      </div>
-    </div>
 
-    {%- comment -%} Bases Legales {%- endcomment -%}
-    <div class="section__divider"></div>
-    <div class="section__header">
-      <div class="section__header-left">
-        <span class="label">Terminos y condiciones</span>
-        <h2 class="heading-md">Bases Legales</h2>
+    {%- comment -%} ── HERO ── {%- endcomment -%}
+    <div class="sorteo__hero">
+      <div>
+        <div class="sorteo__hero-badge">Sorteo Oficial 2026</div>
+        <div class="sorteo__hero-pre">Gana una</div>
+        <h1 class="sorteo__hero-title">FOX <span>40</span></h1>
+        <div class="sorteo__hero-value">$50,000 MXN</div>
+        <div class="sorteo__hero-model">FOX 40 Factory GRIP 2 — Nueva, en caja, sin abrir</div>
+        <div class="sorteo__hero-cta-line">
+          <a href="{{ section.settings.cta_link | default: '/#sedes' }}" class="sorteo__pill">Inscribirse</a>
+          <span>Cada inscripcion = 1 boleto</span>
+        </div>
       </div>
-    </div>
-
-    <div class="sorteo__bases">
-      {% for block in section.blocks %}
-        {% if block.type == 'base' %}
-          <div class="sorteo__base-card reveal" {{ block.shopify_attributes }}>
-            <span class="sorteo__base-number">{{ forloop.index | prepend: '00' | slice: -2, 2 }}</span>
-            <h3 class="sorteo__base-title">{{ block.settings.title }}</h3>
-            <p class="sorteo__base-text">{{ block.settings.content }}</p>
+      <div class="sorteo__hero-visual">
+        {% if section.settings.prize_image != blank %}
+          <div class="sorteo__hero-img-wrap">
+            <div class="sorteo__hero-img-glow"></div>
+            <img
+              src="{{ section.settings.prize_image | image_url: width: 800 }}"
+              alt="FOX 40 Factory GRIP 2"
+              loading="eager"
+            >
+          </div>
+        {% else %}
+          <div class="sorteo__hero-img-wrap" style="padding: var(--space-xl); text-align: center;">
+            <div class="sorteo__hero-img-glow"></div>
+            <div style="font-family: var(--font-heading); font-size: clamp(3rem, 6vw, 5rem); font-weight: 900; color: var(--fox); opacity: 0.2; text-transform: uppercase;">FOX 40</div>
           </div>
         {% endif %}
-      {% endfor %}
+      </div>
     </div>
 
-    {%- comment -%} CTA {%- endcomment -%}
-    {% if section.settings.cta_text != blank %}
-      <div class="sorteo__cta reveal">
-        <div class="sorteo__cta-content">
-          <h3 class="heading-md">{{ section.settings.cta_heading | default: 'Inscribete y participa' }}</h3>
-          <p class="body-text" style="margin: var(--space-sm) 0 var(--space-md);">
-            {{ section.settings.cta_description | default: 'Cada inscripcion es una oportunidad de ganar' }}
-          </p>
-          <a href="{{ section.settings.cta_link | default: '/#tickets' }}" class="btn btn--primary btn--large">
-            {{ section.settings.cta_text }}
-          </a>
+    {%- comment -%} ── COMO PARTICIPAR ── {%- endcomment -%}
+    <div class="sorteo__participate">
+      <div class="sorteo__participate-label">Como participar</div>
+      <div class="sorteo__participate-title">Obtén tus boletos</div>
+
+      <div class="sorteo__steps">
+        <div class="sorteo__step">
+          <div class="sorteo__step-tag">✓ Inscribete a</div>
+          <div class="sorteo__step-sede">Guanajuato</div>
+          <div class="sorteo__step-boleto">= 1 boleto</div>
+        </div>
+        <div class="sorteo__step-divider">+</div>
+        <div class="sorteo__step">
+          <div class="sorteo__step-tag">✓ Inscribete a</div>
+          <div class="sorteo__step-sede">Puebla</div>
+          <div class="sorteo__step-boleto">= 1 boleto</div>
+        </div>
+        <div class="sorteo__step-divider">=</div>
+        <div class="sorteo__step sorteo__step--combo">
+          <div class="sorteo__step-tag sorteo__step-tag--fire">Ambas fechas</div>
+          <div class="sorteo__step-sede">2 boletos</div>
+          <div class="sorteo__step-boleto">Doble oportunidad</div>
         </div>
       </div>
-    {% endif %}
+      <p class="sorteo__step-note">Tu numero se asigna automaticamente al inscribirte • Max 2 boletos por rider</p>
+    </div>
+
+    {%- comment -%} ── INFO STRIP ── {%- endcomment -%}
+    <div class="sorteo__strip">
+      <div class="sorteo__strip-item">
+        <div class="sorteo__strip-label">Fecha del Sorteo</div>
+        <div class="sorteo__strip-big">22 Marzo</div>
+        <div class="sorteo__strip-sub">2026 — Sede Puebla</div>
+        <div class="sorteo__strip-foot">EN VIVO al finalizar la carrera</div>
+      </div>
+      <div class="sorteo__strip-item">
+        <div class="sorteo__strip-label">El Premio</div>
+        <div class="sorteo__strip-big">FOX 40</div>
+        <div class="sorteo__strip-sub">Factory GRIP 2</div>
+        <div class="sorteo__strip-foot">Valor: $50,000 MXN</div>
+      </div>
+      <div class="sorteo__strip-item">
+        <div class="sorteo__strip-label">Transmision</div>
+        <div class="sorteo__strip-big">En Vivo</div>
+        <div class="sorteo__strip-sub">@dhmex_races</div>
+        <div class="sorteo__strip-foot">Grabacion disponible</div>
+      </div>
+    </div>
+
+    {%- comment -%} ── BASES LEGALES ── {%- endcomment -%}
+    <div class="sorteo__bases-section">
+      <div class="sorteo__bases-label">Terminos y Condiciones</div>
+      <div class="sorteo__bases-title">Bases Oficiales</div>
+      <div class="sorteo__bases-sub">Copa Scott DHMEXRACES 2026</div>
+
+      <div class="sorteo__bases-grid">
+        {% for block in section.blocks %}
+          {% if block.type == 'base' %}
+            <div class="sorteo__base" {{ block.shopify_attributes }}>
+              <div class="sorteo__base-num">{{ forloop.index | prepend: '00' | slice: -2, 2 }}</div>
+              <h3 class="sorteo__base-title">{{ block.settings.title }}</h3>
+              <div class="sorteo__base-text">{{ block.settings.content }}</div>
+            </div>
+          {% endif %}
+        {% endfor %}
+      </div>
+    </div>
+
+    {%- comment -%} ── CTA ── {%- endcomment -%}
+    <div class="sorteo__cta">
+      <div class="sorteo__cta-label">Sorteo FOX 40</div>
+      <div class="sorteo__cta-heading">Inscribete y Participa</div>
+      <div class="sorteo__cta-desc">Cada inscripcion a Guanajuato o Puebla = 1 boleto automatico</div>
+      <a href="{{ section.settings.cta_link | default: '/#sedes' }}" class="btn--fox">
+        {{ section.settings.cta_text | default: 'Inscribirse Ahora' }}
+      </a>
+    </div>
+
+    <div class="sorteo__footer">Ultima actualizacion: 13 de enero de 2026</div>
   </div>
 </section>
 
 {% schema %}
 {
-  "name": "Sorteo / Rifa",
-  "tag": "section",
+  "name": "Sorteo FOX 40",
   "settings": [
-    {
-      "type": "text",
-      "id": "badge",
-      "label": "Badge",
-      "default": "Sorteo Exclusivo"
-    },
-    {
-      "type": "text",
-      "id": "title",
-      "label": "Titulo",
-      "default": "FOX 40"
-    },
-    {
-      "type": "textarea",
-      "id": "description",
-      "label": "Descripcion",
-      "default": "Participa por una suspension FOX 40 valorada en $50,000 MXN"
-    },
     {
       "type": "image_picker",
       "id": "prize_image",
-      "label": "Imagen del premio"
-    },
-    {
-      "type": "text",
-      "id": "how_to",
-      "label": "Como participar",
-      "default": "Inscribete en cualquier sede de la temporada 2026"
-    },
-    {
-      "type": "text",
-      "id": "draw_date",
-      "label": "Fecha del sorteo",
-      "default": "22 de Marzo, 2026"
-    },
-    {
-      "type": "text",
-      "id": "prize_value",
-      "label": "Valor del premio",
-      "default": "$50,000 MXN"
-    },
-    {
-      "type": "text",
-      "id": "cta_heading",
-      "label": "Titulo CTA",
-      "default": "Inscribete y participa"
-    },
-    {
-      "type": "textarea",
-      "id": "cta_description",
-      "label": "Descripcion CTA",
-      "default": "Cada inscripcion es una oportunidad de ganar"
+      "label": "Imagen del premio",
+      "info": "Foto de la FOX 40. Se anima con efecto flotante."
     },
     {
       "type": "text",
@@ -175,8 +561,7 @@
         {
           "type": "text",
           "id": "title",
-          "label": "Titulo",
-          "default": "Elegibilidad"
+          "label": "Titulo"
         },
         {
           "type": "textarea",
@@ -188,21 +573,8 @@
   ],
   "presets": [
     {
-      "name": "Sorteo / Rifa",
-      "blocks": [
-        { "type": "base", "settings": { "title": "Elegibilidad", "content": "Pueden participar todas las personas que se inscriban en cualquier sede de la Copa Scott DHMEXRACES Temporada 2026." } },
-        { "type": "base", "settings": { "title": "Mecanica", "content": "Cada inscripcion pagada genera automaticamente un numero de participacion para el sorteo." } },
-        { "type": "base", "settings": { "title": "Premio", "content": "El premio consiste en una suspension FOX 40 Factory valorada en $50,000 MXN aproximadamente." } },
-        { "type": "base", "settings": { "title": "Fecha del Sorteo", "content": "El sorteo se realizara el 22 de Marzo de 2026 durante el evento de la primera sede." } },
-        { "type": "base", "settings": { "title": "Seleccion del Ganador", "content": "El ganador sera seleccionado de manera aleatoria mediante un sistema digital verificable." } },
-        { "type": "base", "settings": { "title": "Notificacion", "content": "El ganador sera notificado via Instagram y correo electronico registrado en su inscripcion." } },
-        { "type": "base", "settings": { "title": "Entrega del Premio", "content": "El premio se entregara en la sede donde se realice el sorteo o se enviara sin costo adicional." } },
-        { "type": "base", "settings": { "title": "Restricciones", "content": "El premio no es transferible ni canjeable por dinero en efectivo." } },
-        { "type": "base", "settings": { "title": "Responsabilidad", "content": "DHMEXRACES no se hace responsable por el uso inadecuado del premio." } },
-        { "type": "base", "settings": { "title": "Datos Personales", "content": "Los datos de los participantes seran tratados conforme a nuestra politica de privacidad." } },
-        { "type": "base", "settings": { "title": "Modificaciones", "content": "DHMEXRACES se reserva el derecho de modificar las bases del sorteo." } },
-        { "type": "base", "settings": { "title": "Aceptacion", "content": "La participacion en el sorteo implica la aceptacion total de estas bases." } }
-      ]
+      "name": "Sorteo FOX 40",
+      "blocks": []
     }
   ]
 }
