@@ -257,7 +257,12 @@
                 {% endfor %}
               </div>
 
-              <div class="ranking-table-wrap">
+              <button type="button" class="ranking-download-btn" onclick="downloadRanking(this)">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                Descargar para Instagram
+              </button>
+
+              <div class="ranking-table-wrap" data-sede-name="{{ block.settings.title }}">
                 <table class="ranking-table" data-table="{{ block.id }}">
                   <thead>
                     <tr>
@@ -396,6 +401,110 @@ function filterCategory(btn, sedeId) {
   });
 
   calcDiffs(sede);
+}
+
+function downloadRanking(btn) {
+  if (typeof html2canvas === 'undefined') {
+    var script = document.createElement('script');
+    script.src = 'https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js';
+    script.onload = function() { captureRanking(btn); };
+    document.head.appendChild(script);
+  } else {
+    captureRanking(btn);
+  }
+}
+
+function captureRanking(btn) {
+  var sede = btn.closest('.ranking-sede');
+  var tableWrap = sede.querySelector('.ranking-table-wrap');
+  var sedeName = tableWrap.dataset.sedeName || 'DHMEXRACES';
+  var activeFilter = sede.querySelector('.ranking-filter.is-active');
+  var categoryName = activeFilter ? activeFilter.dataset.filter : '';
+
+  btn.textContent = 'Generando...';
+  btn.disabled = true;
+
+  var rows = sede.querySelectorAll('tbody tr');
+  var riders = [];
+  rows.forEach(function(row) {
+    if (row.style.display === 'none') return;
+    riders.push({
+      pos: row.querySelector('.ranking-table__pos').textContent.trim(),
+      name: row.querySelector('.ranking-table__name').textContent.trim(),
+      time: row.querySelector('.ranking-table__time') ? row.querySelector('.ranking-table__time').textContent.trim() : '',
+      diff: row.querySelector('.ranking-table__diff') ? row.querySelector('.ranking-table__diff').textContent.trim() : '',
+      pts: row.querySelector('.ranking-table__pts') ? row.querySelector('.ranking-table__pts').textContent.trim() : ''
+    });
+  });
+
+  var W = 1080;
+  var el = document.createElement('div');
+  el.style.cssText = 'position:fixed;left:-9999px;top:0;width:'+W+'px;background:#fff;font-family:"IBM Plex Mono","Space Mono",monospace;';
+
+  // Header
+  var h = '<div style="padding:48px 48px 0">';
+  h += '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:28px">';
+  h += '<img src="https://endhurorace.com/cdn/shop/files/DHMEXRACES_MARCA_REGISTRADA_1.png?v=1770853952&width=600" crossorigin="anonymous" style="height:56px">';
+  h += '<span style="font-size:13px;font-weight:600;letter-spacing:0.15em;text-transform:uppercase;color:#999">Copa Scott 2026</span>';
+  h += '</div>';
+  h += '<div style="font-size:36px;font-weight:700;color:#1A1A1A;text-transform:uppercase;letter-spacing:-0.02em;line-height:1">'+sedeName+'</div>';
+  h += '<div style="font-size:18px;font-weight:700;color:#DF3382;text-transform:uppercase;letter-spacing:0.06em;margin-top:8px">'+categoryName+'</div>';
+  h += '<div style="width:48px;height:3px;background:#DF3382;margin:24px 0"></div>';
+  h += '</div>';
+
+  // Rows
+  h += '<div style="padding:0 48px">';
+  riders.forEach(function(r, i) {
+    var p = parseInt(r.pos);
+    var bg = i % 2 === 1 ? 'background:rgba(0,0,0,0.02);' : '';
+
+    // Medal or number
+    var medal = '';
+    if (p === 1) medal = '<div style="width:44px;height:44px;border-radius:50%;background:rgba(255,215,0,0.8);color:#1a1a1a;font-size:18px;font-weight:700;display:flex;align-items:center;justify-content:center">1</div>';
+    else if (p === 2) medal = '<div style="width:44px;height:44px;border-radius:50%;background:rgba(192,192,192,0.7);color:#1a1a1a;font-size:18px;font-weight:700;display:flex;align-items:center;justify-content:center">2</div>';
+    else if (p === 3) medal = '<div style="width:44px;height:44px;border-radius:50%;background:rgba(205,127,50,0.7);color:#fff;font-size:18px;font-weight:700;display:flex;align-items:center;justify-content:center">3</div>';
+    else medal = '<div style="width:44px;height:44px;display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:600;color:#999">'+r.pos+'</div>';
+
+    h += '<div style="display:flex;align-items:center;gap:16px;padding:16px 12px;border-bottom:1px solid rgba(0,0,0,0.05);'+bg+'">';
+    h += medal;
+    h += '<div style="flex:1;min-width:0">';
+    h += '<div style="font-size:16px;font-weight:700;color:#1A1A1A;text-transform:uppercase;letter-spacing:0.01em">'+r.name+'</div>';
+    h += '<div style="font-size:14px;font-weight:600;color:#DF3382;margin-top:4px">'+r.time+'</div>';
+    h += '</div>';
+    h += '<div style="text-align:right;flex-shrink:0">';
+    h += '<div style="font-size:16px;font-weight:600;color:#999">'+r.pts+'</div>';
+    h += '<div style="font-size:14px;font-weight:600;color:#DF3382;margin-top:4px">'+r.diff+'</div>';
+    h += '</div>';
+    h += '</div>';
+  });
+  h += '</div>';
+
+  // Footer
+  h += '<div style="padding:28px 48px 48px">';
+  h += '<div style="display:flex;justify-content:space-between;align-items:center;padding-top:20px;border-top:1px solid rgba(0,0,0,0.06)">';
+  h += '<span style="font-size:12px;color:#ccc;letter-spacing:0.08em;text-transform:uppercase">endhurorace.com</span>';
+  h += '<span style="font-size:14px;color:#DF3382;font-weight:700">@dhmex_races</span>';
+  h += '</div></div>';
+
+  el.innerHTML = h;
+  document.body.appendChild(el);
+
+  setTimeout(function() {
+    html2canvas(el, { scale: 2, backgroundColor: '#fff', useCORS: true, allowTaint: true, width: W }).then(function(canvas) {
+      document.body.removeChild(el);
+      var a = document.createElement('a');
+      a.download = 'ranking-' + sedeName.toLowerCase().replace(/\s+/g,'-') + '-' + categoryName.toLowerCase().replace(/\s+/g,'-') + '.png';
+      a.href = canvas.toDataURL('image/png');
+      a.click();
+      btn.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg> Descargar para Instagram';
+      btn.disabled = false;
+    }).catch(function(e) {
+      document.body.removeChild(el);
+      btn.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg> Descargar para Instagram';
+      btn.disabled = false;
+      alert('Error al generar.');
+    });
+  }, 800);
 }
 </script>
 
