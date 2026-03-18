@@ -66,6 +66,9 @@ async function loadOverallRanking(sourceUrl) {
       const sedeName = titleEl ? titleEl.textContent.trim() : 'Sede ' + (idx + 1);
       sedeNames.push(sedeName);
 
+      // Group results by rider within this sede to keep only BEST result per rider
+      const sedeRiders = {};
+
       sede.querySelectorAll('tbody tr').forEach(function(row) {
         const cells = row.querySelectorAll('td');
         if (cells.length < 6) return;
@@ -75,16 +78,26 @@ async function loadOverallRanking(sourceUrl) {
         const points = parseInt(cells[5].textContent.trim()) || 0;
 
         const key = name + '___' + category;
+
+        // Keep only the BEST (highest points) result for this rider in this sede
+        if (!sedeRiders[key] || points > sedeRiders[key].points) {
+          sedeRiders[key] = { name: name, category: category, points: points };
+        }
+      });
+
+      // Now add the best result from this sede to the overall standings
+      Object.keys(sedeRiders).forEach(function(key) {
+        const sedeResult = sedeRiders[key];
         if (!riders[key]) {
           riders[key] = {
-            name: name,
-            category: category,
+            name: sedeResult.name,
+            category: sedeResult.category,
             sedes: {},
             total: 0
           };
         }
-        riders[key].sedes[idx] = points;
-        riders[key].total += points;
+        riders[key].sedes[idx] = sedeResult.points;
+        riders[key].total += sedeResult.points;
       });
     });
 

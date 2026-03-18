@@ -452,7 +452,7 @@ function saveCurrentForm() {
 
   if (!data.emergencia_nombre) {
     showError('emergencia_nombre', 'Este campo es obligatorio');
-  } else if (/^\d+$/.test(data.emergencia_nombre)) {
+  } else if (/^\d[\d\s\-+()]*$/.test(data.emergencia_nombre)) {
     showError('emergencia_nombre', 'Ingresa un nombre, no un numero');
   }
 
@@ -529,7 +529,7 @@ async function submitAllForms() {
         emergencia_nombre: d.emergencia_nombre,
         emergencia_telefono: d.emergencia_telefono,
         tipo_sangre: d.tipo_sangre,
-        alergias: d.alergias || '',
+        alergias: d.alergias || 'Ninguna',
         categoria: item.variant_title,
         talla_playera: d.talla_playera || ''
       });
