@@ -195,6 +195,13 @@ ul, ol {
   white-space: nowrap;
 }
 
+@media (max-width: 480px) {
+  .btn {
+    padding: 14px 24px;
+    font-size: 12px;
+  }
+}
+
 .btn--primary {
   background-color: var(--accent);
   color: #fff;
@@ -514,11 +521,11 @@ ul, ol {
 
 .mobile-menu__link {
   font-family: var(--font-heading);
-  font-size: 1.1rem;
+  font-size: clamp(0.9rem, 2.5vw, 1.1rem);
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.01em;
-  padding: 12px 14px;
+  padding: 10px 12px;
   border-radius: 10px;
   transition: background 0.15s ease, color 0.15s ease;
   display: flex;
@@ -571,9 +578,17 @@ ul, ol {
   min-height: 100vh;
   display: flex;
   align-items: flex-end;
-  padding-bottom: var(--space-xl);
-  padding-top: calc(var(--header-height) + var(--space-lg));
+  padding-bottom: var(--space-lg);
+  padding-top: calc(var(--header-height) + var(--space-md));
   overflow: hidden;
+}
+
+@media (max-width: 768px) {
+  .hero {
+    min-height: auto;
+    padding-bottom: var(--space-md);
+    padding-top: calc(var(--header-height) + var(--space-sm));
+  }
 }
 
 .hero__bg {
@@ -770,8 +785,8 @@ ul, ol {
 .hero__info {
   display: flex;
   flex-wrap: wrap;
-  gap: var(--space-md);
-  margin-bottom: var(--space-lg);
+  gap: var(--space-sm);
+  margin-bottom: var(--space-md);
 }
 
 .hero__info-item {
@@ -814,7 +829,7 @@ ul, ol {
 
 .countdown__number {
   font-family: var(--font-heading);
-  font-size: clamp(2rem, 5vw, 3.5rem);
+  font-size: clamp(1.75rem, 5vw, 3.5rem);
   font-weight: 700;
   line-height: 1;
   letter-spacing: -0.04em;
@@ -841,7 +856,7 @@ ul, ol {
 .about__grid {
   display: grid;
   grid-template-columns: 1fr;
-  gap: var(--space-lg);
+  gap: var(--space-md);
   align-items: start;
 }
 
@@ -870,18 +885,19 @@ ul, ol {
 .stats {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: var(--space-md);
+  gap: var(--space-sm);
 }
 
 @media (min-width: 768px) {
   .stats {
     grid-template-columns: repeat(4, 1fr);
+    gap: var(--space-md);
   }
 }
 
 .stat {
   text-align: center;
-  padding: var(--space-md) var(--space-sm);
+  padding: var(--space-sm);
   border: 1px solid rgba(0, 0, 0, 0.06);
 }
 
@@ -908,7 +924,13 @@ ul, ol {
    SECTION (Generic)
    ============================================ */
 .section {
-  padding: var(--space-xl) 0;
+  padding: var(--space-lg) 0;
+}
+
+@media (max-width: 768px) {
+  .section {
+    padding: var(--space-md) 0;
+  }
 }
 
 .section--alt {
@@ -921,7 +943,14 @@ ul, ol {
   justify-content: space-between;
   flex-wrap: wrap;
   gap: var(--space-sm);
-  margin-bottom: var(--space-lg);
+  margin-bottom: var(--space-md);
+
+}
+
+@media (min-width: 768px) {
+  .section__header {
+    margin-bottom: var(--space-lg);
+  }
 }
 
 .section__header-left {
@@ -1472,7 +1501,7 @@ ul, ol {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: var(--space-md);
+  padding: clamp(var(--space-sm), 2vw, var(--space-md));
   border: 1px solid rgba(0, 0, 0, 0.06);
   transition: all 0.3s var(--ease-out-quart);
 }
@@ -1556,12 +1585,25 @@ ul, ol {
   width: max-content;
 }
 
+@media (max-width: 768px) {
+  .horizontal-stats__track {
+    gap: var(--space-md);
+    padding: var(--space-sm) var(--container-padding);
+  }
+}
+
 .horizontal-stats__card {
   flex-shrink: 0;
   display: flex;
   flex-direction: column;
   gap: 8px;
   min-width: 280px;
+}
+
+@media (max-width: 768px) {
+  .horizontal-stats__card {
+    min-width: 180px;
+  }
 }
 
 .horizontal-stats__number {
@@ -1659,7 +1701,7 @@ ul, ol {
   border-radius: 10px;
   padding: 16px 20px;
   min-width: 200px;
-  max-width: 280px;
+  max-width: min(280px, calc(100vw - 32px));
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
   opacity: 0;
   pointer-events: none;
@@ -1983,6 +2025,13 @@ ul, ol {
   align-self: start;
 }
 
+@media (max-width: 768px) {
+  .product-page__info {
+    position: static;
+    gap: var(--space-sm);
+  }
+}
+
 .product-page__title {
   font-family: var(--font-heading);
   font-size: clamp(1.5rem, 3vw, 2.5rem);
@@ -2239,13 +2288,13 @@ ul, ol {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: var(--space-xl) var(--container-padding);
+  padding: var(--space-lg) var(--container-padding);
 }
 
 .auth__card {
   width: 100%;
   max-width: 480px;
-  padding: var(--space-lg);
+  padding: clamp(var(--space-md), 4vw, var(--space-lg));
   border: 1px solid rgba(0, 0, 0, 0.08);
   background: var(--bg-secondary);
 }
@@ -2713,6 +2762,14 @@ ul, ol {
   }
 }
 
+@media (max-width: 375px) {
+  .ranking-table td,
+  .ranking-table th {
+    padding: 6px 4px;
+    font-size: 10px;
+  }
+}
+
 /* ============================================
    KIT DEL RIDER
    ============================================ */
@@ -2743,7 +2800,7 @@ ul, ol {
 .kit-item {
   display: flex;
   flex-direction: column;
-  padding: 24px;
+  padding: clamp(12px, 2vw, 24px);
   border: 1px solid rgba(0, 0, 0, 0.06);
   transition: border-color 0.3s ease;
   position: relative;
@@ -2855,7 +2912,7 @@ ul, ol {
 }
 
 .prize-card {
-  padding: 24px;
+  padding: clamp(12px, 2vw, 24px);
   border: 1px solid rgba(0, 0, 0, 0.06);
   display: flex;
   flex-direction: column;
@@ -3184,19 +3241,20 @@ ul, ol {
 .inscripcion__layout {
   display: grid;
   grid-template-columns: 1fr;
-  gap: var(--space-lg);
+  gap: var(--space-md);
 }
 
 @media (min-width: 768px) {
   .inscripcion__layout {
     grid-template-columns: 1fr 1fr;
+    gap: var(--space-md);
   }
 }
 
 @media (min-width: 1024px) {
   .inscripcion__layout {
     grid-template-columns: 55% 1fr;
-    gap: var(--space-xl);
+    gap: var(--space-lg);
   }
 }
 
@@ -5549,6 +5607,12 @@ ul, ol {
 @media (max-width: 600px) {
   .sede-grid .sede-card {
     width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .sede-grid .sede-card {
+    padding: var(--space-md) var(--space-sm);
   }
 }
 
