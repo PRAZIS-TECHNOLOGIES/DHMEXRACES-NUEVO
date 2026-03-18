@@ -115,7 +115,7 @@ function initMobileMenu() {
 
   toggle.addEventListener('click', () => {
     const isOpen = menu.classList.contains('is-open');
-    toggle.classList.toggle('is-active');
+    toggle.classList.toggle('active');
     menu.classList.toggle('is-open');
     document.body.style.overflow = isOpen ? '' : 'hidden';
   });
@@ -123,7 +123,7 @@ function initMobileMenu() {
   // Close on link click
   menu.querySelectorAll('a').forEach(link => {
     link.addEventListener('click', () => {
-      toggle.classList.remove('is-active');
+      toggle.classList.remove('active');
       menu.classList.remove('is-open');
       document.body.style.overflow = '';
     });

@@ -340,7 +340,7 @@ ul, ol {
 .header__nav-index {
   font-size: 9px;
   font-weight: 400;
-  color: var(--accent);
+  color: #DF3382;
   opacity: 0.7;
   transition: opacity 0.3s ease;
 }
@@ -536,7 +536,7 @@ ul, ol {
   font-family: var(--font-body);
   font-size: 10px;
   font-weight: 600;
-  color: var(--text-secondary);
+  color: #DF3382;
   min-width: 20px;
   letter-spacing: 0.04em;
 }
@@ -1185,7 +1185,7 @@ ul, ol {
 
 .ticket-card__type {
   font-family: var(--font-heading);
-  font-size: clamp(1.25rem, 2vw, 1.75rem);
+  font-size: 1rem;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: -0.03em;
@@ -1193,7 +1193,7 @@ ul, ol {
 
 .ticket-card__price {
   font-family: var(--font-heading);
-  font-size: clamp(2rem, 4vw, 3rem);
+  font-size: 1.1rem;
   font-weight: 700;
   letter-spacing: -0.04em;
   color: var(--accent);
@@ -1230,11 +1230,50 @@ ul, ol {
 
 .ticket-card__cta {
   margin-top: auto;
+  width: 100%;
 }
 
 /* Tickets — Category Selector */
+#tickets .section__header {
+  margin-bottom: 8px;
+}
+
+#tickets.section {
+  padding: var(--space-sm) 0;
+}
+
 .tickets__cat-section {
-  margin-top: var(--space-md);
+  margin-top: 0;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.tickets__steps-row {
+  display: flex;
+  gap: var(--space-lg);
+  margin-bottom: 12px;
+  justify-content: center;
+}
+
+@media (max-width: 600px) {
+  .tickets__steps-row {
+    flex-direction: column;
+    gap: var(--space-xs);
+  }
+}
+
+@media (max-width: 768px) {
+  .ticket-card__title-row {
+    flex-direction: column;
+    gap: 2px;
+  }
+  #tickets .section__header {
+    margin-bottom: var(--space-xs);
+  }
+  .ticket-row__info {
+    padding: 16px;
+  }
 }
 
 .tickets__cat-title {
@@ -1252,6 +1291,13 @@ ul, ol {
   margin-bottom: var(--space-sm);
 }
 
+.ticket-card__title-row {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-sm);
+  flex-wrap: wrap;
+}
+
 .tickets__cat-list {
   display: flex;
   flex-direction: column;
@@ -1259,8 +1305,7 @@ ul, ol {
   border: 1px solid rgba(0, 0, 0, 0.08);
   border-radius: 8px;
   overflow: hidden;
-  max-height: 320px;
-  overflow-y: auto;
+  width: 100%;
 }
 
 .tickets__cat-btn {
@@ -1268,7 +1313,7 @@ ul, ol {
   align-items: center;
   justify-content: space-between;
   width: 100%;
-  padding: 12px 16px;
+  padding: 3px 10px;
   background: transparent;
   border: none;
   border-bottom: 1px solid rgba(0, 0, 0, 0.06);
@@ -1282,11 +1327,12 @@ ul, ol {
 }
 
 .tickets__cat-btn:hover {
-  background: rgba(0, 0, 0, 0.02);
+  background: rgba(223, 51, 130, 0.04);
 }
 
 .tickets__cat-btn.is-selected {
-  background: rgba(0, 0, 0, 0.04);
+  background: rgba(223, 51, 130, 0.08);
+  border-left: 3px solid #DF3382;
 }
 
 .tickets__cat-btn.is-sold-out {
@@ -1329,11 +1375,12 @@ ul, ol {
 
 .ticket-row {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 2fr 3fr;
   border: 1px solid rgba(0, 0, 0, 0.08);
   border-radius: 16px;
   overflow: hidden;
   transition: border-color 0.3s ease;
+  max-height: 85vh;
 }
 
 .ticket-row:hover {
@@ -1342,7 +1389,7 @@ ul, ol {
 
 .ticket-row__image {
   overflow: hidden;
-  min-height: 320px;
+  min-height: auto;
 }
 
 .ticket-row__image img {
@@ -1369,21 +1416,23 @@ ul, ol {
 }
 
 .ticket-row__info {
-  padding: var(--space-lg);
+  padding: 28px 28px;
   display: flex;
   flex-direction: column;
-  gap: var(--space-md);
-  justify-content: center;
+  gap: 10px;
+  justify-content: space-between;
 }
 
 @media (max-width: 768px) {
   .ticket-row {
     grid-template-columns: 1fr;
     max-width: 100%;
+    max-height: none;
   }
 
   .ticket-row__image {
     min-height: 200px;
+    max-height: 300px;
   }
 
   .ticket-row__image-placeholder {
@@ -5421,17 +5470,21 @@ ul, ol {
 }
 
 .race-dates--has-bg .sede-card {
-  border-color: rgba(255, 255, 255, 0.2);
-  background: rgba(0, 0, 0, 0.3);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
+  border-color: rgba(255, 255, 255, 0.15);
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
 }
 
 .race-dates--has-bg .sede-card:hover {
   border-color: rgba(255, 255, 255, 0.4);
 }
 
-.race-dates--has-bg .sede-card__round,
+.race-dates--has-bg .sede-card__round {
+  color: #DF3382;
+  font-size: 18px;
+}
+
 .race-dates--has-bg .sede-card__meta-item,
 .race-dates--has-bg .sede-card__desc {
   color: rgba(255, 255, 255, 0.7);
@@ -5442,51 +5495,60 @@ ul, ol {
 }
 
 .race-dates--has-bg .sede-card__status--upcoming {
-  border-color: rgba(255, 255, 255, 0.25);
-  color: rgba(255, 255, 255, 0.7);
+  border-color: rgba(255, 255, 255, 0.4);
+  color: rgba(255, 255, 255, 0.9);
+  background: rgba(255, 255, 255, 0.08);
 }
 
 .race-dates--has-bg .sede-card__status--closed {
-  background: rgba(255, 255, 255, 0.1);
-  color: rgba(255, 255, 255, 0.6);
+  background: rgba(255, 255, 255, 0.15);
+  color: rgba(255, 255, 255, 0.8);
+  border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
 /* Buttons on image bg */
 .race-dates--has-bg .btn--primary {
-  background: #fff;
-  color: #1a1a1a;
-  border-color: #fff;
+  background: #DF3382;
+  color: #fff;
+  border-color: #DF3382;
 }
 
 .race-dates--has-bg .btn--primary:hover {
-  background: rgba(255, 255, 255, 0.85);
+  background: #c42a6f;
+  border-color: #c42a6f;
 }
 
 .race-dates--has-bg .btn--outline {
-  border-color: rgba(255, 255, 255, 0.5);
-  color: #fff;
+  border-color: rgba(223, 51, 130, 0.6);
+  color: #DF3382;
+  background: rgba(223, 51, 130, 0.08);
 }
 
 .race-dates--has-bg .btn--outline:hover {
-  background: rgba(255, 255, 255, 0.1);
-  border-color: #fff;
+  background: rgba(223, 51, 130, 0.18);
+  border-color: #DF3382;
 }
 
 .sede-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  display: flex;
+  flex-wrap: wrap;
   gap: var(--space-md);
+  justify-content: center;
+}
+
+.sede-grid .sede-card {
+  width: calc(33.333% - var(--space-md));
 }
 
 @media (max-width: 900px) {
-  .sede-grid {
-    grid-template-columns: repeat(2, 1fr);
+  .sede-grid .sede-card {
+    width: calc(50% - var(--space-md));
   }
 }
 
 @media (max-width: 600px) {
-  .sede-grid {
-    grid-template-columns: 1fr;
+  .sede-grid .sede-card {
+    width: 100%;
   }
 }
 

@@ -22,15 +22,23 @@
           </div>
           <div class="ticket-row__info">
             <span class="label">{{ selected_product.type | default: 'Inscripcion' }}</span>
-            <h3 class="ticket-card__type">{{ selected_product.title }}</h3>
-            <div class="ticket-card__price">
-              {{ selected_product.price | money }} <small>MXN</small>
+            <div class="ticket-card__title-row">
+              <h3 class="ticket-card__type">{{ selected_product.title }}</h3>
+              <span class="ticket-card__price">{{ selected_product.price | money }} <small>MXN</small></span>
             </div>
 
             {%- comment -%} Selector de Categoría Custom {%- endcomment -%}
             <div class="tickets__cat-section">
-              <h4 class="tickets__cat-title">1. Selecciona tu Categoría</h4>
-              <p class="tickets__cat-subtitle">Toca tu categoría según tu edad</p>
+              <div class="tickets__steps-row">
+                <div>
+                  <h4 class="tickets__cat-title">1. Selecciona tu Categoría</h4>
+                  <p class="tickets__cat-subtitle">Toca tu categoría según tu edad</p>
+                </div>
+                <div>
+                  <h4 class="tickets__cat-title">2. Datos del corredor</h4>
+                  <p class="tickets__cat-subtitle">Despues de agregar al carrito, te pediremos los datos de cada participante antes de pagar</p>
+                </div>
+              </div>
 
               {% assign category_ages = "Minis:10 a 11 Años (Obligatorio Mochilero)|Infantil:12 a 14 Años|Cadetes:15 a 16 Años|Junior:17 a 18 Años|Senior:19 a 29 Años|Principiantes:Edad Libre|Master 30:30 a 39 Años|Master 40:40 a 49 Años|Master 50:50+ Años|Femenil:Edad Libre|PRO:19+ Años|Elite:19+ Años|EBIKE:Edad Libre|EBIKE Full Power:Edad Libre" | split: "|" %}
 
@@ -80,26 +88,94 @@
             </div>
 
             <div class="ticket-card__cta">
-              <a href="{{ selected_product.url }}" class="btn btn--primary" id="ticketsCta" style="width: 100%;">
-                Inscribirme
-              </a>
+              <button type="button" class="btn btn--primary" id="ticketsCta" style="width: 100%;">
+                Agregar al carrito
+              </button>
             </div>
+
+
           </div>
         </div>
       </div>
+
+    {%- comment -%} Toast — same as product-inscripcion {%- endcomment -%}
+    {% unless request.page_type == 'product' %}
+    <div class="inscripcion__toast" id="ticketsToastGlobal">
+      <div class="inscripcion__toast-content">
+        <svg class="inscripcion__toast-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+          <polyline points="22 4 12 14.01 9 11.01"/>
+        </svg>
+        <div class="inscripcion__toast-text">
+          <span class="inscripcion__toast-title">¡Agregado al carrito!</span>
+          <span class="inscripcion__toast-subtitle" id="ticketsToastSubtitle">1x Inscripcion</span>
+        </div>
+        <a href="/cart" class="inscripcion__toast-btn">Ver carrito</a>
+        <button class="inscripcion__toast-close" onclick="document.getElementById('ticketsToastGlobal').classList.remove('is-visible')">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+    {% endunless %}
 
     <script>
     (function(){
       var btns = document.querySelectorAll('.tickets__cat-btn');
       var cta = document.getElementById('ticketsCta');
+      var selectedVariantId = null;
+
+      // Set initial variant
+      var firstSelected = document.querySelector('.tickets__cat-btn.is-selected');
+      if (firstSelected) selectedVariantId = firstSelected.dataset.variantId;
+
       btns.forEach(function(btn){
         btn.addEventListener('click', function(){
           btns.forEach(function(b){ b.classList.remove('is-selected'); });
           this.classList.add('is-selected');
-          if (cta && this.dataset.variantUrl) {
-            cta.href = this.dataset.variantUrl;
-          }
+          selectedVariantId = this.dataset.variantId;
         });
+      });
+
+      cta.addEventListener('click', async function(){
+        if (!selectedVariantId) return;
+        cta.disabled = true;
+        cta.textContent = 'Agregando...';
+
+        try {
+          var res = await fetch('/cart/add.js', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ id: parseInt(selectedVariantId), quantity: 1 })
+          });
+
+          if (res.ok) {
+            // Update cart count in header
+            var cartRes = await fetch('/cart.js');
+            var cart = await cartRes.json();
+            var countEls = document.querySelectorAll('[data-cart-count]');
+            countEls.forEach(function(el){ el.textContent = cart.item_count; });
+
+            // Show toast (same style as product-inscripcion)
+            var toast = document.getElementById('ticketsToastGlobal') || document.getElementById('toastNotification');
+            if (toast) {
+              var selected = document.querySelector('.tickets__cat-btn.is-selected .tickets__cat-name');
+              var subtitleEl = toast.querySelector('.inscripcion__toast-subtitle');
+              if (subtitleEl) subtitleEl.textContent = '1x ' + (selected ? selected.textContent.trim() : 'Inscripcion');
+              toast.classList.add('is-visible');
+              setTimeout(function(){ toast.classList.remove('is-visible'); }, 5000);
+            }
+          } else {
+            alert('Error al agregar. Intenta de nuevo.');
+          }
+        } catch(e) {
+          console.error(e);
+          alert('Error al agregar. Intenta de nuevo.');
+        }
+
+        cta.disabled = false;
+        cta.textContent = 'Agregar al carrito';
       });
     })();
     </script>
