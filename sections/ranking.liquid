@@ -126,17 +126,17 @@
   .ranking-table__name { font-weight: 700; font-size: 13px; }
   .ranking-table__cat { }
   .ranking-table__team { color: var(--text-secondary); font-size: 12.5px; }
-  .ranking-table__time { font-family: var(--font-heading); font-weight: 700; }
+  .ranking-table__time { font-family: var(--font-heading); font-weight: 700; color: #DF3382 !important; }
   .ranking-table__pts { font-weight: 800; text-align: center; font-size: 14px; }
   .ranking-table__sede { text-align: center; font-size: 12px; }
   .ranking-table__diff {
     font-family: var(--font-heading);
     font-size: 11.5px;
-    color: var(--text-secondary);
+    color: #DF3382 !important;
     white-space: nowrap;
   }
   .ranking-table__diff--leader {
-    color: var(--text-primary);
+    color: #DF3382 !important;
     font-weight: 700;
   }
   .ranking-medal {
@@ -259,7 +259,7 @@
 
               <button type="button" class="ranking-download-btn" onclick="downloadRanking(this)">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-                Descargar para Instagram
+                Descargar para Historia de Instagram
               </button>
 
               <div class="ranking-table-wrap" data-sede-name="{{ block.settings.title }}">
@@ -289,11 +289,11 @@
                         <tr data-category="{{ category }}">
                           <td class="ranking-table__pos">
                             {% if pos_num == 1 %}
-                              <span class="ranking-medal ranking-medal--gold">{{ pos }}</span>
+                              <span class="ranking-pos ranking-pos--gold">{{ pos }}</span>
                             {% elsif pos_num == 2 %}
-                              <span class="ranking-medal ranking-medal--silver">{{ pos }}</span>
+                              <span class="ranking-pos ranking-pos--silver">{{ pos }}</span>
                             {% elsif pos_num == 3 %}
-                              <span class="ranking-medal ranking-medal--bronze">{{ pos }}</span>
+                              <span class="ranking-pos ranking-pos--bronze">{{ pos }}</span>
                             {% else %}
                               {{ pos }}
                             {% endif %}
@@ -445,7 +445,7 @@ function captureRanking(btn) {
   var h = '<div style="padding:48px 48px 0">';
   h += '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:28px">';
   h += '<img src="https://endhurorace.com/cdn/shop/files/DHMEXRACES_MARCA_REGISTRADA_1.png?v=1770853952&width=600" crossorigin="anonymous" style="height:56px">';
-  h += '<span style="font-size:13px;font-weight:600;letter-spacing:0.15em;text-transform:uppercase;color:#999">Copa Scott 2026</span>';
+  h += '<span style="font-size:12px;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:#999">Copa Scott DHMEXRACES 2026</span>';
   h += '</div>';
   h += '<div style="font-size:36px;font-weight:700;color:#1A1A1A;text-transform:uppercase;letter-spacing:-0.02em;line-height:1">'+sedeName+'</div>';
   h += '<div style="font-size:18px;font-weight:700;color:#DF3382;text-transform:uppercase;letter-spacing:0.06em;margin-top:8px">'+categoryName+'</div>';
@@ -458,12 +458,11 @@ function captureRanking(btn) {
     var p = parseInt(r.pos);
     var bg = i % 2 === 1 ? 'background:rgba(0,0,0,0.02);' : '';
 
-    // Medal or number
-    var medal = '';
-    if (p === 1) medal = '<div style="width:44px;height:44px;border-radius:50%;background:rgba(255,215,0,0.8);color:#1a1a1a;font-size:18px;font-weight:700;display:flex;align-items:center;justify-content:center">1</div>';
-    else if (p === 2) medal = '<div style="width:44px;height:44px;border-radius:50%;background:rgba(192,192,192,0.7);color:#1a1a1a;font-size:18px;font-weight:700;display:flex;align-items:center;justify-content:center">2</div>';
-    else if (p === 3) medal = '<div style="width:44px;height:44px;border-radius:50%;background:rgba(205,127,50,0.7);color:#fff;font-size:18px;font-weight:700;display:flex;align-items:center;justify-content:center">3</div>';
-    else medal = '<div style="width:44px;height:44px;display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:600;color:#999">'+r.pos+'</div>';
+    var posColor = '#999';
+    if (p === 1) posColor = '#D4A017';
+    else if (p === 2) posColor = '#888';
+    else if (p === 3) posColor = '#B87333';
+    var medal = '<div style="width:44px;text-align:center;font-size:20px;font-weight:800;color:'+posColor+'">'+r.pos+'</div>';
 
     h += '<div style="display:flex;align-items:center;gap:16px;padding:16px 12px;border-bottom:1px solid rgba(0,0,0,0.05);'+bg+'">';
     h += medal;
@@ -496,11 +495,11 @@ function captureRanking(btn) {
       a.download = 'ranking-' + sedeName.toLowerCase().replace(/\s+/g,'-') + '-' + categoryName.toLowerCase().replace(/\s+/g,'-') + '.png';
       a.href = canvas.toDataURL('image/png');
       a.click();
-      btn.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg> Descargar para Instagram';
+      btn.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg> Descargar para Historia de Instagram';
       btn.disabled = false;
     }).catch(function(e) {
       document.body.removeChild(el);
-      btn.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg> Descargar para Instagram';
+      btn.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg> Descargar para Historia de Instagram';
       btn.disabled = false;
       alert('Error al generar.');
     });

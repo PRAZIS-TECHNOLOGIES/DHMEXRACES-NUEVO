@@ -8,6 +8,8 @@
           {% assign yt_h_id = yt_h | split: 'watch?v=' | last | split: '&' | first %}
         {% elsif yt_h contains 'youtu.be/' %}
           {% assign yt_h_id = yt_h | split: 'youtu.be/' | last | split: '?' | first %}
+        {% elsif yt_h contains '/shorts/' %}
+          {% assign yt_h_id = yt_h | split: '/shorts/' | last | split: '?' | first %}
         {% else %}
           {% assign yt_h_id = yt_h %}
         {% endif %}
@@ -25,6 +27,8 @@
           {% assign yt_v_id = yt_v | split: 'watch?v=' | last | split: '&' | first %}
         {% elsif yt_v contains 'youtu.be/' %}
           {% assign yt_v_id = yt_v | split: 'youtu.be/' | last | split: '?' | first %}
+        {% elsif yt_v contains '/shorts/' %}
+          {% assign yt_v_id = yt_v | split: '/shorts/' | last | split: '?' | first %}
         {% else %}
           {% assign yt_v_id = yt_v %}
         {% endif %}

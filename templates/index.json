@@ -1,48 +1,171 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
 {
   "sections": {
     "hero": {
       "type": "hero",
       "settings": {
         "bg_mode": "gallery",
+        "youtube_horizontal": "",
+        "youtube_vertical": "",
+        "yt_start": 3,
         "tag": "TEMPORADA 2026 — 5 SEDES",
+        "heading_pre": "COPA SCOTT",
         "heading": "DHMEX",
         "heading_accent": "RACES",
         "date_display": "21-22 MARZO 2026",
         "prize_display": "$530,000 MXN"
-      },
-      "blocks": {},
-      "block_order": []
+      }
     },
     "about": {
       "type": "about-event",
-      "settings": {},
       "blocks": {
-        "stat-1": { "type": "stat", "settings": { "number": "5", "label": "Sedes nacionales" } },
-        "stat-2": { "type": "stat", "settings": { "number": "13", "prefix": "+", "label": "Categorias" } },
-        "stat-3": { "type": "stat", "settings": { "number": "530", "prefix": "$", "suffix": "K", "label": "En premios MXN" } },
-        "stat-4": { "type": "stat", "settings": { "number": "500", "prefix": "+", "label": "Pilotos por temporada" } }
+        "stat-1": {
+          "type": "stat",
+          "settings": {
+            "number": "5",
+            "prefix": "",
+            "suffix": "",
+            "label": "Sedes nacionales"
+          }
+        },
+        "stat-2": {
+          "type": "stat",
+          "settings": {
+            "number": "13",
+            "prefix": "+",
+            "suffix": "",
+            "label": "Categorias"
+          }
+        },
+        "stat-3": {
+          "type": "stat",
+          "settings": {
+            "number": "530",
+            "prefix": "$",
+            "suffix": "K",
+            "label": "En premios MXN"
+          }
+        },
+        "stat-4": {
+          "type": "stat",
+          "settings": {
+            "number": "500",
+            "prefix": "+",
+            "suffix": "",
+            "label": "Pilotos por temporada"
+          }
+        }
       },
-      "block_order": ["stat-1", "stat-2", "stat-3", "stat-4"]
+      "block_order": [
+        "stat-1",
+        "stat-2",
+        "stat-3",
+        "stat-4"
+      ],
+      "settings": {
+        "label": "La copa",
+        "heading": "La copa nacional de downhill mas grande de Mexico",
+        "description": "Copa Scott DHMEXRACES reune a los mejores pilotos del pais en 5 sedes a lo largo de la temporada. Desde principiantes hasta elite, 13 categorias compiten por el titulo nacional en las pistas mas exigentes del downhill mexicano. Velocidad, tecnica y adrenalina en estado puro.",
+        "logo_alt": "Logo",
+        "logo_width": 300
+      }
     },
     "horizontal-stats": {
       "type": "horizontal-stats",
-      "settings": {},
       "blocks": {
-        "hs-1": { "type": "stat", "settings": { "number": "GTO", "text": "Sede 1 — Guanajuato / 21-22 Feb" } },
-        "hs-2": { "type": "stat", "settings": { "number": "PUE", "text": "Sede 2 — Puebla / 21-22 Mar" } },
-        "hs-3": { "type": "stat", "settings": { "number": "GDL", "text": "Sede 3 — Guadalajara / 30-31 May" } },
-        "hs-4": { "type": "stat", "settings": { "number": "IXT", "text": "Sede 4 — Ixtapan de la Sal / 18-19 Jul" } },
-        "hs-5": { "type": "stat", "settings": { "number": "TAX", "text": "Sede 5 — Taxco / 17-18 Oct — Final Nacional" } },
-        "hs-6": { "type": "stat", "settings": { "number": "$530K", "text": "Total en premios para la temporada 2026" } }
+        "hs-1": {
+          "type": "stat",
+          "settings": {
+            "number": "GTO",
+            "text": "Sede 1 — Guanajuato / 21-22 Feb",
+            "popup_round": "",
+            "popup_city": "",
+            "popup_elevation": "",
+            "popup_desc": "",
+            "popup_link": ""
+          }
+        },
+        "hs-2": {
+          "type": "stat",
+          "settings": {
+            "number": "PUE",
+            "text": "Sede 2 — Puebla / 21-22 Mar",
+            "popup_round": "",
+            "popup_city": "",
+            "popup_elevation": "",
+            "popup_desc": "",
+            "popup_link": ""
+          }
+        },
+        "hs-3": {
+          "type": "stat",
+          "settings": {
+            "number": "GDL",
+            "text": "Sede 3 — Guadalajara / 30-31 May",
+            "popup_round": "",
+            "popup_city": "",
+            "popup_elevation": "",
+            "popup_desc": "",
+            "popup_link": ""
+          }
+        },
+        "hs-4": {
+          "type": "stat",
+          "settings": {
+            "number": "IXT",
+            "text": "Sede 4 — Ixtapan de la Sal / 18-19 Jul",
+            "popup_round": "",
+            "popup_city": "",
+            "popup_elevation": "",
+            "popup_desc": "",
+            "popup_link": ""
+          }
+        },
+        "hs-5": {
+          "type": "stat",
+          "settings": {
+            "number": "TAX",
+            "text": "Sede 5 — Taxco / 17-18 Oct — Final Nacional",
+            "popup_round": "",
+            "popup_city": "",
+            "popup_elevation": "",
+            "popup_desc": "",
+            "popup_link": ""
+          }
+        },
+        "hs-6": {
+          "type": "stat",
+          "settings": {
+            "number": "$530K",
+            "text": "Total en premios para la temporada 2026",
+            "popup_round": "",
+            "popup_city": "",
+            "popup_elevation": "",
+            "popup_desc": "",
+            "popup_link": ""
+          }
+        }
       },
-      "block_order": ["hs-1", "hs-2", "hs-3", "hs-4", "hs-5", "hs-6"]
+      "block_order": [
+        "hs-1",
+        "hs-2",
+        "hs-3",
+        "hs-4",
+        "hs-5",
+        "hs-6"
+      ],
+      "settings": {}
     },
     "sedes": {
       "type": "race-dates",
-      "settings": {
-        "subtitle": "Temporada 2026",
-        "title": "Sedes & Inscripciones"
-      },
       "blocks": {
         "race-1": {
           "type": "race",
@@ -52,8 +175,8 @@
             "date": "21-22 Feb 2026",
             "location": "Guanajuato, GTO",
             "elevation": "2,100 msnm",
+            "description": "Sede inaugural de la temporada",
             "status": "closed",
-            "description": "Sede inaugurial de la temporada",
             "link": "/products/inscripcion-sede-guanajuato",
             "results_link": "/pages/ranking-2026-demo"
           }
@@ -66,8 +189,10 @@
             "date": "21-22 Mar 2026",
             "location": "Puebla, PUE",
             "elevation": "2,160 msnm",
+            "description": "",
             "status": "open",
-            "link": "/products/inscripcion-sede-1-puebla"
+            "link": "/products/inscripcion-sede-1-puebla",
+            "results_link": ""
           }
         },
         "race-3": {
@@ -77,8 +202,11 @@
             "title": "Guadalajara",
             "date": "30-31 May 2026",
             "location": "Guadalajara, JAL",
+            "elevation": "2,100 msnm",
+            "description": "",
             "status": "upcoming",
-            "link": "/products/inscripcion-sede-2-guadalajara"
+            "link": "/products/inscripcion-sede-2-guadalajara",
+            "results_link": ""
           }
         },
         "race-4": {
@@ -88,8 +216,11 @@
             "title": "Ixtapan de la Sal",
             "date": "18-19 Jul 2026",
             "location": "Ixtapan de la Sal, MEX",
+            "elevation": "2,100 msnm",
+            "description": "",
             "status": "upcoming",
-            "link": "/products/inscripcion-sede-4-ixtapan-de-la-sal"
+            "link": "/products/inscripcion-sede-4-ixtapan-de-la-sal",
+            "results_link": ""
           }
         },
         "race-5": {
@@ -99,58 +230,239 @@
             "title": "Taxco",
             "date": "17-18 Oct 2026",
             "location": "Taxco, GRO",
-            "status": "upcoming",
+            "elevation": "2,100 msnm",
             "description": "Final Nacional",
-            "link": "/products/inscripcion-sede-5-taxco-final-urbano"
+            "status": "upcoming",
+            "link": "/products/inscripcion-sede-5-taxco-final-urbano",
+            "results_link": ""
           }
         }
       },
-      "block_order": ["race-1", "race-2", "race-3", "race-4", "race-5"]
+      "block_order": [
+        "race-1",
+        "race-2",
+        "race-3",
+        "race-4",
+        "race-5"
+      ],
+      "settings": {
+        "subtitle": "Temporada 2026",
+        "title": "Sedes & Inscripciones"
+      }
     },
     "tickets": {
       "type": "tickets",
-      "settings": {}
+      "settings": {
+        "label": "Inscripciones",
+        "heading": "Asegura tu lugar en la pista",
+        "product": ""
+      }
     },
     "merch": {
       "type": "featured-collection",
       "settings": {
         "anchor_id": "merch",
         "label": "Merch",
-        "heading": "Merch oficial"
+        "heading": "Merch oficial",
+        "collection": "",
+        "products_count": 6
       }
     },
     "sponsors": {
       "type": "sponsors",
-      "settings": {},
       "blocks": {
-        "sp-1": { "type": "sponsor", "settings": { "name": "SCOTT", "tier": "gold" } },
-        "sp-2": { "type": "sponsor", "settings": { "name": "SHIMANO", "tier": "gold" } },
-        "sp-3": { "type": "sponsor", "settings": { "name": "RED BULL", "tier": "plata" } },
-        "sp-4": { "type": "sponsor", "settings": { "name": "MOTUL", "tier": "plata" } },
-        "sp-5": { "type": "sponsor", "settings": { "name": "SRAM", "tier": "plata" } },
-        "sp-6": { "type": "sponsor", "settings": { "name": "SCHWALBE", "tier": "bronce" } },
-        "sp-7": { "type": "sponsor", "settings": { "name": "FOX FACTORY", "tier": "bronce" } },
-        "sp-8": { "type": "sponsor", "settings": { "name": "VITTORIA", "tier": "bronce" } },
-        "sp-9": { "type": "sponsor", "settings": { "name": "LAZER", "tier": "bronce" } },
-        "sp-10": { "type": "sponsor", "settings": { "name": "ALPINESTARS", "tier": "bronce" } }
+        "sp-1": {
+          "type": "sponsor",
+          "settings": {
+            "tier": "gold",
+            "name": "SCOTT",
+            "logo_url": "",
+            "url": ""
+          }
+        },
+        "sp-2": {
+          "type": "sponsor",
+          "settings": {
+            "tier": "gold",
+            "name": "SHIMANO",
+            "logo_url": "",
+            "url": ""
+          }
+        },
+        "sp-3": {
+          "type": "sponsor",
+          "settings": {
+            "tier": "plata",
+            "name": "RED BULL",
+            "logo_url": "",
+            "url": ""
+          }
+        },
+        "sp-4": {
+          "type": "sponsor",
+          "settings": {
+            "tier": "plata",
+            "name": "MOTUL",
+            "logo_url": "",
+            "url": ""
+          }
+        },
+        "sp-5": {
+          "type": "sponsor",
+          "settings": {
+            "tier": "plata",
+            "name": "SRAM",
+            "logo_url": "",
+            "url": ""
+          }
+        },
+        "sp-6": {
+          "type": "sponsor",
+          "settings": {
+            "tier": "bronce",
+            "name": "SCHWALBE",
+            "logo_url": "",
+            "url": ""
+          }
+        },
+        "sp-7": {
+          "type": "sponsor",
+          "settings": {
+            "tier": "bronce",
+            "name": "FOX FACTORY",
+            "logo_url": "",
+            "url": ""
+          }
+        },
+        "sp-8": {
+          "type": "sponsor",
+          "settings": {
+            "tier": "bronce",
+            "name": "VITTORIA",
+            "logo_url": "",
+            "url": ""
+          }
+        },
+        "sp-9": {
+          "type": "sponsor",
+          "settings": {
+            "tier": "bronce",
+            "name": "LAZER",
+            "logo_url": "",
+            "url": ""
+          }
+        },
+        "sp-10": {
+          "type": "sponsor",
+          "settings": {
+            "tier": "bronce",
+            "name": "ALPINESTARS",
+            "logo_url": "",
+            "url": ""
+          }
+        }
       },
-      "block_order": ["sp-1", "sp-2", "sp-3", "sp-4", "sp-5", "sp-6", "sp-7", "sp-8", "sp-9", "sp-10"]
+      "block_order": [
+        "sp-1",
+        "sp-2",
+        "sp-3",
+        "sp-4",
+        "sp-5",
+        "sp-6",
+        "sp-7",
+        "sp-8",
+        "sp-9",
+        "sp-10"
+      ],
+      "settings": {
+        "label": "Presentado por",
+        "heading": "Sponsors"
+      }
     },
     "gallery": {
       "type": "gallery",
-      "settings": {},
       "blocks": {
-        "g-1": { "type": "image", "settings": { "caption": "Downhill Guanajuato" } },
-        "g-2": { "type": "image", "settings": { "caption": "Podium Elite" } },
-        "g-3": { "type": "image", "settings": { "caption": "Pista Taxco" } },
-        "g-4": { "type": "image", "settings": { "caption": "Pilotos en accion" } },
-        "g-5": { "type": "image", "settings": { "caption": "Mecanica neutral Shimano" } },
-        "g-6": { "type": "image", "settings": { "caption": "Premiacion" } },
-        "g-7": { "type": "image", "settings": { "caption": "Publico DHMEX" } },
-        "g-8": { "type": "image", "settings": { "caption": "Full send" } }
+        "g-1": {
+          "type": "image",
+          "settings": {
+            "caption": "Downhill Guanajuato",
+            "image_url": ""
+          }
+        },
+        "g-2": {
+          "type": "image",
+          "settings": {
+            "caption": "Podium Elite",
+            "image_url": ""
+          }
+        },
+        "g-3": {
+          "type": "image",
+          "settings": {
+            "caption": "Pista Taxco",
+            "image_url": ""
+          }
+        },
+        "g-4": {
+          "type": "image",
+          "settings": {
+            "caption": "Pilotos en accion",
+            "image_url": ""
+          }
+        },
+        "g-5": {
+          "type": "image",
+          "settings": {
+            "caption": "Mecanica neutral Shimano",
+            "image_url": ""
+          }
+        },
+        "g-6": {
+          "type": "image",
+          "settings": {
+            "caption": "Premiacion",
+            "image_url": ""
+          }
+        },
+        "g-7": {
+          "type": "image",
+          "settings": {
+            "caption": "Publico DHMEX",
+            "image_url": ""
+          }
+        },
+        "g-8": {
+          "type": "image",
+          "settings": {
+            "caption": "Full send",
+            "image_url": ""
+          }
+        }
       },
-      "block_order": ["g-1", "g-2", "g-3", "g-4", "g-5", "g-6", "g-7", "g-8"]
+      "block_order": [
+        "g-1",
+        "g-2",
+        "g-3",
+        "g-4",
+        "g-5",
+        "g-6",
+        "g-7",
+        "g-8"
+      ],
+      "settings": {
+        "label": "Highlights",
+        "heading": "SEDE GUANAJUATO"
+      }
     }
   },
-  "order": ["hero", "about", "horizontal-stats", "sedes", "tickets", "merch", "sponsors", "gallery"]
+  "order": [
+    "hero",
+    "about",
+    "horizontal-stats",
+    "sedes",
+    "tickets",
+    "merch",
+    "sponsors",
+    "gallery"
+  ]
 }

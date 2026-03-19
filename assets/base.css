@@ -2719,29 +2719,20 @@ ul, ol {
   color: var(--text-secondary);
 }
 
-.ranking-medal {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 28px;
-  height: 28px;
-  font-size: 12px;
-  font-weight: 700;
+.ranking-pos {
+  font-weight: 800;
 }
 
-.ranking-medal--gold {
-  background: rgba(255, 215, 0, 0.15);
-  color: #FFD700;
+.ranking-pos--gold {
+  color: #D4A017;
 }
 
-.ranking-medal--silver {
-  background: rgba(192, 192, 192, 0.15);
-  color: #C0C0C0;
+.ranking-pos--silver {
+  color: #888;
 }
 
-.ranking-medal--bronze {
-  background: rgba(205, 127, 50, 0.15);
-  color: #CD7F32;
+.ranking-pos--bronze {
+  color: #B87333;
 }
 
 .ranking-download-btn {
@@ -2823,18 +2814,8 @@ ul, ol {
     padding: 0;
   }
 
-  .ranking-medal {
-    min-width: 36px;
-    width: 36px;
-    min-height: 36px;
-    height: 36px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    line-height: 36px;
-    padding: 0;
-    margin: 0 auto;
-    font-size: 14px;
+  .ranking-pos {
+    font-size: 16px;
   }
 
   /* Name - top right */
@@ -4161,15 +4142,18 @@ ul, ol {
 /* Toast Notification */
 .inscripcion__toast {
   position: fixed;
-  top: -100px;
+  top: -200px;
   left: 50%;
   transform: translateX(-50%);
   z-index: 10000;
-  transition: top 0.4s var(--ease-out-quart);
+  transition: top 0.4s var(--ease-out-quart), visibility 0s 0.4s;
+  visibility: hidden;
 }
 
 .inscripcion__toast.is-visible {
   top: calc(var(--header-height) + 16px);
+  visibility: visible;
+  transition: top 0.4s var(--ease-out-quart), visibility 0s 0s;
 }
 
 .inscripcion__toast-content {
