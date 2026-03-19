@@ -2,6 +2,7 @@
   Cart Page - DHMEX PRO
   Custom cart with inscription detection, promo jersey sync,
   discount codes, and registration form redirect
+  CART PROTECTION SYSTEM - ported from original DHMEXRACES
 {% endcomment %}
 
 <div class="cart-page">
@@ -41,7 +42,7 @@
               <div class="cart-item__details">
                 <a href="{{ item.url }}" class="cart-item__title">{{ item.product.title }}</a>
                 {% unless item.variant.title == 'Default Title' %}
-                  <div class="label" style="margin-top: 4px;">{{ item.variant.title }}</div>
+                  <div class="cart-item__variant">Categoría: {{ item.variant.title }}</div>
                 {% endunless %}
 
                 {% if is_promo_jersey %}
@@ -76,6 +77,9 @@
                   <span class="cart-item__price-free">GRATIS</span>
                 {% else %}
                   {{ item.line_price | money }}
+                  {% if item.quantity > 1 %}
+                    <span class="cart-item__price-unit">{{ item.price | money }} c/u</span>
+                  {% endif %}
                 {% endif %}
               </div>
             </div>
@@ -154,10 +158,6 @@
             Seguir comprando
           </a>
         </div>
-      </div>
-
-      <div id="cartProcessing" class="cart-processing" style="display: none;">
-        <span class="label">Actualizando carrito...</span>
       </div>
 
     {% else %}
@@ -244,6 +244,15 @@
     border-radius: 4px;
     width: fit-content;
   }
+  .cart-item__variant {
+    margin-top: 4px;
+    font-family: var(--font-body);
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: #DF3382;
+  }
   .cart-item__remove {
     background: none;
     border: none;
@@ -270,6 +279,12 @@
   .cart-item__price-free {
     color: var(--accent);
     font-weight: 700;
+  }
+  .cart-item__price-unit {
+    display: block;
+    font-size: 11px;
+    font-weight: 400;
+    color: var(--text-secondary);
   }
   .cart-summary {
     padding: var(--space-md);
@@ -324,66 +339,223 @@
     background: rgba(var(--accent-rgb, 255,59,48), 0.08);
     border-radius: 6px;
   }
-  .cart-processing {
-    text-align: center;
-    padding: var(--space-lg);
+
+  /* ── Skeleton Loading ── */
+  @keyframes skeleton-pulse {
+    0%, 100% { opacity: 0.15; }
+    50% { opacity: 0.08; }
+  }
+  .cart-skeleton {
+    position: absolute;
+    inset: 0;
+    z-index: 3;
+    pointer-events: all;
+  }
+  .cart-skeleton .cart-items,
+  .cart-skeleton .cart-summary {
+    pointer-events: none;
+  }
+  .cart-skeleton .skel-block {
+    background: var(--text-primary);
+    border-radius: 4px;
+    animation: skeleton-pulse 1.2s ease-in-out infinite;
+  }
+  .cart-skeleton .skel-item {
+    display: grid;
+    grid-template-columns: 80px 1fr auto;
+    gap: var(--space-sm);
+    align-items: center;
+    padding: var(--space-sm);
+    border: 1px solid rgba(0,0,0,0.06);
+    border-radius: 8px;
+    background: var(--bg-secondary);
+  }
+  .cart-skeleton .skel-img {
+    width: 80px;
+    height: 80px;
+    border-radius: 6px;
+  }
+  .cart-skeleton .skel-lines {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .cart-skeleton .skel-line {
+    height: 12px;
+    border-radius: 3px;
+  }
+  .cart-skeleton .skel-line--title { width: 70%; }
+  .cart-skeleton .skel-line--cat { width: 40%; }
+  .cart-skeleton .skel-line--price { width: 60px; height: 14px; }
+  .cart-skeleton .skel-summary-line {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+  }
+  .cart-skeleton .skel-btn {
+    height: 44px;
+    border-radius: 8px;
+    width: 100%;
+  }
+
+  /* ── Mobile Cart ── */
+  @media (max-width: 600px) {
+    .cart-page {
+      padding: calc(var(--header-height) + var(--space-sm)) 0 var(--space-md);
+    }
+    .cart-page .section__header {
+      margin-bottom: var(--space-sm);
+    }
+    .cart-page .heading-lg {
+      font-size: clamp(1.8rem, 6vw, 2.4rem);
+    }
+    .cart-layout {
+      gap: var(--space-md);
+    }
+    .cart-item {
+      grid-template-columns: 64px 1fr;
+      grid-template-rows: auto auto;
+      gap: 8px;
+      padding: 12px;
+      position: relative;
+    }
+    .cart-item__image {
+      width: 64px;
+      min-height: 64px;
+      grid-row: 1 / 2;
+    }
+    .cart-item__details {
+      grid-column: 2;
+      grid-row: 1;
+    }
+    .cart-item__title {
+      font-size: 13px;
+    }
+    .cart-item__qty {
+      grid-column: 1 / -1;
+      grid-row: 2;
+      justify-self: start;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      width: 100%;
+    }
+    .cart-item__qty .quantity-selector {
+      transform: scale(0.9);
+      transform-origin: left center;
+    }
+    .cart-item__remove {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      z-index: 2;
+      padding: 6px;
+    }
+    .cart-item__price {
+      grid-column: 1 / -1;
+      grid-row: 2;
+      text-align: right;
+      font-size: 13px;
+      align-self: center;
+    }
+    .cart-summary {
+      position: static;
+      padding: var(--space-sm);
+      gap: 8px;
+    }
+    .cart-summary__row--total {
+      font-size: 16px;
+    }
+    .cart-discount {
+      flex-direction: column;
+      gap: 6px;
+    }
+    .cart-discount__input {
+      font-size: 14px;
+      padding: 10px 12px;
+    }
+    .cart-discount__btn {
+      padding: 10px 16px !important;
+      font-size: 12px !important;
+    }
+    .cart-skeleton .skel-item {
+      grid-template-columns: 56px 1fr;
+      padding: 10px;
+    }
+    .cart-skeleton .skel-img {
+      width: 56px;
+      height: 56px;
+    }
   }
 </style>
 
 <script>
-let isProcessing = false;
+// ============================================================
+// CART PROTECTION SYSTEM - DHMEX SKELETON
+// Full error handling ported from original DHMEXRACES cart
+// ============================================================
 
+var isProcessing = false;
+
+// ============ UI STATE MANAGEMENT ============
 function setProcessingState(processing) {
   isProcessing = processing;
-  const content = document.getElementById('cartContent');
-  const overlay = document.getElementById('cartProcessing');
+  var content = document.getElementById('cartContent');
   if (content) content.style.opacity = processing ? '0.5' : '1';
-  if (overlay) overlay.style.display = processing ? 'block' : 'none';
-}
 
-async function updateQuantity(line, change) {
-  if (isProcessing) return;
-  setProcessingState(true);
-  try {
-    const res = await fetch('/cart.js');
-    const cart = await res.json();
-    const item = cart.items[line - 1];
-    if (!item) return;
-    const newQty = item.quantity + change;
-    if (newQty < 1) { await removeItem(line); return; }
-    if (newQty > 10) { setProcessingState(false); return; }
-    await fetch('/cart/change.js', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ line: line, quantity: newQty })
-    });
-    await syncPromoJerseysWithInscriptions();
-    location.reload();
-  } catch (e) {
-    console.error('Update error:', e);
-    setProcessingState(false);
+  // Disable/enable all cart buttons
+  var buttons = document.querySelectorAll('.quantity-selector button, .cart-item__remove, .btn--primary, .btn--outline');
+  for (var i = 0; i < buttons.length; i++) {
+    buttons[i].disabled = processing;
+    buttons[i].style.opacity = processing ? '0.5' : '';
+    buttons[i].style.cursor = processing ? 'wait' : '';
+  }
+
+  // Skeleton screen overlay
+  var loader = document.getElementById('cartSkeleton');
+  if (processing) {
+    if (!loader) {
+      var layout = document.querySelector('.cart-layout');
+      if (layout) {
+        loader = document.createElement('div');
+        loader.id = 'cartSkeleton';
+        loader.className = 'cart-skeleton';
+
+        var itemCount = document.querySelectorAll('.cart-item').length || 2;
+        var itemsHtml = '';
+        for (var j = 0; j < itemCount; j++) {
+          itemsHtml += '<div class="skel-item">'
+            + '<div class="skel-block skel-img"></div>'
+            + '<div class="skel-lines">'
+            + '<div class="skel-block skel-line skel-line--title"></div>'
+            + '<div class="skel-block skel-line skel-line--cat"></div>'
+            + '</div>'
+            + '<div class="skel-block skel-line skel-line--price"></div>'
+            + '</div>';
+        }
+
+        loader.innerHTML = '<div class="cart-layout">'
+          + '<div class="cart-items">' + itemsHtml + '</div>'
+          + '<div class="cart-summary" style="border:1px solid rgba(0,0,0,0.06);">'
+          + '<div class="skel-summary-line"><div class="skel-block skel-line" style="width:80px"></div><div class="skel-block skel-line" style="width:40px"></div></div>'
+          + '<div class="skel-summary-line"><div class="skel-block skel-line" style="width:60px"></div><div class="skel-block skel-line" style="width:50px"></div></div>'
+          + '<div class="skel-summary-line" style="margin-top:8px;padding-top:8px;border-top:1px solid rgba(0,0,0,0.06)"><div class="skel-block skel-line" style="width:50px;height:16px"></div><div class="skel-block skel-line" style="width:70px;height:16px"></div></div>'
+          + '<div class="skel-block skel-btn" style="margin-top:12px"></div>'
+          + '</div>'
+          + '</div>';
+
+        layout.style.position = 'relative';
+        layout.appendChild(loader);
+      }
+    }
+  } else if (loader) {
+    loader.remove();
   }
 }
 
-async function removeItem(line) {
-  if (isProcessing) return;
-  setProcessingState(true);
-  try {
-    await fetch('/cart/change.js', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ line: line, quantity: 0 })
-    });
-    await syncPromoJerseysWithInscriptions();
-    location.reload();
-  } catch (e) {
-    console.error('Remove error:', e);
-    setProcessingState(false);
-  }
-}
-
+// ============ ITEM TYPE DETECTION ============
 function isInscriptionItem(item) {
-  const t = (item.product_title || item.title || '').toLowerCase();
+  var t = (item.product_title || item.title || '').toLowerCase();
   return t.includes('inscripcion') || t.includes('inscripción') || t.includes('inscripci');
 }
 
@@ -391,122 +563,174 @@ function isPromoJersey(item) {
   return (item.properties || {})['_promo_jersey'] === 'true';
 }
 
-async function syncPromoJerseysWithInscriptions() {
-  // ROBUST SYNC: Force inscriptions count = promo jerseys count
-  // Strategy: Remove ALL promo jerseys, then add ONE with correct quantity
+// ============ CART OPERATIONS ============
+async function updateCart(line, quantity) {
+  if (isProcessing) return;
+  setProcessingState(true);
+
   try {
-    // Step 1: Get cart and count inscriptions
-    let cartResponse = await fetch('/cart.js');
+    // Step 1: Get current cart and validate
+    var cartRes = await fetch('/cart.js');
+    if (!cartRes.ok) throw new Error('No se pudo obtener el carrito');
+    var cart = await cartRes.json();
+
+    // Validate line number
+    if (line < 1 || line > cart.items.length) {
+      throw new Error('Línea de carrito inválida');
+    }
+
+    var itemBeingChanged = cart.items[line - 1];
+    var isInscription = isInscriptionItem(itemBeingChanged);
+
+    // Step 2: Perform the update
+    var updateRes = await fetch('/cart/change.js', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ line: line, quantity: quantity })
+    });
+
+    if (!updateRes.ok) {
+      var errData = await updateRes.json().catch(function() { return {}; });
+      throw new Error(errData.description || 'Error al actualizar cantidad');
+    }
+
+    // Step 3: If inscription changed, sync promo jerseys
+    if (isInscription) {
+      await syncPromoJerseysWithInscriptions();
+    }
+
+    // Step 4: Reload
+    window.location.reload();
+
+  } catch (error) {
+    console.error('Error updating cart:', error);
+    setProcessingState(false);
+    alert('Error al actualizar el carrito: ' + error.message + '\n\nPor favor recarga la página e intenta de nuevo.');
+  }
+}
+
+function updateQuantity(line, change) {
+  if (isProcessing) return;
+
+  fetch('/cart.js').then(function(r) { return r.json(); }).then(function(cart) {
+    var item = cart.items[line - 1];
+    if (!item) return;
+    var newQty = Math.max(0, Math.min(10, item.quantity + change));
+    if (newQty === 0) { removeItem(line); return; }
+    if (newQty === item.quantity) return;
+    updateCart(line, newQty);
+  });
+}
+
+function removeItem(line) {
+  if (isProcessing) return;
+  if (!confirm('¿Eliminar este artículo del carrito?')) return;
+  updateCart(line, 0);
+}
+
+// ============ PROMO JERSEY SYNC ============
+async function syncPromoJerseysWithInscriptions() {
+  try {
+    var cartResponse = await fetch('/cart.js');
     if (!cartResponse.ok) return;
-    let cart = await cartResponse.json();
+    var cart = await cartResponse.json();
 
-    const totalInscriptions = cart.items
-      .filter(item => isInscriptionItem(item))
-      .reduce((total, item) => total + item.quantity, 0);
+    var totalInscriptions = cart.items
+      .filter(function(item) { return isInscriptionItem(item); })
+      .reduce(function(total, item) { return total + item.quantity; }, 0);
 
-    // Step 2: Find all promo jerseys
-    let promoJerseys = cart.items.filter(item => isPromoJersey(item));
+    var promoJerseys = cart.items.filter(function(item) { return isPromoJersey(item); });
+    var totalPromoJerseys = promoJerseys.reduce(function(total, item) { return total + item.quantity; }, 0);
 
-    // Calculate total promo jerseys quantity
-    const totalPromoJerseys = promoJerseys.reduce((total, item) => total + item.quantity, 0);
-
-    // Step 3: Check inventory FIRST - if jerseys are sold out, remove all promos
-    // Detect sede from inscription items in cart (not from API inscritos count)
-    let inventoryDisponibles = null;
+    // Check inventory
+    var inventoryDisponibles = null;
     try {
-      let detectedSede = 'guanajuato';
-      const inscriptionItems = cart.items.filter(item => isInscriptionItem(item));
-      for (const item of inscriptionItems) {
-        const title = (item.product_title || item.title || '').toLowerCase();
+      var detectedSede = 'guanajuato';
+      var inscriptionItems = cart.items.filter(function(item) { return isInscriptionItem(item); });
+      for (var i = 0; i < inscriptionItems.length; i++) {
+        var title = (inscriptionItems[i].product_title || inscriptionItems[i].title || '').toLowerCase();
         if (title.includes('guadalajara')) { detectedSede = 'guadalajara'; break; }
         else if (title.includes('puebla')) { detectedSede = 'puebla'; break; }
         else if (title.includes('ixtapan')) { detectedSede = 'ixtapan'; break; }
         else if (title.includes('taxco')) { detectedSede = 'taxco'; break; }
         else if (title.includes('guanajuato')) { detectedSede = 'guanajuato'; break; }
       }
-      const invResponse = await fetch('https://dhmexraces-webhooks.vercel.app/api/inventory');
-      const invData = await invResponse.json();
-      inventoryDisponibles = invData.sedes?.[detectedSede]?.playeras?.disponibles ?? 50;
+      var invResponse = await fetch('https://dhmexraces-webhooks.vercel.app/api/inventory');
+      var invData = await invResponse.json();
+      inventoryDisponibles = (invData.sedes && invData.sedes[detectedSede] && invData.sedes[detectedSede].playeras) ? invData.sedes[detectedSede].playeras.disponibles : 50;
     } catch (invErr) {
       console.error('Error fetching inventory:', invErr);
     }
 
-    // If jerseys are sold out, remove ALL promo jerseys regardless of quantities
+    // If jerseys sold out, remove all promos
     if (inventoryDisponibles !== null && inventoryDisponibles <= 0 && totalPromoJerseys > 0) {
-      console.log('Jerseys AGOTADAS - removing all promo jerseys from cart');
       while (promoJerseys.length > 0) {
-        const jersey = promoJerseys[0];
-        const jerseyLine = cart.items.indexOf(jersey) + 1;
+        var jersey = promoJerseys[0];
+        var jerseyLine = cart.items.indexOf(jersey) + 1;
         await fetch('/cart/change.js', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ line: jerseyLine, quantity: 0 })
         });
-        await new Promise(r => setTimeout(r, 150));
+        await new Promise(function(r) { setTimeout(r, 150); });
         cartResponse = await fetch('/cart.js');
         cart = await cartResponse.json();
-        promoJerseys = cart.items.filter(item => isPromoJersey(item));
+        promoJerseys = cart.items.filter(function(item) { return isPromoJersey(item); });
       }
       location.reload();
       return;
     }
 
-    // Step 3b: If quantities match and inventory is available, we're good
+    // If already synced, skip
     if (promoJerseys.length === 1 && totalPromoJerseys === totalInscriptions && inventoryDisponibles > 0) {
-      console.log('Promo jerseys already synced correctly');
       return;
     }
 
-    // Step 4: If no inscriptions, remove ALL promo jerseys
+    // If no inscriptions, remove all promos
     if (totalInscriptions === 0) {
-      for (let i = promoJerseys.length - 1; i >= 0; i--) {
-        const jersey = promoJerseys[i];
-        const jerseyLine = cart.items.indexOf(jersey) + 1;
+      while (promoJerseys.length > 0) {
+        var jrs = promoJerseys[0];
+        var jrsLine = cart.items.indexOf(jrs) + 1;
         await fetch('/cart/change.js', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ line: jerseyLine, quantity: 0 })
+          body: JSON.stringify({ line: jrsLine, quantity: 0 })
         });
-        await new Promise(r => setTimeout(r, 150));
+        await new Promise(function(r) { setTimeout(r, 150); });
         cartResponse = await fetch('/cart.js');
         cart = await cartResponse.json();
-        promoJerseys = cart.items.filter(item => isPromoJersey(item));
+        promoJerseys = cart.items.filter(function(item) { return isPromoJersey(item); });
       }
       return;
     }
 
-    // Step 5: Get the jersey variant ID from existing promo jersey (we'll need it to re-add)
-    let jerseyVariantId = null;
+    // Get variant ID before removing
+    var jerseyVariantId = null;
     if (promoJerseys.length > 0) {
       jerseyVariantId = promoJerseys[0].variant_id;
     }
 
-    // Step 6: Remove ALL promo jerseys (one by one, re-fetching cart each time)
+    // Remove all promo jerseys
     while (promoJerseys.length > 0) {
-      const jersey = promoJerseys[0];
-      const jerseyLine = cart.items.indexOf(jersey) + 1;
-
+      var pj = promoJerseys[0];
+      var pjLine = cart.items.indexOf(pj) + 1;
       await fetch('/cart/change.js', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ line: jerseyLine, quantity: 0 })
+        body: JSON.stringify({ line: pjLine, quantity: 0 })
       });
-
-      await new Promise(r => setTimeout(r, 150));
-
-      // Re-fetch cart
+      await new Promise(function(r) { setTimeout(r, 150); });
       cartResponse = await fetch('/cart.js');
       cart = await cartResponse.json();
-      promoJerseys = cart.items.filter(item => isPromoJersey(item));
+      promoJerseys = cart.items.filter(function(item) { return isPromoJersey(item); });
     }
 
-    // Step 7: Use inventory data already fetched in Step 3 to cap jersey quantity
-    let jerseyQty = totalInscriptions;
+    // Add back with correct quantity (capped by inventory)
+    var jerseyQty = totalInscriptions;
     if (inventoryDisponibles !== null) {
       jerseyQty = Math.min(totalInscriptions, inventoryDisponibles);
     }
 
-    // Step 8: Add ONE promo jersey with the capped quantity
     if (jerseyVariantId && jerseyQty > 0) {
       await fetch('/cart/add.js', {
         method: 'POST',
@@ -514,26 +738,27 @@ async function syncPromoJerseysWithInscriptions() {
         body: JSON.stringify({
           id: jerseyVariantId,
           quantity: jerseyQty,
-          properties: {
-            '_promo_jersey': 'true'
-          }
+          properties: { '_promo_jersey': 'true' }
         })
       });
     }
-
-    console.log(`Synced: ${totalInscriptions} inscriptions = ${jerseyQty} promo jerseys (capped by inventory)`);
 
   } catch (error) {
     console.error('Error syncing promo jerseys:', error);
   }
 }
 
+// ============ REGISTRATION REDIRECT ============
 async function proceedToRegistration() {
-  try {
-    const res = await fetch('/cart.js');
-    const cart = await res.json();
+  if (isProcessing) return;
+  setProcessingState(true);
 
-    const cartItems = cart.items.filter(function(i) {
+  try {
+    var res = await fetch('/cart.js');
+    if (!res.ok) throw new Error('No se pudo obtener el carrito');
+    var cart = await res.json();
+
+    var cartItems = cart.items.filter(function(i) {
       var t = (i.product_title || '').toLowerCase();
       return t.includes('inscripci');
     }).map(function(i) {
@@ -548,8 +773,7 @@ async function proceedToRegistration() {
     });
 
     if (cartItems.length === 0) {
-      alert('No hay inscripciones en el carrito');
-      return;
+      throw new Error('No hay inscripciones en el carrito');
     }
 
     sessionStorage.setItem('registrationCartData', JSON.stringify(cartItems));
@@ -568,21 +792,42 @@ async function proceedToRegistration() {
       sessionStorage.removeItem('jerseyDisponible');
     }
 
-    var code = localStorage.getItem('discountCode');
-    if (code) sessionStorage.setItem('discountCode', code);
+    // Get discount code from localStorage or input
+    var discountCode = localStorage.getItem('discountCode') || '';
+    if (!discountCode) {
+      var codeDisplay = document.getElementById('discountCodeDisplay');
+      var codeInput = document.getElementById('discountCode');
+      if (codeDisplay && codeDisplay.textContent.trim()) {
+        discountCode = codeDisplay.textContent.trim().toUpperCase();
+      } else if (codeInput && codeInput.value.trim()) {
+        discountCode = codeInput.value.trim().toUpperCase();
+      }
+    }
+
+    if (discountCode) {
+      sessionStorage.setItem('discountCode', discountCode);
+    } else {
+      sessionStorage.removeItem('discountCode');
+    }
 
     window.location.href = '/pages/formulario-de-inscripcion';
-  } catch (e) {
-    console.error('Registration redirect error:', e);
-    alert('Error al procesar. Intenta de nuevo.');
+
+  } catch (error) {
+    console.error('Registration redirect error:', error);
+    setProcessingState(false);
+    alert('Error al procesar: ' + error.message + '\n\nPor favor intenta de nuevo.');
   }
 }
 
-// Discount code
+// ============ DISCOUNT CODE ============
 function applyDiscount() {
-  const input = document.getElementById('discountCode');
-  const code = (input.value || '').trim().toUpperCase();
-  if (!code) return;
+  var input = document.getElementById('discountCode');
+  var code = (input.value || '').trim().toUpperCase();
+  if (!code) {
+    input.style.borderColor = '#DF3382';
+    setTimeout(function() { input.style.borderColor = ''; }, 2000);
+    return;
+  }
   localStorage.setItem('discountCode', code);
   document.getElementById('discountInput').style.display = 'none';
   document.getElementById('discountConfirmed').style.display = 'flex';
@@ -596,6 +841,7 @@ function changeDiscount() {
   document.getElementById('discountCode').value = '';
 }
 
+// ============ PAGE LOAD ============
 document.addEventListener('DOMContentLoaded', function() {
   var saved = localStorage.getItem('discountCode');
   if (saved) {
@@ -614,6 +860,9 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   }
 
-  syncPromoJerseysWithInscriptions();
+  // Sync promo jerseys on page load
+  syncPromoJerseysWithInscriptions().catch(function(err) {
+    console.error('Error in initial sync:', err);
+  });
 });
 </script>

@@ -127,8 +127,12 @@
     </div>
 
     <div class="hero__actions reveal reveal--delay-4" style="margin-top: var(--space-md);">
-      <a href="/#sedes" class="btn btn--primary btn--large">Inscribirme ahora</a>
-      <a href="#about" class="btn btn--outline btn--large">Conocer mas</a>
+      {% if section.settings.btn1_text != blank %}
+        <a href="{{ section.settings.btn1_link | default: '/#sedes' }}" class="btn btn--primary btn--large">{{ section.settings.btn1_text }}</a>
+      {% endif %}
+      {% if section.settings.btn2_text != blank %}
+        <a href="{{ section.settings.btn2_link | default: '#about' }}" class="btn btn--outline btn--large">{{ section.settings.btn2_text }}</a>
+      {% endif %}
     </div>
   </div>
 </section>
@@ -215,6 +219,32 @@
       "id": "prize_display",
       "label": "Premios visibles",
       "default": "$530,000 MXN"
+    },
+    {
+      "type": "header",
+      "content": "Botones"
+    },
+    {
+      "type": "text",
+      "id": "btn1_text",
+      "label": "Boton primario — texto",
+      "default": "Inscribirme ahora"
+    },
+    {
+      "type": "url",
+      "id": "btn1_link",
+      "label": "Boton primario — enlace"
+    },
+    {
+      "type": "text",
+      "id": "btn2_text",
+      "label": "Boton secundario — texto",
+      "default": "Conocer mas"
+    },
+    {
+      "type": "url",
+      "id": "btn2_link",
+      "label": "Boton secundario — enlace"
     }
   ],
   "blocks": [
