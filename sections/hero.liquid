@@ -100,10 +100,12 @@
         <span class="hero__info-label">Fecha</span>
         <span class="hero__info-value">{{ section.settings.date_display | default: '21-22 MARZO 2026' }}</span>
       </div>
-      <div class="hero__info-item">
-        <span class="hero__info-label">Premios</span>
-        <span class="hero__info-value">{{ section.settings.prize_display | default: '$530,000 MXN' }}</span>
-      </div>
+      {% if section.settings.show_prize %}
+        <div class="hero__info-item">
+          <span class="hero__info-label">Premios</span>
+          <span class="hero__info-value">{{ section.settings.prize_display | default: '$530,000 MXN' }}</span>
+        </div>
+      {% endif %}
     </div>
 
     <!-- Countdown -->
@@ -213,6 +215,12 @@
       "id": "date_display",
       "label": "Fecha visible",
       "default": "21-22 MARZO 2026"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_prize",
+      "label": "Mostrar premios",
+      "default": true
     },
     {
       "type": "text",
