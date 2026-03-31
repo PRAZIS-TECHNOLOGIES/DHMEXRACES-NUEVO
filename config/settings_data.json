@@ -1,3 +1,12 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
 {
   "current": {
     "color_bg_primary": "#FFFFFF",
@@ -6,9 +15,29 @@
     "color_text_secondary": "#666666",
     "color_accent": "#1A1A1A",
     "event_name": "COPA SCOTT DHMEXRACES",
-    "event_date": "2026-03-21",
-    "event_location": "Puebla, Mexico",
+    "event_date": "2026-05-30",
+    "event_location": "GUADALAJARA, MEXICO",
     "event_season": "2026",
-    "social_instagram": "https://www.instagram.com/dhmex_races/"
+    "social_instagram": "https://www.instagram.com/dhmex_races/",
+    "sections": {
+      "header": {
+        "type": "header",
+        "settings": {
+          "logo": "shopify://shop_images/DHMEXRACES_MARCA_REGISTRADA_1.png",
+          "logo_alt": "",
+          "logo_height": 54
+        }
+      },
+      "footer": {
+        "type": "footer",
+        "settings": {
+          "description": "El campeonato nacional de downhill MTB mas grande de Mexico. Copa Scott DHMEXRACES — Temporada 2026.",
+          "email": "endhurorace@gmail.com",
+          "credit_name": "PRAZIS DEV",
+          "credit_url": ""
+        }
+      }
+    },
+    "content_for_index": []
   }
 }
