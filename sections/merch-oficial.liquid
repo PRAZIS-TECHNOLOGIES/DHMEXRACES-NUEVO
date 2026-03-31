@@ -1,85 +1,119 @@
 {% comment %}
   Merch Oficial - DHMEX PRO
-  Premium merch page with product cards
+  Horizontal product cards, editorial style
 {% endcomment %}
 
 <section class="section merch-section">
   <div class="container">
     <div class="section__header">
       <div class="section__header-left">
-        <span class="label">{{ section.settings.subtitle | default: 'Tienda Oficial' }}</span>
-        <h2 class="heading-lg">{{ section.settings.title | default: 'Merch Oficial' }}</h2>
+        <span class="label reveal">{{ section.settings.subtitle | default: 'Tienda Oficial' }}</span>
+        <h2 class="heading-lg reveal reveal--delay-1">{{ section.settings.title | default: 'Merch Oficial' }}</h2>
       </div>
       {% if section.settings.description != blank %}
-        <p class="body-text" style="max-width: 480px;">{{ section.settings.description }}</p>
+        <p class="body-text reveal reveal--delay-2" style="max-width: 480px;">{{ section.settings.description }}</p>
       {% endif %}
     </div>
 
-    {% for block in section.blocks %}
-      {% if block.type == 'product' %}
-        {% assign merch_product = all_products[block.settings.product_handle] %}
-        {% if merch_product != blank %}
-          <div class="merch-card reveal" {{ block.shopify_attributes }}>
-            <div class="merch-card__image">
-              {% if merch_product.featured_image != blank %}
-                <img
-                  src="{{ merch_product.featured_image | image_url: width: 800 }}"
-                  alt="{{ merch_product.title }}"
-                  loading="lazy"
-                  width="800"
-                  height="600"
-                >
-              {% else %}
-                <div class="merch-card__placeholder">
-                  <span class="label" style="opacity: 0.3;">Sin imagen</span>
+    <div class="merch-list">
+      {% for block in section.blocks %}
+        {% if block.type == 'product' %}
+          {% assign merch_product = block.settings.product %}
+          {% if merch_product != blank %}
+            <a href="{{ merch_product.url }}" class="merch-card reveal" {{ block.shopify_attributes }}>
+              <div class="merch-card__media">
+                {% if block.settings.badge != blank %}
+                  <span class="merch-card__badge">{{ block.settings.badge }}</span>
+                {% endif %}
+                {% if merch_product.compare_at_price > merch_product.price %}
+                  <span class="merch-card__badge merch-card__badge--sale">Sale</span>
+                {% endif %}
+                {% if merch_product.featured_image != blank %}
+                  <img
+                    src="{{ merch_product.featured_image | image_url: width: 900 }}"
+                    alt="{{ merch_product.featured_image.alt | default: merch_product.title }}"
+                    loading="lazy"
+                    width="{{ merch_product.featured_image.width }}"
+                    height="{{ merch_product.featured_image.height }}"
+                  >
+                {% else %}
+                  <div class="merch-card__placeholder">
+                    <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" style="opacity: 0.15;">
+                      <rect x="3" y="3" width="18" height="18" rx="2"/>
+                      <circle cx="8.5" cy="8.5" r="1.5"/>
+                      <path d="m21 15-5-5L5 21"/>
+                    </svg>
+                  </div>
+                {% endif %}
+              </div>
+              <div class="merch-card__info">
+                {% if merch_product.vendor != blank %}
+                  <span class="merch-card__vendor">{{ merch_product.vendor }}</span>
+                {% endif %}
+                <h3 class="merch-card__title">{{ merch_product.title }}</h3>
+                {% if merch_product.description != blank %}
+                  <p class="merch-card__desc">{{ merch_product.description | strip_html | truncate: 180 }}</p>
+                {% endif %}
+                <div class="merch-card__pricing">
+                  {% if merch_product.compare_at_price > merch_product.price %}
+                    <s class="merch-card__compare">{{ merch_product.compare_at_price | money }}</s>
+                  {% endif %}
+                  <span class="merch-card__price">{{ merch_product.price | money }}</span>
                 </div>
-              {% endif %}
-            </div>
-            <div class="merch-card__info">
-              {% if block.settings.badge != blank %}
-                <span class="tag tag--accent">{{ block.settings.badge }}</span>
-              {% endif %}
-              <h3 class="merch-card__title">{{ merch_product.title }}</h3>
-              <p class="merch-card__desc body-text">{{ merch_product.description | strip_html | truncate: 160 }}</p>
-              <div class="merch-card__bottom">
-                <span class="merch-card__price">{{ merch_product.price | money }}</span>
-                <a href="{{ merch_product.url }}" class="btn btn--primary">Comprar</a>
+                {% if merch_product.variants.size > 1 %}
+                  <span class="merch-card__variants">{{ merch_product.variants.size }} opciones disponibles</span>
+                {% endif %}
+                <div class="merch-card__cta">
+                  <span class="btn btn--primary">Ver Producto</span>
+                </div>
+              </div>
+            </a>
+          {% else %}
+            <div class="merch-card merch-card--empty reveal" {{ block.shopify_attributes }}>
+              <div class="merch-card__media">
+                <div class="merch-card__placeholder">
+                  <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" style="opacity: 0.15;">
+                    <rect x="3" y="3" width="18" height="18" rx="2"/>
+                    <circle cx="8.5" cy="8.5" r="1.5"/>
+                    <path d="m21 15-5-5L5 21"/>
+                  </svg>
+                </div>
+              </div>
+              <div class="merch-card__info">
+                <span class="merch-card__vendor" style="opacity: 0.3;">DHMEXRACES</span>
+                <h3 class="merch-card__title" style="opacity: 0.3;">Selecciona un producto</h3>
               </div>
             </div>
-          </div>
-        {% else %}
-          <div class="merch-card reveal" {{ block.shopify_attributes }}>
-            <div class="merch-card__image merch-card__placeholder">
-              <span class="label" style="opacity: 0.3;">Producto no encontrado</span>
-            </div>
-            <div class="merch-card__info">
-              <h3 class="merch-card__title">{{ block.settings.product_handle }}</h3>
-              <p class="merch-card__desc body-text">Verifica el handle del producto</p>
+          {% endif %}
+
+        {% elsif block.type == 'coming_soon' %}
+          <div class="merch-coming-soon reveal" {{ block.shopify_attributes }}>
+            <div class="merch-coming-soon__content">
+              <span class="label">{{ block.settings.subtitle | default: 'Proximamente' }}</span>
+              <h3 class="heading-md">{{ block.settings.title | default: 'Mas productos en camino' }}</h3>
+              {% if block.settings.description != blank %}
+                <p class="body-text" style="margin-top: var(--space-xs);">{{ block.settings.description }}</p>
+              {% endif %}
+              {% if block.settings.link != blank %}
+                <a href="{{ block.settings.link }}" class="btn btn--outline" style="margin-top: var(--space-md);">
+                  {{ block.settings.link_text | default: 'Siguenos en Instagram' }}
+                </a>
+              {% endif %}
             </div>
           </div>
         {% endif %}
-      {% elsif block.type == 'coming_soon' %}
-        <div class="merch-coming-soon reveal" {{ block.shopify_attributes }}>
-          <div class="merch-coming-soon__content">
-            <span class="label">{{ block.settings.subtitle | default: 'Proximamente' }}</span>
-            <h3 class="heading-md">{{ block.settings.title | default: 'Mas productos en camino' }}</h3>
-            {% if block.settings.description != blank %}
-              <p class="body-text">{{ block.settings.description }}</p>
-            {% endif %}
-            {% if block.settings.link != blank %}
-              <a href="{{ block.settings.link }}" class="btn btn--outline" style="margin-top: var(--space-md);">
-                {{ block.settings.link_text | default: 'Siguenos en Instagram' }}
-              </a>
-            {% endif %}
-          </div>
-        </div>
-      {% endif %}
-    {% endfor %}
+      {% endfor %}
+    </div>
 
     {% if section.blocks.size == 0 %}
-      <div class="ranking-empty">
+      <div class="merch-empty reveal">
+        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" style="opacity: 0.15; margin-bottom: var(--space-sm);">
+          <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/>
+          <line x1="3" x2="21" y1="6" y2="6"/>
+          <path d="M16 10a4 4 0 0 1-8 0"/>
+        </svg>
         <span class="heading-md" style="color: var(--text-secondary);">Proximamente</span>
-        <p class="body-text" style="margin-top: var(--space-sm);">La tienda oficial estara disponible pronto</p>
+        <p class="body-text" style="margin-top: var(--space-xs); color: var(--text-secondary);">La tienda oficial estara disponible pronto</p>
       </div>
     {% endif %}
   </div>
@@ -114,10 +148,9 @@
       "name": "Producto",
       "settings": [
         {
-          "type": "text",
-          "id": "product_handle",
-          "label": "Handle del producto",
-          "info": "El handle/url del producto en Shopify"
+          "type": "product",
+          "id": "product",
+          "label": "Producto"
         },
         {
           "type": "text",

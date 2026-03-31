@@ -17,17 +17,15 @@
     {% if cart.item_count > 0 %}
       <div class="cart-layout" id="cartContent">
         <div class="cart-items" id="cartItems">
+          {% comment %} Render non-promo items first, then promo jerseys {% endcomment %}
           {% for item in cart.items %}
+            {% if item.properties['_promo_jersey'] == 'true' %}{% continue %}{% endif %}
             {% assign title_lower = item.product.title | downcase %}
             {% assign is_inscription = false %}
             {% assign is_promo_jersey = false %}
 
             {% if title_lower contains 'inscripci' %}
               {% assign is_inscription = true %}
-            {% endif %}
-
-            {% if item.properties['_promo_jersey'] == 'true' %}
-              {% assign is_promo_jersey = true %}
             {% endif %}
 
             <div class="cart-item {% if is_promo_jersey %}cart-item--promo{% endif %}" data-line="{{ forloop.index }}" data-variant-id="{{ item.variant_id }}">
@@ -41,13 +39,14 @@
 
               <div class="cart-item__details">
                 <a href="{{ item.url }}" class="cart-item__title">{{ item.product.title }}</a>
-                {% unless item.variant.title == 'Default Title' %}
-                  <div class="cart-item__variant">Categoría: {{ item.variant.title }}</div>
-                {% endunless %}
-
                 {% if is_promo_jersey %}
+                  <div class="cart-item__variant">Talla: Por definir en formulario</div>
                   <span class="cart-item__promo-badge">JERSEY GRATIS</span>
                   <span class="label" style="margin-top: 4px; opacity: 0.6;">Sincronizado con inscripciones</span>
+                {% else %}
+                  {% unless item.variant.title == 'Default Title' %}
+                    <div class="cart-item__variant">Categoría: {{ item.variant.title }}</div>
+                  {% endunless %}
                 {% endif %}
 
                 {% for property in item.properties %}
@@ -84,6 +83,69 @@
               </div>
             </div>
           {% endfor %}
+
+          {% comment %} Promo jerseys rendered last {% endcomment %}
+          {% for item in cart.items %}
+            {% unless item.properties['_promo_jersey'] == 'true' %}{% continue %}{% endunless %}
+            {% assign is_promo_jersey = true %}
+            {% assign is_inscription = false %}
+
+            <div class="cart-item cart-item--promo" data-line="{{ forloop.index }}" data-variant-id="{{ item.variant_id }}">
+              <a href="{{ item.url }}">
+                {% if item.image %}
+                  <img class="cart-item__image" src="{{ item.image | image_url: width: 160 }}" alt="{{ item.title }}" loading="lazy">
+                {% else %}
+                  <div class="cart-item__image" style="background: var(--bg-secondary);"></div>
+                {% endif %}
+              </a>
+
+              <div class="cart-item__details">
+                <a href="{{ item.url }}" class="cart-item__title">{{ item.product.title }}</a>
+                <div class="cart-item__variant">Talla: Por definir en formulario</div>
+                <span class="cart-item__promo-badge">JERSEY GRATIS</span>
+                <span class="label" style="margin-top: 4px; opacity: 0.6;">Sincronizado con inscripciones</span>
+              </div>
+
+              <div class="cart-item__qty"></div>
+
+              <div class="cart-item__price">
+                <span class="cart-item__price-original">{{ item.original_line_price | money }}</span>
+                <span class="cart-item__price-free">GRATIS</span>
+              </div>
+            </div>
+          {% endfor %}
+
+          {% assign has_inscriptions_early = false %}
+          {% for item in cart.items %}
+            {% assign t_check = item.product.title | downcase %}
+            {% if t_check contains 'inscripci' %}{% assign has_inscriptions_early = true %}{% endif %}
+          {% endfor %}
+          {% if has_inscriptions_early %}
+          <div class="cart-timeline">
+            <div class="cart-timeline__step cart-timeline__step--done">
+              <div class="cart-timeline__dot">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+              </div>
+              <span class="cart-timeline__label">Inscripciones agregadas</span>
+            </div>
+            <div class="cart-timeline__line cart-timeline__line--done"></div>
+            <div class="cart-timeline__step cart-timeline__step--active">
+              <div class="cart-timeline__dot">2</div>
+              <span class="cart-timeline__label">Revisar carrito y continuar</span>
+              <span class="cart-timeline__badge">Estas aqui</span>
+            </div>
+            <div class="cart-timeline__line"></div>
+            <div class="cart-timeline__step">
+              <div class="cart-timeline__dot">3</div>
+              <span class="cart-timeline__label">Datos y tallas de jersey</span>
+            </div>
+            <div class="cart-timeline__line"></div>
+            <div class="cart-timeline__step">
+              <div class="cart-timeline__dot">4</div>
+              <span class="cart-timeline__label">Pagar</span>
+            </div>
+          </div>
+          {% endif %}
         </div>
 
         <div class="cart-summary">
@@ -116,7 +178,7 @@
           {% if promo_jersey_total > 0 %}
             <div class="cart-summary__row">
               <span class="label">Jersey Oficial Gratis</span>
-              <span class="label" style="color: var(--accent);">-{{ promo_jersey_total | money }}</span>
+              <span class="label" style="color: #DF3382;">-{{ promo_jersey_total | money }}</span>
             </div>
           {% endif %}
 
@@ -136,7 +198,7 @@
             </div>
             <div id="discountConfirmed" class="cart-discount__confirmed" style="display: none;">
               <span class="label">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#DF3382" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
                 Codigo: <strong id="discountCodeDisplay"></strong>
               </span>
               <button type="button" onclick="changeDiscount()" class="label" style="text-decoration: underline; cursor: pointer;">Cambiar</button>
@@ -144,17 +206,43 @@
           </div>
 
           {% if has_inscriptions %}
-            <button type="button" class="btn btn--primary btn--large" style="width: 100%; margin-top: var(--space-sm);" onclick="proceedToRegistration()">
-              Continuar al Registro
+            <button type="button" class="btn btn--primary btn--large" style="width: 100%; margin-top: var(--space-sm); background: #DF3382; box-shadow: 0 0 20px rgba(223, 51, 130, 0.4); display: flex; flex-direction: column; align-items: center; gap: 2px; padding-top: 12px; padding-bottom: 12px;" onclick="proceedToRegistration()">
+              <span>Continuar al Registro</span>
+              <span style="font-size: 10px; font-weight: 400; opacity: 0.75; letter-spacing: 0.03em;">Siguiente: datos de los corredores (2 min)</span>
             </button>
-            <p class="label" style="text-align: center; margin-top: 8px; opacity: 0.6;">Llenaras los datos de cada participante</p>
           {% else %}
             <a href="/checkout" class="btn btn--primary btn--large" style="width: 100%; margin-top: var(--space-sm); text-align: center;">
               Proceder al pago
             </a>
           {% endif %}
 
-          <a href="/#sedes" class="btn btn--outline" style="width: 100%; text-align: center;">
+          <div style="display: flex; flex-direction: column; align-items: center; gap: 8px; margin-top: var(--space-sm);">
+            <div style="display: flex; align-items: center; gap: 6px; opacity: 0.45;">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+              </svg>
+              <span class="label">Pago seguro · 3D Secure</span>
+            </div>
+            <div style="display: flex; align-items: center; gap: 12px; opacity: 0.35;">
+              {%- comment -%} Visa {%- endcomment -%}
+              <svg width="40" height="13" viewBox="0 0 750 471" fill="currentColor">
+                <path d="M278.2 334.2l33.4-195.3h53.4L331.6 334.2h-53.4zM524.9 142.6c-10.6-4-27.2-8.3-47.9-8.3-52.8 0-90 26.5-90.2 64.5-.3 28.1 26.5 43.7 46.8 53.1 20.8 9.6 27.8 15.7 27.7 24.3-.1 13.1-16.6 19.1-32 19.1-21.4 0-32.7-3-50.3-10.2l-6.9-3.1-7.5 43.8c12.5 5.4 35.6 10.2 59.6 10.4 56.2 0 92.6-26.2 93-66.7.2-22.2-14-39.1-44.8-53.1-18.7-9-30.1-15-30-24.2 0-8.1 9.7-16.8 30.6-16.8 17.4-.3 30.1 3.5 39.9 7.4l4.8 2.2 7.2-42.1zM661.6 138.9h-41.3c-12.8 0-22.4 3.5-28 16.2l-79.4 179.1h56.2s9.2-24.1 11.3-29.4c6.1 0 60.8.1 68.6.1 1.6 6.9 6.5 29.3 6.5 29.3h49.7l-43.6-195.3zm-65.9 126c4.4-11.3 21.4-54.7 21.4-54.7-.3.5 4.4-11.3 7.1-18.7l3.6 16.9s10.3 46.8 12.4 56.6h-44.5zM232.8 138.9L180.5 271l-5.6-27.1c-9.7-31.2-39.9-65-73.7-81.9l47.9 171.1 56.6-.1 84.2-195.2h-56.6z"/>
+                <path d="M131.9 138.9H44.7l-.7 4c67.2 16.2 111.7 55.3 130.1 102.3L156 159.4c-3-12.4-12.6-16-24.1-16.5z"/>
+              </svg>
+              {%- comment -%} Mastercard {%- endcomment -%}
+              <svg width="32" height="20" viewBox="0 0 152 100" fill="currentColor">
+                <circle cx="50" cy="50" r="50" opacity="0.6"/>
+                <circle cx="102" cy="50" r="50" opacity="0.6"/>
+              </svg>
+              {%- comment -%} Amex {%- endcomment -%}
+              <svg width="32" height="20" viewBox="0 0 120 80" fill="none" stroke="currentColor" stroke-width="4">
+                <rect x="2" y="2" width="116" height="76" rx="8"/>
+                <text x="60" y="52" text-anchor="middle" font-family="monospace" font-size="28" font-weight="bold" fill="currentColor" stroke="none">AMEX</text>
+              </svg>
+            </div>
+          </div>
+
+          <a href="/#sedes" class="label" style="display: block; text-align: center; margin-top: var(--space-sm); text-decoration: underline; opacity: 0.5;">
             Seguir comprando
           </a>
         </div>
@@ -162,8 +250,8 @@
 
     {% else %}
       <div style="text-align: center; padding: var(--space-xl) 0;">
-        <p class="heading-md" style="margin-bottom: var(--space-md);">Tu carrito esta vacio</p>
-        <a href="/#sedes" class="btn btn--primary">Ver inscripciones</a>
+        <p class="heading-md" style="margin-bottom: var(--space-md);">{{ section.settings.empty_title | default: 'Tu carrito esta vacio' }}</p>
+        <a href="/products/inscripcion-sede-2-guadalajara" class="btn btn--primary">Inscribirme ahora</a>
       </div>
     {% endif %}
   </div>
@@ -207,8 +295,8 @@
     justify-self: center;
   }
   .cart-item--promo {
-    border-color: rgba(var(--accent-rgb, 255,59,48), 0.3);
-    background: rgba(var(--accent-rgb, 255,59,48), 0.05);
+    border-color: rgba(223, 51, 130, 0.3);
+    background: rgba(223, 51, 130, 0.05);
   }
   .cart-item__image {
     width: 80px;
@@ -239,8 +327,8 @@
     font-size: 10px;
     font-weight: 700;
     letter-spacing: 0.05em;
-    color: var(--accent);
-    border: 1px solid var(--accent);
+    color: #000;
+    border: 1px solid #000;
     border-radius: 4px;
     width: fit-content;
   }
@@ -277,7 +365,7 @@
     display: block;
   }
   .cart-item__price-free {
-    color: var(--accent);
+    color: #DF3382;
     font-weight: 700;
   }
   .cart-item__price-unit {
@@ -326,6 +414,8 @@
   .cart-discount__input::placeholder {
     color: var(--text-secondary);
   }
+
+  /* ── Cart Timeline ── */
   .cart-discount__btn {
     padding: 8px 16px !important;
     font-size: 11px !important;
@@ -336,7 +426,7 @@
     justify-content: space-between;
     align-items: center;
     padding: 8px 12px;
-    background: rgba(var(--accent-rgb, 255,59,48), 0.08);
+    background: rgba(223, 51, 130, 0.08);
     border-radius: 6px;
   }
 
@@ -347,9 +437,15 @@
   }
   .cart-skeleton {
     position: absolute;
-    inset: 0;
+    top: -2px;
+    left: -10px;
+    right: -10px;
+    bottom: -2px;
     z-index: 3;
     pointer-events: all;
+    background: var(--bg-primary, #fff);
+    overflow: hidden;
+    padding: 0 10px;
   }
   .cart-skeleton .cart-items,
   .cart-skeleton .cart-summary {
@@ -366,7 +462,7 @@
     gap: var(--space-sm);
     align-items: center;
     padding: var(--space-sm);
-    border: 1px solid rgba(0,0,0,0.06);
+    border: none;
     border-radius: 8px;
     background: var(--bg-secondary);
   }
@@ -403,33 +499,46 @@
     .cart-page {
       padding: calc(var(--header-height) + var(--space-sm)) 0 var(--space-md);
     }
+    .cart-page .container {
+      padding-left: 12px;
+      padding-right: 12px;
+    }
     .cart-page .section__header {
       margin-bottom: var(--space-sm);
     }
     .cart-page .heading-lg {
-      font-size: clamp(1.8rem, 6vw, 2.4rem);
+      font-size: clamp(1.5rem, 6vw, 2.4rem);
     }
     .cart-layout {
       gap: var(--space-md);
     }
     .cart-item {
-      grid-template-columns: 64px 1fr;
+      grid-template-columns: 56px 1fr;
       grid-template-rows: auto auto;
       gap: 8px;
-      padding: 12px;
+      padding: 10px;
       position: relative;
     }
     .cart-item__image {
-      width: 64px;
-      min-height: 64px;
+      width: 56px;
+      min-height: 56px;
       grid-row: 1 / 2;
     }
     .cart-item__details {
       grid-column: 2;
       grid-row: 1;
+      min-width: 0;
     }
     .cart-item__title {
-      font-size: 13px;
+      font-size: 12px;
+      word-break: break-word;
+    }
+    .cart-item__variant {
+      font-size: 11px !important;
+    }
+    .cart-item__promo-badge {
+      font-size: 9px !important;
+      padding: 2px 6px !important;
     }
     .cart-item__qty {
       grid-column: 1 / -1;
@@ -441,13 +550,13 @@
       width: 100%;
     }
     .cart-item__qty .quantity-selector {
-      transform: scale(0.9);
+      transform: scale(0.85);
       transform-origin: left center;
     }
     .cart-item__remove {
       position: absolute;
-      top: 8px;
-      right: 8px;
+      top: 6px;
+      right: 6px;
       z-index: 2;
       padding: 6px;
     }
@@ -455,8 +564,11 @@
       grid-column: 1 / -1;
       grid-row: 2;
       text-align: right;
-      font-size: 13px;
+      font-size: 12px;
       align-self: center;
+    }
+    .cart-item__price-original {
+      font-size: 11px !important;
     }
     .cart-summary {
       position: static;
@@ -478,6 +590,33 @@
       padding: 10px 16px !important;
       font-size: 12px !important;
     }
+    .cart-timeline {
+      padding: 10px 6px;
+    }
+    .cart-timeline__step {
+      min-width: 50px;
+    }
+    .cart-timeline__label {
+      font-size: 8px;
+      max-width: 55px;
+    }
+    .cart-timeline__dot {
+      width: 22px;
+      height: 22px;
+      font-size: 9px;
+    }
+    .cart-timeline__dot svg {
+      width: 11px;
+      height: 11px;
+    }
+    .cart-timeline__badge {
+      font-size: 7px;
+      padding: 1px 4px;
+    }
+    .cart-timeline__line {
+      min-width: 10px;
+      margin-top: 11px;
+    }
     .cart-skeleton .skel-item {
       grid-template-columns: 56px 1fr;
       padding: 10px;
@@ -485,6 +624,9 @@
     .cart-skeleton .skel-img {
       width: 56px;
       height: 56px;
+    }
+    .cart-skeleton .cart-summary {
+      border: none;
     }
   }
 </style>
@@ -536,7 +678,7 @@ function setProcessingState(processing) {
 
         loader.innerHTML = '<div class="cart-layout">'
           + '<div class="cart-items">' + itemsHtml + '</div>'
-          + '<div class="cart-summary" style="border:1px solid rgba(0,0,0,0.06);">'
+          + '<div class="cart-summary" style="border:none;">'
           + '<div class="skel-summary-line"><div class="skel-block skel-line" style="width:80px"></div><div class="skel-block skel-line" style="width:40px"></div></div>'
           + '<div class="skel-summary-line"><div class="skel-block skel-line" style="width:60px"></div><div class="skel-block skel-line" style="width:50px"></div></div>'
           + '<div class="skel-summary-line" style="margin-top:8px;padding-top:8px;border-top:1px solid rgba(0,0,0,0.06)"><div class="skel-block skel-line" style="width:50px;height:16px"></div><div class="skel-block skel-line" style="width:70px;height:16px"></div></div>'

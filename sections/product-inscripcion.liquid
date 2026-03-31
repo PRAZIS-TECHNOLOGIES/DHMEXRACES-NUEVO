@@ -236,7 +236,8 @@
       </div>
     </div>
 
-    {%- comment -%} 5. TIMELINE DE PRECIOS {%- endcomment -%}
+    {%- comment -%} 5. TIMELINE DE PRECIOS - DESHABILITADO TEMPORALMENTE
+    Para restaurar: quita el comment y endcomment que rodean este bloque
     {% if pricing_enabled %}
       <div class="inscripcion__timeline" id="priceTimeline">
         {% if product.metafields.custom.phase1_price != blank %}
@@ -267,7 +268,9 @@
           </div>
         {% endif %}
       </div>
+    {%- endcomment -%}
 
+    {% if pricing_enabled %}
       <script id="pricingConfig" type="application/json">
         {
           "enabled": true,
@@ -331,8 +334,32 @@
           </div>
         </div>
 
+        {%- comment -%} Timeline de inscripcion {%- endcomment -%}
+        <div class="cart-timeline">
+          <div class="cart-timeline__step cart-timeline__step--active">
+            <div class="cart-timeline__dot">1</div>
+            <span class="cart-timeline__label">Agregar inscripciones</span>
+            <span class="cart-timeline__badge">Estas aqui</span>
+          </div>
+          <div class="cart-timeline__line"></div>
+          <div class="cart-timeline__step">
+            <div class="cart-timeline__dot">2</div>
+            <span class="cart-timeline__label">Revisar carrito y continuar</span>
+          </div>
+          <div class="cart-timeline__line"></div>
+          <div class="cart-timeline__step">
+            <div class="cart-timeline__dot">3</div>
+            <span class="cart-timeline__label">Datos y tallas de jersey</span>
+          </div>
+          <div class="cart-timeline__line"></div>
+          <div class="cart-timeline__step">
+            <div class="cart-timeline__dot">4</div>
+            <span class="cart-timeline__label">Pagar</span>
+          </div>
+        </div>
+
         {%- comment -%} Carrito actual - Siempre visible {%- endcomment -%}
-        <div class="inscripcion__cart-summary" id="carritoResumen">
+        <div class="inscripcion__cart-summary" id="carritoResumen" onclick="window.location.href='/cart'">
           <div class="inscripcion__cart-header">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/>
@@ -348,7 +375,7 @@
 
         {%- comment -%} 7. CANTIDAD {%- endcomment -%}
         <div class="inscripcion__field">
-          <label class="inscripcion__label">2. ¿Cuántas inscripciones?</label>
+          <label class="inscripcion__label">2. ¿Cuántas inscripciones de esta categoría?</label>
           <div class="inscripcion__quantity">
             <button type="button" class="inscripcion__qty-btn inscripcion__qty-btn--minus" onclick="decreaseQty()" aria-label="Disminuir">
               <svg width="16" height="2" viewBox="0 0 16 2" fill="none">

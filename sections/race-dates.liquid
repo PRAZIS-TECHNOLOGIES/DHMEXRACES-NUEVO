@@ -5,8 +5,15 @@
 
 <section class="section race-dates {% if section.settings.bg_image != blank %}race-dates--has-bg{% endif %}" id="sedes">
   {% if section.settings.bg_image != blank %}
-    <div class="race-dates__bg">
+    <div class="race-dates__bg race-dates__bg--desktop">
       <img src="{{ section.settings.bg_image | image_url: width: 2000 }}" alt="" loading="lazy">
+    </div>
+    <div class="race-dates__bg race-dates__bg--mobile">
+      {% if section.settings.bg_image_mobile != blank %}
+        <img src="{{ section.settings.bg_image_mobile | image_url: width: 1080 }}" alt="" loading="lazy">
+      {% else %}
+        <img src="{{ section.settings.bg_image | image_url: width: 1080 }}" alt="" loading="lazy">
+      {% endif %}
     </div>
     <div class="race-dates__overlay"></div>
   {% endif %}
@@ -71,6 +78,7 @@
   </div>
 </section>
 
+
 {% schema %}
 {
   "name": "Sedes & Inscripciones",
@@ -79,8 +87,14 @@
     {
       "type": "image_picker",
       "id": "bg_image",
-      "label": "Imagen de fondo",
+      "label": "Imagen de fondo (desktop)",
       "info": "Dejar vacio para fondo blanco"
+    },
+    {
+      "type": "image_picker",
+      "id": "bg_image_mobile",
+      "label": "Imagen de fondo (mobile vertical)",
+      "info": "Imagen vertical para celular. Si no se agrega usa la de desktop"
     },
     {
       "type": "text",
